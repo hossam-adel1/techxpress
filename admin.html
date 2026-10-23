@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Dashboard | TechXpress</title>
+<meta name="robots" content="noindex">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet">
+<style>
+:root{--primary:#1769AA;--navy:#0B1220;--secondary:#2589D8;--bg:#F5F7FB;--text:#182230;--muted:#667085;--border:#E4E7EC;--sw:250px}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{text-decoration:none}
+.btn{border-radius:10px;transition:all .2s}
+.btn-primary{background:var(--primary);border-color:var(--primary)}
+.btn-primary:hover,.btn-primary:focus{background:var(--secondary);border-color:var(--secondary)}
+.btn-outline-primary{color:var(--primary);border-color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);border-color:var(--primary)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}.btn-navy:hover{background:#1b2a44;color:#fff}
+.form-control,.form-select{border-radius:10px;border-color:var(--border)}
+.form-control:focus,.form-select:focus{border-color:var(--secondary);box-shadow:0 0 0 .2rem rgba(37,137,216,.2)}
+.side{position:fixed;inset:0 auto 0 0;width:var(--sw);background:var(--navy);color:#c3cbd8;z-index:1040;display:flex;flex-direction:column;transition:width .25s,transform .25s;overflow:hidden}
+.side .brand{display:flex;align-items:center;gap:.6rem;padding:1.1rem;font-weight:800;font-size:1.25rem;color:#fff;white-space:nowrap}
+.side .brand i{color:#6cb6ee}
+.side .nv{display:flex;align-items:center;gap:.8rem;width:100%;border:0;background:transparent;color:#c3cbd8;padding:.7rem 1.1rem;font-weight:600;text-align:left;border-left:3px solid transparent;white-space:nowrap}
+.side .nv i{width:1.3rem;text-align:center}
+.side .nv:hover{background:rgba(255,255,255,.07);color:#fff}
+.side .nv.active{background:rgba(37,137,216,.22);color:#fff;border-left-color:var(--secondary)}
+.side nav{flex:1;overflow-y:auto}
+.main{margin-left:var(--sw);transition:margin .25s;min-height:100vh}
+.top{position:sticky;top:0;z-index:1030;background:#fff;border-bottom:1px solid var(--border);padding:.7rem 1rem;display:flex;align-items:center;gap:.8rem}
+.overlay{display:none}
+@media(min-width:992px){body.collapsed{--sw:74px}body.collapsed .side .lbl{display:none}}
+@media(max-width:991.98px){.side{transform:translateX(-100%)}body.open .side{transform:none}.main{margin-left:0}body.open .overlay{display:block;position:fixed;inset:0;background:rgba(11,18,32,.5);z-index:1035}}
+.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.2rem;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.ptitle{font-weight:800;font-size:1.5rem}
+.stat{display:flex;gap:1rem;align-items:center;height:100%}
+.stat .ic{width:48px;height:48px;flex:none;border-radius:12px;background:#e8f2fb;color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+.stat .n{font-weight:800;font-size:1.5rem;line-height:1.1}.stat .l{font-size:.82rem;color:var(--muted);font-weight:600}
+.pimg{width:48px;height:38px;object-fit:cover;border-radius:8px;background:#eef2f7;border:1px solid var(--border)}
+.table>:not(caption)>*>*{vertical-align:middle}
+.table thead th{color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.sec-note{background:#fff8e6;border:1px solid #f3dca0;border-radius:12px;padding:.6rem 1rem;font-size:.82rem;color:#6b4e00}
+.sim-tag{display:inline-block;background:var(--navy);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.05em;padding:.15rem .55rem;border-radius:20px}
+.mini{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.55rem 0;border-top:1px solid var(--border);font-size:.9rem}
+.mini:first-child{border-top:0}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--muted)}
+.empty i{font-size:2.2rem;margin-bottom:.6rem;display:block}
+.dataTables_wrapper .row{--bs-gutter-y:.6rem}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- Access gate -->
+<div id="gate" class="container d-none py-5" style="max-width:640px">
+  <div class="panel text-center py-5">
+    <i class="fa-solid fa-user-shield fa-3x mb-3" style="color:var(--primary)"></i>
+    <span class="sim-tag mb-2">ADMIN INTERFACE (DEMO)</span>
+    <h1 class="h3 fw-bold mt-2">Demo access notice</h1>
+    <p class="text-muted">The TechXpress admin dashboard opens only for a demo user with the <strong>Admin</strong> role. No authorized demo user is signed in on this device.</p>
+    <p class="small text-muted">Sign in with the "Sign in as Demo Admin" option on the sign-in page to review the dashboard.</p>
+    <div class="sec-note text-start mb-4"><i class="fa-solid fa-triangle-exclamation me-1"></i>This role check runs in your browser and is <strong>not real security</strong>. Actual authorization must be enforced by ASP.NET Core Identity and server-side policies.</div>
+    <div class="d-flex flex-wrap justify-content-center gap-2"><a href="login_registration.html" class="btn btn-primary px-4"><i class="fa-solid fa-right-to-bracket me-2"></i>Go to sign in</a><a href="home.html" class="btn btn-outline-primary px-4">Back to store</a></div>
+  </div>
+</div>
+
+<div id="app" class="d-none">
+<aside class="side" id="side" aria-label="Admin navigation">
+  <div class="brand"><i class="fa-solid fa-microchip"></i><span class="lbl" id="brandName">TechXpress</span><span class="badge text-bg-primary lbl" style="font-size:.6rem">ADMIN</span></div>
+  <nav id="nav">
+    <button type="button" class="nv active" data-sec="overview"><i class="fa-solid fa-gauge"></i><span class="lbl">Dashboard Overview</span></button>
+    <button type="button" class="nv" data-sec="products"><i class="fa-solid fa-box"></i><span class="lbl">Products</span></button>
+    <button type="button" class="nv" data-sec="categories"><i class="fa-solid fa-tags"></i><span class="lbl">Categories</span></button>
+    <button type="button" class="nv" data-sec="orders"><i class="fa-solid fa-receipt"></i><span class="lbl">Orders</span></button>
+    <button type="button" class="nv" data-sec="customers"><i class="fa-solid fa-users"></i><span class="lbl">Customers</span></button>
+    <button type="button" class="nv" data-sec="reports"><i class="fa-solid fa-chart-line"></i><span class="lbl">Reports</span></button>
+    <button type="button" class="nv" data-sec="settings"><i class="fa-solid fa-gear"></i><span class="lbl">Settings</span></button>
+  </nav>
+  <div class="border-top border-secondary border-opacity-25 py-2">
+    <a href="index.html" class="nv" style="text-decoration:none"><i class="fa-solid fa-store"></i><span class="lbl">View storefront</span></a>
+    <button type="button" class="nv" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i><span class="lbl">Logout</span></button>
+  </div>
+</aside>
+<div class="overlay" id="overlay"></div>
+
+<div class="main">
+  <header class="top">
+    <button type="button" class="btn btn-light" id="menuBtn" aria-label="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+    <form id="topSearch" class="flex-grow-1" style="max-width:420px" role="search">
+      <div class="input-group"><input type="search" id="topQ" class="form-control" placeholder="Search products or brands..." aria-label="Search products"><button class="btn btn-primary" type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button></div>
+    </form>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <div class="dropdown" id="bellWrap">
+        <button type="button" class="btn btn-light position-relative" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications"><i class="fa-regular fa-bell"></i><span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle d-none" id="bellCount">0</span></button>
+        <div class="dropdown-menu dropdown-menu-end p-0" style="min-width:290px" id="bellList"></div>
+      </div>
+      <div class="dropdown">
+        <button type="button" class="btn btn-light d-flex align-items-center gap-2" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Profile menu">
+          <span class="rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold" style="width:30px;height:30px;background:var(--primary)" id="pfInit">A</span><span class="d-none d-md-inline fw-semibold" id="pfName"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li class="px-3 py-2 small text-muted" id="pfMail"></li><li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="customer_profile.html"><i class="fa-regular fa-user me-2"></i>My profile</a></li>
+          <li><a class="dropdown-item" href="index.html"><i class="fa-solid fa-store me-2"></i>Storefront</a></li>
+          <li><button type="button" class="dropdown-item" data-go="settings"><i class="fa-solid fa-gear me-2"></i>Settings</button></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><button type="button" class="dropdown-item text-danger" id="logoutTop"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</button></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="p-3 p-lg-4" id="content">
+    <div class="sec-note mb-3" role="note"><span class="sim-tag me-2">ADMIN INTERFACE &middot; DEMO</span>Client-side role checks provide no real security. Real authorization must be enforced by ASP.NET Core Identity and server-side policies. No credentials are stored or shown here.</div>
+    <div class="alert alert-warning small d-none" id="libWarn" role="alert"></div>
+
+    <!-- Overview -->
+    <section id="s_overview">
+      <h1 class="ptitle mb-3">Dashboard Overview</h1>
+      <div class="row g-3 mb-3">
+        <div class="col-6 col-xl-3"><div class="panel stat"><div class="ic"><i class="fa-solid fa-dollar-sign"></i></div><div><div class="n" id="kRev">$0.00</div><div class="l">Total revenue</div></div></div></div>
+        <div class="col-6 col-xl-3"><div class="panel stat"><div class="ic"><i class="fa-solid fa-receipt"></i></div><div><div class="n" id="kOrd">0</div><div class="l">Total orders</div></div></div></div>
+        <div class="col-6 col-xl-3"><div class="panel stat"><div class="ic"><i class="fa-solid fa-box"></i></div><div><div class="n" id="kProd">0</div><div class="l">Total products</div></div></div></div>
+        <div class="col-6 col-xl-3"><div class="panel stat"><div class="ic"><i class="fa-solid fa-users"></i></div><div><div class="n" id="kCust">0</div><div class="l">Total customers</div></div></div></div>
+      </div>
+      <div class="row g-3 mb-3">
+        <div class="col-lg-8"><div class="panel h-100">
+          <div class="d-flex justify-content-between align-items-center mb-2"><h2 class="h5 fw-bold mb-0">Sales (excluding cancelled)</h2>
+            <select id="chartRange" class="form-select form-select-sm" style="width:auto" aria-label="Chart range"><option value="7">Last 7 days</option><option value="14" selected>Last 14 days</option><option value="30">Last 30 days</option></select></div>
+          <div style="height:290px;position:relative"><canvas id="salesChart" aria-label="Sales chart" role="img"></canvas></div>
+          <div class="small text-muted d-none" id="chartMsg"></div>
+        </div></div>
+        <div class="col-lg-4"><div class="panel h-100"><h2 class="h5 fw-bold mb-2">Top-selling products</h2><div id="topList"></div></div></div>
+      </div>
+      <div class="row g-3">
+        <div class="col-lg-8"><div class="panel h-100"><div class="d-flex justify-content-between mb-2"><h2 class="h5 fw-bold mb-0">Recent orders</h2><button type="button" class="btn btn-sm btn-outline-primary" data-go="orders">View all</button></div><div class="table-responsive" id="recentBox"></div></div></div>
+        <div class="col-lg-4"><div class="panel h-100"><h2 class="h5 fw-bold mb-2">Low-stock alerts</h2><div id="lowList"></div></div></div>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <section id="s_products" class="d-none">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><h1 class="ptitle mb-0">Products</h1>
+        <div class="d-flex gap-2"><button type="button" class="btn btn-outline-primary" id="expProd"><i class="fa-solid fa-file-csv me-2"></i>Export CSV</button><button type="button" class="btn btn-primary" id="addProd"><i class="fa-solid fa-plus me-2"></i>Add Product</button></div></div>
+      <div class="panel"><div class="table-responsive tblbox"><table class="table table-hover w-100" id="tblProducts"></table></div><div class="empty d-none" id="emProd"><i class="fa-solid fa-box-open"></i><p class="mb-2" id="emProdTxt">No products yet.</p><a href="index.html" class="btn btn-outline-primary btn-sm">Open storefront</a></div></div>
+    </section>
+
+    <!-- Categories -->
+    <section id="s_categories" class="d-none">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><h1 class="ptitle mb-0">Categories</h1><button type="button" class="btn btn-primary" id="addCat"><i class="fa-solid fa-plus me-2"></i>Add Category</button></div>
+      <div class="panel"><div class="table-responsive tblbox"><table class="table table-hover w-100" id="tblCats"></table></div><div class="empty d-none" id="emCat"><i class="fa-solid fa-tags"></i><p class="mb-2">No categories found. Open the storefront once to load the sample categories.</p><a href="index.html" class="btn btn-outline-primary btn-sm">Open storefront</a></div></div>
+    </section>
+
+    <!-- Orders -->
+    <section id="s_orders" class="d-none">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><h1 class="ptitle mb-0">Orders</h1><button type="button" class="btn btn-outline-primary" id="expOrd"><i class="fa-solid fa-file-csv me-2"></i>Export CSV</button></div>
+      <div class="panel"><div class="table-responsive tblbox"><table class="table table-hover w-100" id="tblOrders"></table></div><div class="empty d-none" id="emOrd"><i class="fa-solid fa-receipt"></i><p class="mb-0">No orders yet. Demo orders placed at checkout will appear here.</p></div></div>
+    </section>
+
+    <!-- Customers -->
+    <section id="s_customers" class="d-none">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><h1 class="ptitle mb-0">Customers</h1>
+        <div class="d-flex align-items-center gap-2"><label for="custFilter" class="small fw-semibold text-muted mb-0">Show</label><select id="custFilter" class="form-select form-select-sm" style="width:auto"><option value="all">All customers</option><option value="with">With orders</option><option value="none">Without orders</option></select></div></div>
+      <div class="panel"><div class="table-responsive tblbox"><table class="table table-hover w-100" id="tblCust"></table></div><div class="empty d-none" id="emCust"><i class="fa-solid fa-users"></i><p class="mb-0">No customers match. Registered demo accounts will appear here.</p></div></div>
+    </section>
+
+    <!-- Reports -->
+    <section id="s_reports" class="d-none">
+      <h1 class="ptitle mb-3">Reports</h1>
+      <div class="panel mb-3"><div class="row g-2 align-items-end">
+        <div class="col-6 col-md-3"><label class="form-label small fw-semibold" for="rFrom">From</label><input type="date" id="rFrom" class="form-control"></div>
+        <div class="col-6 col-md-3"><label class="form-label small fw-semibold" for="rTo">To</label><input type="date" id="rTo" class="form-control"></div>
+        <div class="col-12 col-md-6 d-flex flex-wrap gap-2"><button type="button" class="btn btn-primary" id="rApply">Apply</button><button type="button" class="btn btn-outline-primary" id="rReset">Reset</button><button type="button" class="btn btn-outline-primary" id="rExpOrd"><i class="fa-solid fa-file-csv me-1"></i>Orders CSV</button><button type="button" class="btn btn-outline-primary" id="rExpProd"><i class="fa-solid fa-file-csv me-1"></i>Products CSV</button></div>
+      </div></div>
+      <div class="row g-3 mb-3" id="rCards"></div>
+      <div class="row g-3">
+        <div class="col-lg-7"><div class="panel h-100"><h2 class="h5 fw-bold mb-2">Daily sales</h2><div class="table-responsive tblbox"><table class="table w-100" id="tblDaily"></table></div><div class="empty d-none" id="emDaily"><i class="fa-regular fa-calendar"></i><p class="mb-0">No orders in this period.</p></div></div></div>
+        <div class="col-lg-5"><div class="panel mb-3"><h2 class="h5 fw-bold mb-2">Orders by status</h2><div id="rStatus"></div></div><div class="panel"><h2 class="h5 fw-bold mb-2">Top products in period</h2><div id="rTop"></div></div></div>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="s_settings" class="d-none">
+      <h1 class="ptitle mb-3">Settings</h1>
+      <div class="panel" style="max-width:640px"><form id="setForm" novalidate>
+        <p class="small text-muted">Demo preferences for this admin interface only. They are saved in this browser and do not change the storefront.</p>
+        <div class="mb-3"><label class="form-label small fw-semibold" for="stName">Store name</label><input id="stName" class="form-control" maxlength="40"><div class="invalid-feedback">Enter a store name (2 to 40 characters).</div></div>
+        <div class="mb-3"><label class="form-label small fw-semibold" for="stLow">Low-stock threshold (units)</label><input id="stLow" type="number" min="0" max="100" class="form-control"><div class="invalid-feedback">Enter a whole number from 0 to 100.</div></div>
+        <div class="mb-3"><label class="form-label small fw-semibold" for="stPage">Rows per table page</label><select id="stPage" class="form-select"><option>10</option><option>25</option><option>50</option></select></div>
+        <div class="form-check form-switch mb-4"><input class="form-check-input" type="checkbox" id="stBell"><label class="form-check-label" for="stBell">Show notifications bell</label></div>
+        <button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save settings</button>
+      </form></div>
+    </section>
+  </main>
+</div>
+</div>
+
+<!-- Product modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="pmTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"><div class="modal-content" style="border-radius:16px">
+  <form id="prodForm" novalidate>
+  <div class="modal-header"><h2 class="modal-title h5 fw-bold" id="pmTitle">Add Product</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+  <div class="modal-body"><input type="hidden" id="pId"><div class="row g-3">
+    <div class="col-md-8"><label class="form-label small fw-semibold" for="pName">Product name *</label><input id="pName" class="form-control" maxlength="80"><div class="invalid-feedback">Name is required (at least 2 characters).</div></div>
+    <div class="col-md-4"><label class="form-label small fw-semibold" for="pBrand">Brand *</label><input id="pBrand" class="form-control" maxlength="40"><div class="invalid-feedback">Brand is required.</div></div>
+    <div class="col-md-4"><label class="form-label small fw-semibold" for="pCat">Category *</label><select id="pCat" class="form-select"></select><div class="invalid-feedback">Choose a category.</div></div>
+    <div class="col-md-4"><label class="form-label small fw-semibold" for="pPrice">Price (USD) *</label><input id="pPrice" type="number" step="0.01" min="0" class="form-control"><div class="invalid-feedback">Enter a price greater than 0.</div></div>
+    <div class="col-md-4"><label class="form-label small fw-semibold" for="pOrig">Original price (optional)</label><input id="pOrig" type="number" step="0.01" min="0" class="form-control"><div class="invalid-feedback">Must be higher than the price, or blank.</div></div>
+    <div class="col-md-4"><label class="form-label small fw-semibold" for="pStock">Stock quantity *</label><input id="pStock" type="number" step="1" min="0" class="form-control"><div class="invalid-feedback">Enter a whole number, 0 or more.</div></div>
+    <div class="col-md-8"><label class="form-label small fw-semibold" for="pImage">Image URL</label><input id="pImage" class="form-control" placeholder="https://..."><div class="invalid-feedback">Enter a valid http(s) URL or image path, or leave blank.</div></div>
+    <div class="col-12"><label class="form-label small fw-semibold" for="pDesc">Short description</label><textarea id="pDesc" rows="2" class="form-control" maxlength="200"></textarea></div>
+    <div class="col-12"><div class="form-check"><input type="checkbox" class="form-check-input" id="pNew"><label class="form-check-label" for="pNew">Show in New Arrivals</label></div></div>
+  </div></div>
+  <div class="modal-footer"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary px-4">Save product</button></div>
+  </form></div></div></div>
+
+<!-- Category modal -->
+<div class="modal fade" id="catModal" tabindex="-1" aria-labelledby="cmTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content" style="border-radius:16px">
+  <form id="catForm" novalidate>
+  <div class="modal-header"><h2 class="modal-title h5 fw-bold" id="cmTitle">Add Category</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+  <div class="modal-body"><input type="hidden" id="cId">
+    <div class="mb-3"><label class="form-label small fw-semibold" for="cName">Category name *</label><input id="cName" class="form-control" maxlength="30"><div class="invalid-feedback" id="cNameErr">Name is required.</div></div>
+    <div><label class="form-label small fw-semibold" for="cIcon">Font Awesome icon class</label><input id="cIcon" class="form-control" placeholder="fa-laptop" maxlength="40"><div class="invalid-feedback">Use a class like fa-laptop, or leave blank.</div></div>
+  </div>
+  <div class="modal-footer"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button><button type="submit" class="btn btn-primary px-4">Save category</button></div>
+  </form></div></div></div>
+
+<!-- Confirm modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="cfTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered"><div class="modal-content" style="border-radius:16px">
+  <div class="modal-header border-0"><h2 class="modal-title h5 fw-bold" id="cfTitle">Confirm</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+  <div class="modal-body pt-0 text-muted" id="cfText"></div>
+  <div class="modal-footer border-0"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button><button type="button" class="btn btn-danger" id="cfOk">Confirm</button></div>
+</div></div></div>
+
+<!-- Order modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="omTitle" aria-hidden="true"><div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"><div class="modal-content" style="border-radius:16px">
+  <div class="modal-header"><h2 class="modal-title h5 fw-bold" id="omTitle">Order</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+  <div class="modal-body" id="omBody"></div>
+  <div class="modal-footer"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button></div>
+</div></div></div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+"use strict";
+var K={products:"techxpress_products",cart:"techxpress_cart",users:"techxpress_users",current:"techxpress_current_user",orders:"techxpress_orders",categories:"techxpress_categories",wishlist:"techxpress_wishlist"},SK="techxpress_admin_settings";
+var STAT=["Pending","Processing","Shipped","Delivered","Cancelled"],BC={Pending:"warning",Processing:"primary",Shipped:"info",Delivered:"success",Cancelled:"danger"};
+var FB="data:image/svg+xml;charset=utf-8,"+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='80' height='60'><rect width='100%' height='100%' fill='#E4EDF7'/><text x='50%' y='55%' fill='#1769AA' font-family='Arial' font-size='12' font-weight='700' text-anchor='middle'>TX</text></svg>");
+var DEF_IMG="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80";
+var SECS=["overview","products","categories","orders","customers","reports","settings"];
+
+function load(k,fb){try{var r=localStorage.getItem(k);if(r===null)return fb;var v=JSON.parse(r);return v===null?fb:v}catch(e){return fb}}
+function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+function arr(k){var v=load(k,[]);return Array.isArray(v)?v:[]}
+function has(k){try{return localStorage.getItem(k)!==null}catch(e){return false}}
+var $=function(id){return document.getElementById(id)};
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function num(v,d){var n=Number(v);return isFinite(n)?n:d}
+function r2(n){return Math.round((n+Number.EPSILON)*100)/100}
+function money(n){return "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fmt(t){return t?new Date(t).toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"}):"\u2014"}
+function dayKey(t){var d=new Date(t);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function norm(e){return String(e||"").trim().toLowerCase()}
+function jq(){return window.jQuery&&window.jQuery.fn&&window.jQuery.fn.DataTable?window.jQuery:null}
+function M(id){return window.bootstrap?bootstrap.Modal.getOrCreateInstance($(id)):{show:function(){},hide:function(){}}}
+function notify(m,t){
+  if(window.toastr){toastr.options={positionClass:"toast-bottom-right",timeOut:2800,closeButton:true};toastr[t==="error"?"error":t==="success"?"success":"info"](esc(m))}
+  else{var d=document.createElement("div");d.className="alert alert-"+(t==="error"?"danger":t==="success"?"success":"dark")+" position-fixed shadow";d.style.cssText="bottom:20px;right:20px;z-index:3000";d.setAttribute("role","status");d.textContent=m;document.body.appendChild(d);setTimeout(function(){d.remove()},2800)}
+}
+document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&!t.dataset.f){t.dataset.f="1";t.src=FB}},true);
+
+/* Settings */
+function S(){var s=load(SK,{});s=s&&typeof s==="object"?s:{};return{storeName:typeof s.storeName==="string"&&s.storeName?s.storeName:"TechXpress",lowStock:Number.isInteger(s.lowStock)&&s.lowStock>=0?s.lowStock:5,pageSize:[10,25,50].indexOf(s.pageSize)>-1?s.pageSize:10,bell:s.bell!==false}}
+
+/* Data */
+function P(){return arr(K.products).filter(function(p){return p&&p.id!=null&&typeof p.name==="string"&&isFinite(Number(p.price))}).map(function(p){return{id:String(p.id),name:p.name,brand:String(p.brand||""),category:String(p.category||""),price:Number(p.price),originalPrice:p.originalPrice?Number(p.originalPrice):null,stock:Math.max(0,Math.floor(num(p.stock,0))),image:String(p.image||""),description:String(p.description||""),isNew:!!p.isNew}})}
+function C(){return arr(K.categories).filter(function(c){return c&&typeof c.name==="string"&&c.name}).map(function(c){return{id:String(c.id),name:c.name,icon:String(c.icon||"fa-box")}})}
+function O(){
+  return arr(K.orders).filter(function(o){return o&&typeof o==="object"}).map(function(o){
+    var items=(Array.isArray(o.items)?o.items:[]).map(function(i){var q=Math.max(0,Math.floor(num(i&&i.quantity,0))),pr=Math.max(0,num(i&&i.price,0));return{productId:i&&i.productId,name:String((i&&i.name)||"Unknown product"),brand:String((i&&i.brand)||""),quantity:q,price:pr,line:r2(q*pr)}}).filter(function(i){return i.quantity>0});
+    var sub=r2(items.reduce(function(s,i){return s+i.line},0)),disc=Math.min(sub,Math.max(0,num(o.discount,0))),ship=Math.max(0,num(o.shipping,0));
+    var total=o.total!=null&&isFinite(Number(o.total))&&Number(o.total)>=0?r2(Number(o.total)):r2(sub-disc+ship);
+    var st=STAT.filter(function(x){return x.toLowerCase()===String(o.status||"Pending").toLowerCase()})[0]||"Pending";
+    var c=o.customer&&typeof o.customer==="object"?o.customer:{},t=new Date(o.date).getTime()||0;
+    return{raw:o,no:String(o.orderNumber||o.id||"\u2014"),time:t,status:st,items:items,subtotal:sub,discount:disc,shipping:ship,total:total,
+      customer:String(c.name||o.userEmail||"Guest"),email:String(c.email||o.userEmail||""),userId:o.userId,userEmail:o.userEmail,
+      pay:String((o.payment&&o.payment.status)||"Not charged"),code:o.discountCode,cust:c,deliv:o.delivery&&typeof o.delivery==="object"?o.delivery:{}}
+  })
+}
+function customers(){return arr(K.users).filter(function(u){return u&&typeof u==="object"&&typeof u.email==="string"&&String(u.role||"Customer").toLowerCase()!=="admin"})}
+function ordersOf(u,os){return os.filter(function(o){return (u.id!=null&&o.userId!=null&&String(o.userId)===String(u.id))||(o.userEmail&&norm(o.userEmail)===norm(u.email))})}
+function revenue(os){return r2(os.filter(function(o){return o.status!=="Cancelled"}).reduce(function(s,o){return s+o.total},0))}
+function topSelling(os){
+  var m={};os.filter(function(o){return o.status!=="Cancelled"}).forEach(function(o){o.items.forEach(function(i){var k=String(i.productId!=null?i.productId:i.name);m[k]=m[k]||{name:i.name,units:0,rev:0};m[k].units+=i.quantity;m[k].rev=r2(m[k].rev+i.line)})});
+  return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return b.units-a.units||b.rev-a.rev})
+}
+function csv(name,rows){
+  var out=rows.map(function(r){return r.map(function(c){var s=String(c==null?"":c);if(typeof c!=="number"&&/^[=+\-@\t\r]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}).join(",")}).join("\r\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob(["\uFEFF"+out],{type:"text/csv;charset=utf-8"}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},800);notify("CSV exported: "+name,"success")
+}
+function stBadge(s){return "<span class='badge text-bg-"+BC[s]+"'>"+esc(s)+"</span>"}
+
+/* Tables */
+function dt(id,heads,rows,box,opts){
+  var t=$(id),J=jq();
+  if(J&&J.fn.DataTable.isDataTable(t))J(t).DataTable().destroy();
+  t.innerHTML="<thead><tr>"+heads.map(function(h){return "<th scope='col'>"+esc(h)+"</th>"}).join("")+"</tr></thead><tbody>"+rows.join("")+"</tbody>";
+  var empty=!rows.length;t.closest(".tblbox").classList.toggle("d-none",empty);$(box).classList.toggle("d-none",!empty);
+  if(J&&!empty)J(t).DataTable(Object.assign({pageLength:S().pageSize,order:[],autoWidth:false},opts||{}))
+}
+function applySearch(id,q){
+  var J=jq();if(J&&J.fn.DataTable.isDataTable($(id)))J($(id)).DataTable().search(q).draw();
+  else $(id).querySelectorAll("tbody tr").forEach(function(r){r.hidden=q&&r.textContent.toLowerCase().indexOf(q.toLowerCase())<0})
+}
+
+/* Navigation */
+function show(n){
+  if(SECS.indexOf(n)<0)n="overview";
+  SECS.forEach(function(s){$("s_"+s).classList.toggle("d-none",s!==n)});
+  document.querySelectorAll("#nav .nv").forEach(function(b){var on=b.dataset.sec===n;b.classList.toggle("active",on);if(on)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  document.body.classList.remove("open");
+  ({overview:rOverview,products:rProducts,categories:rCats,orders:rOrders,customers:rCust,reports:rReports,settings:rSettings})[n]();
+  rBell();if(history.replaceState)history.replaceState(null,"","#"+n);window.scrollTo(0,0)
+}
+function current(){var h=(location.hash||"").slice(1);return SECS.indexOf(h)>-1?h:"overview"}
+function refresh(){show(current())}
+
+/* Overview */
+var chart=null;
+function drawChart(){
+  var os=O(),days=parseInt($("chartRange").value,10)||14,cv=$("salesChart"),msg=$("chartMsg");
+  if(chart){chart.destroy();chart=null}
+  if(!window.Chart){cv.classList.add("d-none");msg.textContent="Chart.js could not be loaded, so the chart is unavailable.";msg.classList.remove("d-none");return}
+  cv.classList.remove("d-none");msg.classList.add("d-none");
+  var labels=[],keys=[],now=new Date();
+  for(var i=days-1;i>=0;i--){var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);keys.push(dayKey(d));labels.push(d.toLocaleDateString("en-US",{month:"short",day:"numeric"}))}
+  var rev={};keys.forEach(function(k){rev[k]=0});
+  os.filter(function(o){return o.status!=="Cancelled"&&o.time}).forEach(function(o){var k=dayKey(o.time);if(k in rev)rev[k]=r2(rev[k]+o.total)});
+  chart=new Chart(cv,{type:"line",data:{labels:labels,datasets:[{label:"Revenue (USD)",data:keys.map(function(k){return rev[k]}),borderColor:"#1769AA",backgroundColor:"rgba(37,137,216,.15)",fill:true,tension:.3,pointRadius:3}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{callback:function(v){return "$"+v}}}},plugins:{legend:{display:false}}}})
+}
+function listHtml(rows,emptyMsg){return rows.length?rows.join(""):"<div class='empty py-4'><i class='fa-regular fa-folder-open'></i>"+esc(emptyMsg)+"</div>"}
+function rOverview(){
+  var os=O(),ps=P(),th=S().lowStock;
+  $("kRev").textContent=money(revenue(os));$("kOrd").textContent=os.length;$("kProd").textContent=ps.length;$("kCust").textContent=customers().length;
+  var recent=os.slice().sort(function(a,b){return b.time-a.time}).slice(0,6);
+  $("recentBox").innerHTML=recent.length?"<table class='table table-sm mb-0'><thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>"+recent.map(function(o){return "<tr><td class='fw-semibold'>"+esc(o.no)+"</td><td>"+esc(o.customer)+"</td><td>"+fmt(o.time)+"</td><td>"+money(o.total)+"</td><td>"+stBadge(o.status)+"</td><td><button type='button' class='btn btn-sm btn-outline-primary' data-view='"+esc(o.no)+"'>View</button></td></tr>"}).join("")+"</tbody></table>":"<div class='empty'><i class='fa-solid fa-receipt'></i>No orders yet.</div>";
+  $("topList").innerHTML=listHtml(topSelling(os).slice(0,5).map(function(t,i){return "<div class='mini'><span><strong>"+(i+1)+".</strong> "+esc(t.name)+"</span><span class='text-muted'>"+t.units+" sold &middot; "+money(t.rev)+"</span></div>"}),"No sales data yet.");
+  $("lowList").innerHTML=listHtml(ps.filter(function(p){return p.stock<=th}).sort(function(a,b){return a.stock-b.stock}).slice(0,8).map(function(p){return "<div class='mini'><span>"+esc(p.name)+"</span><span class='badge text-bg-"+(p.stock===0?"danger":"warning")+"'>"+(p.stock===0?"Out of stock":p.stock+" left")+"</span></div>"}),"All products are sufficiently stocked.");
+  drawChart()
+}
+
+/* Products */
+function rProducts(){
+  var ps=P(),th=S().lowStock;
+  $("emProdTxt").textContent=has(K.products)?"No products yet. Use Add Product to create one.":"No catalog found. Open the storefront once to load the sample catalog.";
+  dt("tblProducts",["Image","Name","Category","Brand","Price","Stock","Status","Actions"],ps.map(function(p){
+    var st=p.stock<=0?["Out of stock","danger"]:p.stock<=th?["Low stock","warning"]:["In stock","success"];
+    return "<tr><td><img class='pimg' src='"+esc(p.image||FB)+"' alt=''></td><td class='fw-semibold'>"+esc(p.name)+"</td><td>"+esc(p.category)+"</td><td>"+esc(p.brand)+"</td><td data-order='"+p.price+"'>"+money(p.price)+"</td><td data-order='"+p.stock+"'>"+p.stock+"</td><td><span class='badge text-bg-"+st[1]+"'>"+st[0]+"</span></td><td class='text-nowrap'><button type='button' class='btn btn-sm btn-outline-primary' data-act='edit-p' data-id='"+esc(p.id)+"' aria-label='Edit "+esc(p.name)+"'><i class='fa-solid fa-pen'></i></button> <button type='button' class='btn btn-sm btn-outline-danger' data-act='del-p' data-id='"+esc(p.id)+"' aria-label='Delete "+esc(p.name)+"'><i class='fa-regular fa-trash-can'></i></button></td></tr>"
+  }),"emProd",{columnDefs:[{orderable:false,targets:[0,7]}]})
+}
+function okUrl(v){if(/^https?:\/\//i.test(v)){try{new URL(v);return true}catch(e){return false}}return /^[\w\-./]+\.(png|jpe?g|webp|gif|svg|avif)(\?.*)?$/i.test(v)}
+function chk(id,ok){var i=$(id);i.classList.toggle("is-invalid",!ok);i.classList.toggle("is-valid",ok);return ok}
+function clearMarks(f){f.querySelectorAll(".is-invalid,.is-valid").forEach(function(i){i.classList.remove("is-invalid","is-valid")})}
+function openProduct(id){
+  var p=id?P().filter(function(x){return x.id===id})[0]:null;
+  if(!id&&!has(K.products)){notify("Open the storefront once to load the sample catalog before adding products.","error");return}
+  if(id&&!p){notify("Product not found.","error");return}
+  $("pmTitle").textContent=p?"Edit Product":"Add Product";
+  var names=C().map(function(c){return c.name});P().forEach(function(x){if(x.category&&names.indexOf(x.category)<0)names.push(x.category)});
+  if(p&&names.indexOf(p.category)<0)names.push(p.category);
+  var sel=$("pCat");sel.replaceChildren();var ph=document.createElement("option");ph.value="";ph.textContent="Select category";sel.appendChild(ph);
+  names.forEach(function(n){var o=document.createElement("option");o.value=n;o.textContent=n;sel.appendChild(o)});
+  $("pId").value=p?p.id:"";$("pName").value=p?p.name:"";$("pBrand").value=p?p.brand:"";sel.value=p?p.category:"";
+  $("pPrice").value=p?p.price:"";$("pOrig").value=p&&p.originalPrice?p.originalPrice:"";$("pStock").value=p?p.stock:"";
+  $("pImage").value=p?p.image:"";$("pDesc").value=p?p.description:"";$("pNew").checked=p?p.isNew:true;
+  clearMarks($("prodForm"));M("productModal").show()
+}
+$("prodForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var v=function(id){return $(id).value.trim()},name=v("pName"),brand=v("pBrand"),cat=v("pCat"),price=parseFloat(v("pPrice")),orig=v("pOrig"),sRaw=v("pStock"),stock=Number(sRaw),img=v("pImage");
+  var ok=[chk("pName",name.length>=2),chk("pBrand",brand.length>=1),chk("pCat",!!cat),chk("pPrice",isFinite(price)&&price>0&&price<=1000000),chk("pOrig",orig===""||(isFinite(Number(orig))&&Number(orig)>price)),chk("pStock",sRaw!==""&&Number.isInteger(stock)&&stock>=0&&stock<=100000),chk("pImage",img===""||okUrl(img))].every(Boolean);
+  if(!ok){notify("Please fix the highlighted fields.","error");return}
+  var raw=arr(K.products),id=$("pId").value;
+  var data={name:name,brand:brand,category:cat,price:r2(price),originalPrice:orig===""?null:r2(Number(orig)),stock:stock,image:img||DEF_IMG,description:v("pDesc"),isNew:$("pNew").checked};
+  if(id){var i=raw.findIndex(function(x){return x&&String(x.id)===id});if(i<0){notify("Product no longer exists.","error");return}raw[i]=Object.assign({},raw[i],data)}
+  else{var mx=0;raw.forEach(function(x){var n=parseInt(String(x&&x.id).replace(/\D/g,""),10);if(n>mx)mx=n});var n2=mx+1;while(raw.some(function(x){return x&&String(x.id)==="p"+n2}))n2++;raw.push(Object.assign({id:"p"+n2,rating:0,reviews:0},data))}
+  if(!save(K.products,raw)){notify("Could not save (storage unavailable or full).","error");return}
+  M("productModal").hide();notify(id?"Product updated. It is now live on the storefront.":"Product added. It is now live on the storefront.","success");refresh()
+});
+
+/* Categories */
+function rCats(){
+  var cs=C(),ps=P();
+  dt("tblCats",["Icon","Name","Products","Actions"],cs.map(function(c){
+    var n=ps.filter(function(p){return norm(p.category)===norm(c.name)}).length;
+    return "<tr><td><i class='fa-solid "+esc(c.icon)+"' style='color:var(--primary)'></i></td><td class='fw-semibold'>"+esc(c.name)+"</td><td data-order='"+n+"'>"+n+"</td><td class='text-nowrap'><button type='button' class='btn btn-sm btn-outline-primary' data-act='edit-c' data-id='"+esc(c.id)+"' aria-label='Edit "+esc(c.name)+"'><i class='fa-solid fa-pen'></i></button> <button type='button' class='btn btn-sm btn-outline-danger' data-act='del-c' data-id='"+esc(c.id)+"' "+(n?"title='In use by "+n+" product(s)' ":"")+"aria-label='Delete "+esc(c.name)+"'><i class='fa-regular fa-trash-can'></i></button></td></tr>"
+  }),"emCat",{columnDefs:[{orderable:false,targets:[0,3]}]})
+}
+function openCat(id){
+  if(!id&&!has(K.categories)){notify("Open the storefront once to load the sample categories before adding new ones.","error");return}
+  var c=id?C().filter(function(x){return x.id===id})[0]:null;
+  $("cmTitle").textContent=c?"Edit Category":"Add Category";$("cId").value=c?c.id:"";$("cName").value=c?c.name:"";$("cIcon").value=c?c.icon:"";
+  $("cNameErr").textContent="Name is required.";clearMarks($("catForm"));M("catModal").show()
+}
+$("catForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var name=$("cName").value.trim().replace(/\s+/g," "),icon=$("cIcon").value.trim(),id=$("cId").value,raw=arr(K.categories);
+  var dup=raw.some(function(c){return c&&typeof c.name==="string"&&norm(c.name)===norm(name)&&String(c.id)!==id});
+  $("cNameErr").textContent=dup?"A category with this name already exists.":"Name is required (2 to 30 characters).";
+  var ok=[chk("cName",name.length>=2&&!dup),chk("cIcon",icon===""||/^fa-[a-z0-9-]+$/.test(icon))].every(Boolean);
+  if(!ok){notify("Please fix the highlighted fields.","error");return}
+  icon=icon||"fa-box";
+  if(id){
+    var i=raw.findIndex(function(c){return c&&String(c.id)===id});if(i<0){notify("Category no longer exists.","error");return}
+    var old=raw[i].name;raw[i]=Object.assign({},raw[i],{name:name,icon:icon});
+    if(old!==name){var pr=arr(K.products);pr.forEach(function(p){if(p&&p.category===old)p.category=name});save(K.products,pr)}
+  }else{var mx=0;raw.forEach(function(c){var n=parseInt(String(c&&c.id).replace(/\D/g,""),10);if(n>mx)mx=n});raw.push({id:"c"+(mx+1),name:name,icon:icon})}
+  if(!save(K.categories,raw)){notify("Could not save category.","error");return}
+  M("catModal").hide();notify("Category saved.","success");refresh()
+});
+
+/* Confirm helper */
+var onOk=null;
+function ask(title,text,fn){$("cfTitle").textContent=title;$("cfText").textContent=text;onOk=fn;M("confirmModal").show()}
+$("cfOk").addEventListener("click",function(){var f=onOk;onOk=null;M("confirmModal").hide();if(f)f()});
+
+/* Orders */
+function rOrders(){
+  var os=O().sort(function(a,b){return b.time-a.time});
+  dt("tblOrders",["Order #","Customer","Date","Total","Payment","Status","Actions"],os.map(function(o){
+    return "<tr><td class='fw-semibold'>"+esc(o.no)+"</td><td>"+esc(o.customer)+"<div class='small text-muted'>"+esc(o.email)+"</div></td><td data-order='"+o.time+"'>"+fmt(o.time)+"</td><td data-order='"+o.total+"'>"+money(o.total)+"</td><td><span class='badge text-bg-light border'>"+esc(o.pay)+"</span></td><td data-order='"+esc(o.status)+"' data-search='"+esc(o.status)+"'><select class='form-select form-select-sm' style='min-width:125px' data-no='"+esc(o.no)+"' aria-label='Status for order "+esc(o.no)+"'>"+STAT.map(function(s){return "<option"+(s===o.status?" selected":"")+">"+s+"</option>"}).join("")+"</select></td><td><button type='button' class='btn btn-sm btn-outline-primary' data-view='"+esc(o.no)+"'>View Details</button></td></tr>"
+  }),"emOrd",{columnDefs:[{orderable:false,targets:[6]}],order:[[2,"desc"]]})
+}
+function showOrder(no){
+  var o=O().filter(function(x){return x.no===no})[0];if(!o){notify("Order not found.","error");return}
+  $("omTitle").textContent="Order "+o.no;
+  var c=o.cust;
+  $("omBody").innerHTML="<div class='d-flex flex-wrap gap-2 mb-3'>"+stBadge(o.status)+"<span class='badge text-bg-light border'>Payment: "+esc(o.pay)+" (simulated)</span><span class='small text-muted ms-auto'>"+fmt(o.time)+"</span></div>"+
+  "<div class='table-responsive mb-3'><table class='table table-sm align-middle'><thead><tr><th>Product</th><th class='text-center'>Qty</th><th class='text-end'>Price</th><th class='text-end'>Subtotal</th></tr></thead><tbody>"+o.items.map(function(i){return "<tr><td>"+esc(i.name)+"<div class='small text-muted'>"+esc(i.brand)+"</div></td><td class='text-center'>"+i.quantity+"</td><td class='text-end'>"+money(i.price)+"</td><td class='text-end fw-semibold'>"+money(i.line)+"</td></tr>"}).join("")+"</tbody></table></div>"+
+  "<div class='row g-3'><div class='col-md-6'><h3 class='h6 fw-bold'>Customer &amp; shipping</h3><div class='small text-muted'>"+esc(c.name||o.customer)+"<br>"+esc([c.address,c.city,c.postalCode].filter(Boolean).join(", ")||"No address")+"<br>"+esc(c.phone||"")+" "+esc(o.email)+"<br>Delivery: "+esc(o.deliv.label||o.deliv.method||"N/A")+"</div></div>"+
+  "<div class='col-md-6'><div class='mini'><span>Subtotal</span><span>"+money(o.subtotal)+"</span></div><div class='mini'><span>Discount"+(o.code?" ("+esc(o.code)+")":"")+"</span><span>"+(o.discount?"-"+money(o.discount):money(0))+"</span></div><div class='mini'><span>Shipping</span><span>"+(o.shipping?money(o.shipping):"FREE")+"</span></div><div class='mini fw-bold'><span>Total</span><span style='color:var(--primary)'>"+money(o.total)+"</span></div></div></div>";
+  M("orderModal").show()
+}
+document.addEventListener("change",function(e){
+  var s=e.target.closest&&e.target.closest("select[data-no]");if(!s)return;
+  var raw=arr(K.orders),o=raw.filter(function(x){return x&&String(x.orderNumber||x.id)===s.dataset.no})[0];
+  if(!o){notify("Order not found.","error");return}
+  o.status=s.value;
+  if(save(K.orders,raw)){notify("Order "+s.dataset.no+" set to "+s.value+".","success");rBell()}else notify("Could not update the order.","error")
+});
+
+/* Customers */
+function rCust(){
+  var os=O(),f=$("custFilter").value;
+  var rows=customers().map(function(u){return{u:u,n:ordersOf(u,os).length}}).filter(function(r){return f==="all"||(f==="with"?r.n>0:r.n===0)});
+  dt("tblCust",["Name","Email","Role","Registered","Orders"],rows.map(function(r){var t=new Date(r.u.createdAt).getTime()||0;
+    return "<tr><td class='fw-semibold'>"+esc(r.u.name||"\u2014")+"</td><td>"+esc(r.u.email)+"</td><td><span class='badge text-bg-secondary'>"+esc(r.u.role||"Customer")+"</span></td><td data-order='"+t+"'>"+fmt(t)+"</td><td data-order='"+r.n+"'>"+r.n+"</td></tr>"}),"emCust")
+}
+$("custFilter").addEventListener("change",rCust);
+
+/* Reports */
+function rangeOrders(){
+  var f=$("rFrom").value,t=$("rTo").value,a=f?new Date(f+"T00:00:00").getTime():-Infinity,b=t?new Date(t+"T23:59:59.999").getTime():Infinity;
+  return O().filter(function(o){return o.time>=a&&o.time<=b})
+}
+function rReports(){
+  var f=$("rFrom").value,t=$("rTo").value;
+  if(f&&t&&f>t){notify("The start date must be before the end date.","error");return}
+  var os=rangeOrders(),live=os.filter(function(o){return o.status!=="Cancelled"}),units=live.reduce(function(s,o){return s+o.items.reduce(function(a,i){return a+i.quantity},0)},0),rev=revenue(os);
+  var cards=[["Revenue",money(rev),"fa-dollar-sign"],["Orders",os.length,"fa-receipt"],["Avg. order value",money(live.length?r2(rev/live.length):0),"fa-scale-balanced"],["Units sold",units,"fa-boxes-stacked"],["Discounts given",money(r2(live.reduce(function(s,o){return s+o.discount},0))),"fa-tag"],["Cancelled",os.length-live.length,"fa-ban"]];
+  $("rCards").innerHTML=cards.map(function(c){return "<div class='col-6 col-lg-4 col-xl-2'><div class='panel stat'><div class='ic'><i class='fa-solid "+c[2]+"'></i></div><div><div class='n' style='font-size:1.15rem'>"+esc(c[1])+"</div><div class='l'>"+c[0]+"</div></div></div></div>"}).join("");
+  var days={};live.forEach(function(o){if(!o.time)return;var k=dayKey(o.time);days[k]=days[k]||{n:0,u:0,r:0};days[k].n++;days[k].u+=o.items.reduce(function(a,i){return a+i.quantity},0);days[k].r=r2(days[k].r+o.total)});
+  dt("tblDaily",["Date","Orders","Units","Revenue"],Object.keys(days).sort().reverse().map(function(k){var d=days[k];return "<tr><td data-order='"+k+"'>"+fmt(new Date(k+"T00:00:00").getTime())+"</td><td>"+d.n+"</td><td>"+d.u+"</td><td data-order='"+d.r+"'>"+money(d.r)+"</td></tr>"}),"emDaily",{order:[[0,"desc"]]});
+  $("rStatus").innerHTML=STAT.map(function(s){var g=os.filter(function(o){return o.status===s});return "<div class='mini'><span>"+stBadge(s)+"</span><span class='text-muted'>"+g.length+" order(s) &middot; "+money(r2(g.reduce(function(a,o){return a+o.total},0)))+"</span></div>"}).join("");
+  $("rTop").innerHTML=listHtml(topSelling(os).slice(0,5).map(function(x){return "<div class='mini'><span>"+esc(x.name)+"</span><span class='text-muted'>"+x.units+" sold &middot; "+money(x.rev)+"</span></div>"}),"No sales in this period.")
+}
+function exportOrders(os){
+  csv("techxpress-orders.csv",[["Order","Customer","Email","Date","Items","Subtotal","Discount","Shipping","Total","Payment","Status"]].concat(os.map(function(o){return [o.no,o.customer,o.email,o.time?new Date(o.time).toISOString().slice(0,10):"",o.items.reduce(function(a,i){return a+i.quantity},0),o.subtotal,o.discount,o.shipping,o.total,o.pay,o.status]})))
+}
+function exportProducts(){
+  var th=S().lowStock;
+  csv("techxpress-products.csv",[["ID","Name","Brand","Category","Price","Original price","Stock","Status"]].concat(P().map(function(p){return [p.id,p.name,p.brand,p.category,p.price,p.originalPrice||"",p.stock,p.stock<=0?"Out of stock":p.stock<=th?"Low stock":"In stock"]})))
+}
+
+/* Settings */
+function rSettings(){var s=S();$("stName").value=s.storeName;$("stLow").value=s.lowStock;$("stPage").value=String(s.pageSize);$("stBell").checked=s.bell;clearMarks($("setForm"))}
+function applySettings(){var s=S();$("brandName").textContent=s.storeName;document.title="Admin Dashboard | "+s.storeName;$("bellWrap").classList.toggle("d-none",!s.bell)}
+$("setForm").addEventListener("submit",function(e){
+  e.preventDefault();var name=$("stName").value.trim(),lowRaw=$("stLow").value.trim(),low=Number(lowRaw);
+  var ok=[chk("stName",name.length>=2&&name.length<=40),chk("stLow",lowRaw!==""&&Number.isInteger(low)&&low>=0&&low<=100)].every(Boolean);
+  if(!ok){notify("Please fix the highlighted fields.","error");return}
+  if(!save(SK,{storeName:name,lowStock:low,pageSize:parseInt($("stPage").value,10),bell:$("stBell").checked})){notify("Could not save settings.","error");return}
+  applySettings();notify("Settings saved.","success")
+});
+
+/* Notifications */
+function rBell(){
+  var th=S().lowStock,pend=O().filter(function(o){return o.status==="Pending"}).length,low=P().filter(function(p){return p.stock<=th}),out=low.filter(function(p){return p.stock===0}).length,n=pend+low.length;
+  var b=$("bellCount");b.textContent=n;b.classList.toggle("d-none",n===0);
+  var items=[];
+  if(pend)items.push(["fa-clock","text-warning",pend+" pending order(s) need attention","orders"]);
+  if(low.length)items.push(["fa-triangle-exclamation","text-danger",low.length+" product(s) low on stock"+(out?" ("+out+" out of stock)":""),"products"]);
+  $("bellList").innerHTML=items.length?items.map(function(i){return "<button type='button' class='dropdown-item py-2' data-go='"+i[3]+"'><i class='fa-solid "+i[0]+" "+i[1]+" me-2'></i>"+esc(i[2])+"</button>"}).join(""):"<div class='p-3 small text-muted'>You're all caught up.</div>"
+}
+
+/* Events */
+document.addEventListener("click",function(e){
+  var t=e.target,g=t.closest("[data-go]");if(g){show(g.dataset.go);return}
+  var v=t.closest("[data-view]");if(v){showOrder(v.dataset.view);return}
+  var s=t.closest("[data-sec]");if(s){show(s.dataset.sec);return}
+  var a=t.closest("[data-act]");if(!a)return;var id=a.dataset.id;
+  if(a.dataset.act==="edit-p")openProduct(id);
+  else if(a.dataset.act==="del-p"){var p=P().filter(function(x){return x.id===id})[0];if(p)ask("Delete product?","\""+p.name+"\" will be removed from the storefront. This cannot be undone.",function(){var raw=arr(K.products).filter(function(x){return !(x&&String(x.id)===id)});if(save(K.products,raw)){notify("Product deleted.","success");refresh()}else notify("Could not delete.","error")})}
+  else if(a.dataset.act==="edit-c")openCat(id);
+  else if(a.dataset.act==="del-c"){
+    var c=C().filter(function(x){return x.id===id})[0];if(!c)return;
+    var n=P().filter(function(p){return norm(p.category)===norm(c.name)}).length;
+    if(n){notify("\""+c.name+"\" is used by "+n+" product(s). Reassign or delete them first.","error");return}
+    ask("Delete category?","\""+c.name+"\" will be permanently removed.",function(){var raw=arr(K.categories).filter(function(x){return !(x&&String(x.id)===id)});if(save(K.categories,raw)){notify("Category deleted.","success");refresh()}else notify("Could not delete.","error")})
+  }
+});
+$("addProd").addEventListener("click",function(){openProduct(null)});
+$("addCat").addEventListener("click",function(){openCat(null)});
+$("expProd").addEventListener("click",exportProducts);$("rExpProd").addEventListener("click",exportProducts);
+$("expOrd").addEventListener("click",function(){exportOrders(O())});
+$("rExpOrd").addEventListener("click",function(){exportOrders(rangeOrders())});
+$("rApply").addEventListener("click",function(){rReports();notify("Report updated.")});
+$("rReset").addEventListener("click",function(){$("rFrom").value="";$("rTo").value="";rReports()});
+$("chartRange").addEventListener("change",drawChart);
+$("topSearch").addEventListener("submit",function(e){e.preventDefault();var q=$("topQ").value.trim();show("products");if(q)applySearch("tblProducts",q)});
+$("menuBtn").addEventListener("click",function(){if(window.matchMedia("(min-width:992px)").matches)document.body.classList.toggle("collapsed");else document.body.classList.toggle("open")});
+$("overlay").addEventListener("click",function(){document.body.classList.remove("open")});
+function logout(){try{localStorage.removeItem(K.current)}catch(e){}notify("Signed out of the demo session.","success");setTimeout(function(){location.href="auth.html"},600)}
+$("logoutBtn").addEventListener("click",logout);$("logoutTop").addEventListener("click",logout);
+window.addEventListener("hashchange",function(){if(!$("app").classList.contains("d-none"))show(current())});
+window.addEventListener("storage",function(){if(!$("app").classList.contains("d-none"))refresh()});
+
+/* Init */
+function init(){
+  var cu=load(K.current,null);
+  if(!(cu&&typeof cu==="object"&&String(cu.role||"").toLowerCase()==="admin")){$("gate").classList.remove("d-none");document.title="Admin access | TechXpress";return}
+  $("app").classList.remove("d-none");
+  var nm=String(cu.name||"Admin");$("pfName").textContent=nm;$("pfInit").textContent=nm.charAt(0).toUpperCase()||"A";$("pfMail").textContent=String(cu.email||"");
+  var miss=[];if(!window.bootstrap)miss.push("Bootstrap (modals and menus)");if(!jq())miss.push("DataTables (plain tables used instead)");if(!window.Chart)miss.push("Chart.js (sales chart)");if(!window.toastr)miss.push("Toastr (basic alerts used instead)");
+  if(miss.length){var w=$("libWarn");w.textContent="Some libraries failed to load: "+miss.join(", ")+". Core features keep working where possible.";w.classList.remove("d-none")}
+  applySettings();show(current())
+}
+init();
+})();
+</script>
+</body>
+</html>

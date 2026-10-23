@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cart &amp; Checkout | TechXpress</title>
+<meta name="description" content="Review your TechXpress cart and complete your demo checkout.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--primary:#1769AA;--navy:#0B1220;--secondary:#2589D8;--bg:#F5F7FB;--text:#182230;--muted:#667085;--border:#E4E7EC}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+.topbar{background:var(--navy);color:#fff;font-size:.85rem;padding:.5rem 0;text-align:center}
+.topbar a{color:#9fd0f5;font-weight:600}
+header.site{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-weight:800;font-size:1.5rem;color:var(--navy)}
+.logo i{color:var(--primary)}.logo span{color:var(--primary)}
+.search-wrap{position:relative;max-width:560px;width:100%}
+.suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(16,24,40,.14);z-index:300;overflow:hidden}
+.suggest a{display:flex;align-items:center;gap:.7rem;padding:.55rem .8rem;font-size:.92rem}
+.suggest a:hover,.suggest a:focus{background:var(--bg)}
+.suggest img{width:40px;height:40px;object-fit:cover;border-radius:8px;background:#eef2f7}
+.suggest .none{padding:.8rem;color:var(--muted);font-size:.9rem}
+.form-control,.form-select{border-radius:10px;border-color:var(--border)}
+.form-control:focus,.form-select:focus{border-color:var(--secondary);box-shadow:0 0 0 .2rem rgba(37,137,216,.2)}
+.btn{border-radius:10px;transition:all .2s}
+.btn-primary{background:var(--primary);border-color:var(--primary)}
+.btn-primary:hover,.btn-primary:focus{background:var(--secondary);border-color:var(--secondary)}
+.btn-outline-primary{color:var(--primary);border-color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);border-color:var(--primary)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-navy:hover{background:#1b2a44;border-color:#1b2a44;color:#fff}
+.icon-link{position:relative;font-size:1.25rem;color:var(--navy);padding:.4rem .6rem}
+.icon-link:hover{color:var(--primary)}
+.badge-count{position:absolute;top:-4px;right:-4px;background:var(--primary);color:#fff;font-size:.68rem;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+nav.main-nav{border-top:1px solid var(--border)}
+nav.main-nav a{display:inline-block;padding:.7rem 1rem;font-weight:600;font-size:.95rem;color:var(--text);border-bottom:2px solid transparent}
+nav.main-nav a:hover,nav.main-nav a.active{color:var(--primary);border-color:var(--primary)}
+.breadcrumb{font-size:.88rem;margin-bottom:1rem}
+.breadcrumb a{color:var(--primary)}
+.breadcrumb-item.active{color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.4rem;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.section-title{font-weight:800;font-size:1.4rem}
+.page-title{font-weight:800;font-size:clamp(1.6rem,3vw,2rem)}
+.cart-item{display:grid;grid-template-columns:96px 1fr auto;gap:1rem;padding:1rem 0;border-top:1px solid var(--border);align-items:center}
+.cart-item:first-child{border-top:0;padding-top:0}
+.cart-item .thumb{width:96px;height:76px;border-radius:12px;overflow:hidden;background:#eef2f7;display:block}
+.cart-item .thumb img{width:100%;height:100%;object-fit:cover}
+.ci-name{font-weight:700;display:block}
+.ci-name:hover{color:var(--primary)}
+.brand{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.unit{color:var(--muted);font-size:.9rem}
+.line{font-weight:800;color:var(--primary);font-size:1.1rem}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden}
+.qty button{width:36px;height:38px;border:0;background:#fff;color:var(--navy)}
+.qty button:hover:not(:disabled){background:var(--bg)}
+.qty button:disabled{color:#b8c0cc}
+.qty input{width:48px;height:38px;border:0;text-align:center;font-weight:700;-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.qty input:focus{outline:none;background:#f0f7fd}
+.rm{border:0;background:transparent;color:#d92d20;font-size:.85rem;padding:.2rem 0}
+.rm:hover{text-decoration:underline}
+.stock-note{font-size:.8rem;font-weight:600}
+.stock-note.low{color:#b54708}.stock-note.out{color:#d92d20}
+.sum-row{display:flex;justify-content:space-between;padding:.35rem 0}
+.sum-row.total{border-top:1px solid var(--border);margin-top:.5rem;padding-top:.8rem;font-weight:800;font-size:1.25rem}
+.sum-row.total span:last-child{color:var(--primary)}
+.free{color:#12805c;font-weight:700}
+.disc{color:#12805c;font-weight:600}
+.ship-bar{height:8px;background:var(--border);border-radius:6px;overflow:hidden}
+.ship-bar span{display:block;height:100%;background:var(--secondary);border-radius:6px;transition:width .3s}
+.mini-item{display:flex;justify-content:space-between;gap:.6rem;font-size:.88rem;padding:.2rem 0}
+.mini-item span:first-child{color:var(--muted)}
+.deliv{border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;display:flex;gap:.8rem;align-items:flex-start;cursor:pointer;transition:.2s;height:100%}
+.deliv:hover{border-color:var(--secondary)}
+.deliv input{margin-top:.25rem}
+.deliv.sel{border-color:var(--primary);background:#f0f7fd}
+.sim-box{border:2px dashed var(--secondary);background:#f0f7fd;border-radius:14px;padding:1.1rem}
+.sim-tag{display:inline-block;background:var(--navy);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.05em;padding:.2rem .6rem;border-radius:20px}
+.confirm-icon{width:84px;height:84px;border-radius:50%;background:#e7f6ef;color:#12805c;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 1rem}
+.order-no{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:.5rem 1rem;font-weight:800;letter-spacing:.04em;color:var(--primary)}
+.sticky-sum{position:sticky;top:150px}
+footer{background:var(--navy);color:#c3cbd8;margin-top:3rem}
+footer h6{color:#fff;font-weight:700}
+footer a{display:block;color:#c3cbd8;padding:.15rem 0;font-size:.92rem}
+footer a:hover{color:#fff}
+.toast-box{position:fixed;bottom:20px;right:20px;z-index:2000}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+@media(max-width:575.98px){
+  .cart-item{grid-template-columns:76px 1fr;}
+  .cart-item .thumb{width:76px;height:62px}
+  .cart-item .line-col{grid-column:1 / -1;display:flex;justify-content:space-between;align-items:center}
+  .sticky-sum{position:static}
+}
+@media(max-width:991.98px){.sticky-sum{position:static}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="container"><i class="fa-solid fa-bolt"></i> Free shipping on orders over $99 &middot; <a href="home.html">See today's deals</a></div></div>
+
+<header class="site">
+  <div class="container py-3 d-flex align-items-center gap-3 flex-wrap">
+    <a href="index.html" class="logo"><i class="fa-solid fa-microchip"></i> Tech<span>Xpress</span></a>
+    <div class="search-wrap flex-grow-1 mx-lg-auto order-3 order-lg-2">
+      <form id="searchForm" role="search" autocomplete="off">
+        <div class="input-group">
+          <input type="search" id="searchInput" class="form-control" placeholder="Search products or brands..." aria-label="Search products" aria-controls="suggestBox" aria-expanded="false">
+          <button class="btn btn-primary" type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </form>
+      <div id="suggestBox" class="suggest d-none" role="listbox" aria-label="Search suggestions"></div>
+    </div>
+    <div class="ms-auto d-flex align-items-center order-2 order-lg-3">
+      <a href="login_registration.html" id="accountLink" class="icon-link" aria-label="Account"><i class="fa-regular fa-user"></i></a>
+      <a href="shopping.html" class="icon-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i><span class="badge-count" id="cartCount">0</span></a>
+    </div>
+  </div>
+  <nav class="main-nav" aria-label="Main navigation"><div class="container" style="overflow-x:auto;white-space:nowrap">
+    <a href="index.html">Home</a>
+    <a href="index.html">Laptops</a>
+    <a href="index.html">Smartphones</a>
+    <a href="index.html">Cameras</a>
+    <a href="index.html">Accessories</a>
+    <a href="index.html">Deals</a>
+  </div></nav>
+</header>
+
+<main class="container my-4" id="main">
+  <nav aria-label="Breadcrumb"><ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page" id="bcCurrent">Shopping Cart</li>
+  </ol></nav>
+  <h1 class="page-title mb-4" id="pageTitle">Shopping Cart</h1>
+
+  <!-- Empty state -->
+  <section id="emptyView" class="panel text-center py-5 d-none">
+    <i class="fa-solid fa-cart-shopping fa-3x text-muted mb-3"></i>
+    <h2 class="h4 fw-bold">Your cart is empty</h2>
+    <p class="text-muted mb-4">Looks like you haven't added anything yet. Browse our latest electronics and find something you'll love.</p>
+    <a href="index.html" class="btn btn-primary px-4"><i class="fa-solid fa-arrow-left me-2"></i>Continue Shopping</a>
+  </section>
+
+  <!-- Confirmation -->
+  <section id="confirmView" class="panel text-center py-5 d-none" aria-live="polite">
+    <div class="confirm-icon"><i class="fa-solid fa-check"></i></div>
+    <h2 class="h3 fw-bold">Thank you! Your demo order has been placed</h2>
+    <p class="text-muted mb-3">This is a front-end demonstration. No real payment was processed and nothing will be shipped.</p>
+    <div class="mb-4"><span class="text-muted small d-block mb-1">Order number</span><span class="order-no" id="cfNumber"></span></div>
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="text-start border rounded-3 p-3 mb-4" style="border-color:var(--border)!important">
+          <div id="cfItems" class="mb-2"></div>
+          <div class="sum-row"><span class="text-muted">Subtotal</span><span id="cfSub"></span></div>
+          <div class="sum-row"><span class="text-muted">Discount</span><span id="cfDisc"></span></div>
+          <div class="sum-row"><span class="text-muted">Shipping</span><span id="cfShip"></span></div>
+          <div class="sum-row total"><span>Total</span><span id="cfTotal"></span></div>
+          <hr>
+          <div class="small text-muted"><strong class="text-body">Deliver to:</strong> <span id="cfAddr"></span></div>
+          <div class="small text-muted"><strong class="text-body">Delivery:</strong> <span id="cfDeliv"></span></div>
+          <div class="small text-muted"><strong class="text-body">Status:</strong> <span id="cfStatus"></span></div>
+          <div class="small text-muted"><strong class="text-body">Confirmation to:</strong> <span id="cfEmail"></span> (demo, no email is sent)</div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+      <a href="customer_profile.html" class="btn btn-primary px-4"><i class="fa-solid fa-clock-rotate-left me-2"></i>View Order History</a>
+      <a href="index.html" class="btn btn-outline-primary px-4">Continue Shopping</a>
+    </div>
+  </section>
+
+  <!-- Cart + checkout -->
+  <div id="cartView" class="d-none">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <section class="panel mb-4" aria-labelledby="itemsH">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <h2 class="section-title mb-0" id="itemsH">Cart Items <span class="text-muted fs-6 fw-normal" id="itemsCount"></span></h2>
+            <button type="button" class="btn btn-outline-danger btn-sm" id="clearBtn"><i class="fa-regular fa-trash-can me-1"></i>Clear cart</button>
+          </div>
+          <div id="stockAlert" class="alert alert-warning small d-none" role="alert"></div>
+          <div id="cartList"></div>
+          <div class="pt-3 border-top" style="border-color:var(--border)!important">
+            <a href="index.html" class="btn btn-outline-primary"><i class="fa-solid fa-arrow-left me-2"></i>Continue Shopping</a>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="coH">
+          <h2 class="section-title mb-3" id="coH">Checkout</h2>
+          <form id="checkoutForm" novalidate>
+            <h3 class="h6 fw-bold mb-3">Customer details</h3>
+            <div class="row g-3 mb-4">
+              <div class="col-md-6">
+                <label for="fName" class="form-label small fw-semibold">Full name <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" id="fName" class="form-control" autocomplete="name" maxlength="80" required aria-describedby="fNameErr">
+                <div class="invalid-feedback" id="fNameErr">Please enter your full name (at least 2 characters).</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fEmail" class="form-label small fw-semibold">Email <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="email" id="fEmail" class="form-control" autocomplete="email" maxlength="120" required aria-describedby="fEmailErr">
+                <div class="invalid-feedback" id="fEmailErr">Please enter a valid email address.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fPhone" class="form-label small fw-semibold">Phone <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="tel" id="fPhone" class="form-control" autocomplete="tel" maxlength="25" required aria-describedby="fPhoneErr">
+                <div class="invalid-feedback" id="fPhoneErr">Please enter a valid phone number (7 to 15 digits).</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fPostal" class="form-label small fw-semibold">Postal code <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" id="fPostal" class="form-control" autocomplete="postal-code" maxlength="12" required aria-describedby="fPostalErr">
+                <div class="invalid-feedback" id="fPostalErr">Please enter a valid postal code (3 to 10 letters or digits).</div>
+              </div>
+              <div class="col-12">
+                <label for="fAddress" class="form-label small fw-semibold">Street address <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" id="fAddress" class="form-control" autocomplete="street-address" maxlength="150" required aria-describedby="fAddressErr">
+                <div class="invalid-feedback" id="fAddressErr">Please enter your street address (at least 5 characters).</div>
+              </div>
+              <div class="col-md-6">
+                <label for="fCity" class="form-label small fw-semibold">City <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" id="fCity" class="form-control" autocomplete="address-level2" maxlength="60" required aria-describedby="fCityErr">
+                <div class="invalid-feedback" id="fCityErr">Please enter your city.</div>
+              </div>
+            </div>
+
+            <h3 class="h6 fw-bold mb-3">Delivery method</h3>
+            <fieldset class="mb-4">
+              <legend class="visually-hidden">Choose a delivery method</legend>
+              <div class="row g-3" id="delivOptions"></div>
+            </fieldset>
+
+            <h3 class="h6 fw-bold mb-3">Payment</h3>
+            <div class="sim-box mb-4" id="payBox">
+              <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                <span class="sim-tag">SIMULATED PAYMENT</span>
+                <strong>Stripe Checkout placeholder</strong>
+              </div>
+              <p class="small mb-2">Payment is <strong>simulated</strong> in this demo. Stripe Checkout will be integrated through the future ASP.NET Core backend. <strong>Do not enter real card details</strong> anywhere on this site, and no card data is requested or stored.</p>
+              <div class="d-flex align-items-center gap-2 small text-muted"><i class="fa-brands fa-stripe fa-lg"></i> Secure hosted payment page coming with the backend integration.</div>
+              <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="fAck" required aria-describedby="fAckErr">
+                <label class="form-check-label small" for="fAck">I understand this is a demo and no real payment will be charged.</label>
+                <div class="invalid-feedback" id="fAckErr">Please acknowledge the demo notice to continue.</div>
+              </div>
+            </div>
+
+            <div id="formAlert" class="alert alert-danger small d-none" role="alert"></div>
+            <button type="submit" class="btn btn-primary btn-lg w-100" id="placeBtn"><i class="fa-solid fa-lock me-2"></i>Place Demo Order <span id="placeTotal"></span></button>
+          </form>
+        </section>
+      </div>
+
+      <div class="col-lg-4">
+        <aside class="sticky-sum" aria-label="Order summary">
+          <section class="panel">
+            <h2 class="section-title mb-3">Order Summary</h2>
+            <div id="miniItems" class="mb-3 pb-2 border-bottom" style="border-color:var(--border)!important"></div>
+
+            <label for="codeInput" class="form-label small fw-semibold">Discount code</label>
+            <div class="input-group mb-1">
+              <input type="text" id="codeInput" class="form-control" placeholder="Enter code" maxlength="20" autocomplete="off" aria-describedby="codeMsg">
+              <button type="button" class="btn btn-navy" id="codeApply">Apply</button>
+            </div>
+            <div class="small mb-3" id="codeMsg" role="status" aria-live="polite">Try the demo code <strong>TECH10</strong>.</div>
+
+            <div class="sum-row"><span class="text-muted">Subtotal</span><span id="sSub"></span></div>
+            <div class="sum-row"><span class="text-muted">Discount <span id="sCodeTag"></span></span><span id="sDisc" class="disc"></span></div>
+            <div class="sum-row"><span class="text-muted">Shipping</span><span id="sShip"></span></div>
+            <div class="sum-row total"><span>Total</span><span id="sTotal"></span></div>
+
+            <div class="mt-3">
+              <div class="small mb-1" id="shipMsg"></div>
+              <div class="ship-bar" role="progressbar" aria-label="Progress toward free shipping" aria-valuemin="0" aria-valuemax="100" id="shipBarWrap"><span id="shipBar" style="width:0"></span></div>
+            </div>
+            <p class="small text-muted mt-3 mb-0"><i class="fa-solid fa-circle-info me-1"></i>Demo store: totals are for illustration only.</p>
+          </section>
+        </aside>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4"><div class="logo text-white mb-2"><i class="fa-solid fa-microchip"></i> Tech<span style="color:#6cb6ee">Xpress</span></div>
+        <p class="small">Your destination for quality electronics. This is a front-end demo store.</p></div>
+      <div class="col-6 col-lg-2"><h6>Shop</h6><a href="index.html">Laptops</a><a href="index.html">Smartphones</a><a href="index.html">Cameras</a><a href="index.html">Accessories</a></div>
+      <div class="col-6 col-lg-2"><h6>Account</h6><a href="login_registration.html">Sign in / Register</a><a href="customer_profile.html">My Profile</a><a href="shopping.html">Cart</a></div>
+      <div class="col-lg-4"><h6>Contact</h6>
+        <div class="small"><i class="fa-solid fa-location-dot me-2"></i>123 Tech Avenue, Cairo, Egypt</div>
+        <div class="small"><i class="fa-solid fa-phone me-2"></i>+20 100 000 0000</div>
+        <div class="small"><i class="fa-solid fa-envelope me-2"></i>support@techxpress.example</div></div>
+    </div>
+    <hr class="border-secondary mt-4"><div class="small text-center">&copy; 2026 TechXpress. Demo project, no real payments or accounts.</div>
+  </div>
+</footer>
+
+<div class="toast-box"><div id="toast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true"><div class="d-flex"><div class="toast-body" id="toastMsg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div></div>
+
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content" style="border-radius:16px">
+    <div class="modal-header border-0"><h2 class="modal-title h5 fw-bold" id="confirmTitle">Clear your cart?</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+    <div class="modal-body pt-0 text-muted">All items will be removed from your cart. This cannot be undone.</div>
+    <div class="modal-footer border-0"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Keep items</button><button type="button" class="btn btn-danger" id="confirmClear">Yes, clear cart</button></div>
+  </div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+"use strict";
+var KEYS={products:"techxpress_products",cart:"techxpress_cart",users:"techxpress_users",current:"techxpress_current_user",orders:"techxpress_orders",categories:"techxpress_categories",wishlist:"techxpress_wishlist"};
+var U="https://images.unsplash.com/";
+var SAMPLE=[
+{id:"p1",name:"AeroBook Pro 14",brand:"Aero",category:"Laptops",price:1299,originalPrice:1499,rating:4.7,reviews:328,stock:12,image:U+"photo-1496181133206-80ce9b88a853?w=600&q=80",description:"14-inch ultraportable with 16GB RAM and 512GB SSD.",isNew:false},
+{id:"p2",name:"Vertex Gaming 15",brand:"Vertex",category:"Laptops",price:1099,originalPrice:null,rating:4.5,reviews:214,stock:4,image:U+"photo-1517336714731-489689fd1ca8?w=600&q=80",description:"15.6-inch 144Hz display, dedicated graphics, RGB keyboard.",isNew:true},
+{id:"p3",name:"Nova X12 5G",brand:"Nova",category:"Smartphones",price:799,originalPrice:899,rating:4.6,reviews:512,stock:25,image:U+"photo-1511707171634-5f897ff02aa9?w=600&q=80",description:"6.7-inch OLED, triple camera, all-day battery.",isNew:false},
+{id:"p4",name:"Pixa Lite 8",brand:"Pixa",category:"Smartphones",price:449,originalPrice:null,rating:4.2,reviews:187,stock:0,image:U+"photo-1598327105666-5b89351aff97?w=600&q=80",description:"Compact smartphone with a bright display and clean software.",isNew:true},
+{id:"p5",name:"Lumix Z50 Mirrorless",brand:"Lumix",category:"Cameras",price:899,originalPrice:999,rating:4.8,reviews:143,stock:7,image:U+"photo-1516035069371-29a1b244cc32?w=600&q=80",description:"24MP mirrorless camera with 4K video and fast autofocus.",isNew:false},
+{id:"p6",name:"Retro Snap DSLR",brand:"Canvas",category:"Cameras",price:649,originalPrice:null,rating:4.4,reviews:96,stock:9,image:U+"photo-1502920917128-1aa500764cbd?w=600&q=80",description:"Beginner-friendly DSLR with 18-55mm kit lens.",isNew:true},
+{id:"p7",name:"SoundMax ANC Headphones",brand:"SoundMax",category:"Headphones",price:249,originalPrice:329,rating:4.7,reviews:620,stock:30,image:U+"photo-1505740420928-5e560c06d30e?w=600&q=80",description:"Wireless over-ear with active noise cancelling, 40h battery.",isNew:false},
+{id:"p8",name:"BeatPods Studio",brand:"Beatz",category:"Headphones",price:179,originalPrice:null,rating:4.3,reviews:275,stock:3,image:U+"photo-1583394838336-acd977736f90?w=600&q=80",description:"Comfortable studio-tuned headphones with a detachable cable.",isNew:true},
+{id:"p9",name:"TabOne Air 11",brand:"Aero",category:"Tablets",price:599,originalPrice:649,rating:4.6,reviews:201,stock:15,image:U+"photo-1544244015-0df4b3ffc6b0?w=600&q=80",description:"11-inch tablet with stylus support and laminated display.",isNew:false},
+{id:"p10",name:"Slate Mini 8",brand:"Nova",category:"Tablets",price:329,originalPrice:null,rating:4.1,reviews:88,stock:18,image:U+"photo-1561154464-82e9adf32764?w=600&q=80",description:"Lightweight 8-inch tablet for reading and streaming.",isNew:true},
+{id:"p11",name:"MechKey TKL Keyboard",brand:"Vertex",category:"Accessories",price:89,originalPrice:119,rating:4.5,reviews:342,stock:40,image:U+"photo-1587829741301-dc798b83add3?w=600&q=80",description:"Hot-swappable mechanical keyboard with tactile switches.",isNew:false},
+{id:"p12",name:"GlideX Wireless Mouse",brand:"GlideX",category:"Accessories",price:49,originalPrice:null,rating:4.4,reviews:410,stock:60,image:U+"photo-1527864550417-7fd91fc51a46?w=600&q=80",description:"Ergonomic wireless mouse with 6 programmable buttons.",isNew:true},
+{id:"p13",name:"PulseBox Bluetooth Speaker",brand:"SoundMax",category:"Accessories",price:79,originalPrice:99,rating:4.3,reviews:156,stock:22,image:U+"photo-1608043152269-423dbba4e7e8?w=600&q=80",description:"Waterproof portable speaker with 12h playtime.",isNew:true},
+{id:"p14",name:"ChronoFit Smartwatch",brand:"Pixa",category:"Accessories",price:199,originalPrice:249,rating:4.2,reviews:233,stock:11,image:U+"photo-1523275335684-37898b6baf30?w=600&q=80",description:"Fitness tracking, GPS and a 7-day battery life.",isNew:false}
+];
+var CATS=[
+{id:"c1",name:"Laptops",icon:"fa-laptop"},{id:"c2",name:"Smartphones",icon:"fa-mobile-screen"},
+{id:"c3",name:"Cameras",icon:"fa-camera"},{id:"c4",name:"Headphones",icon:"fa-headphones"},
+{id:"c5",name:"Tablets",icon:"fa-tablet-screen-button"},{id:"c6",name:"Accessories",icon:"fa-keyboard"}];
+
+/* Business rules */
+var FREE_SHIP_THRESHOLD=99;
+var DISCOUNT_CODES={TECH10:{rate:0.10,label:"10% off"}};
+var DELIVERY=[
+  {id:"standard",name:"Standard delivery",desc:"3 to 5 business days",fee:9.99,icon:"fa-truck"},
+  {id:"express",name:"Express delivery",desc:"1 to 2 business days",fee:19.99,icon:"fa-bolt"},
+  {id:"pickup",name:"Store pickup",desc:"Ready in 24 hours, Cairo store",fee:0,icon:"fa-store"}
+];
+
+/* Safe storage helpers */
+function load(key,fb){try{var r=localStorage.getItem(key);if(r===null)return fb;var v=JSON.parse(r);return v===null?fb:v}catch(e){return fb}}
+function save(key,v){try{localStorage.setItem(key,JSON.stringify(v));return true}catch(e){return false}}
+function initKey(key,val){try{if(localStorage.getItem(key)===null)localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+function arr(key){var v=load(key,[]);return Array.isArray(v)?v:[]}
+initKey(KEYS.products,SAMPLE);initKey(KEYS.categories,CATS);
+initKey(KEYS.cart,[]);initKey(KEYS.users,[]);initKey(KEYS.orders,[]);initKey(KEYS.wishlist,[]);initKey(KEYS.current,null);
+
+var $=function(id){return document.getElementById(id)};
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined&&text!==null)e.textContent=text;return e}
+function num(v,d){var n=Number(v);return isFinite(n)?n:d}
+function r2(n){return Math.round((n+Number.EPSILON)*100)/100}
+function money(n){return "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function detailUrl(id){return "product-details.html?id="+encodeURIComponent(id)}
+
+function fallbackSrc(label){
+  var svg="<svg xmlns='http://www.w3.org/2000/svg' width='600' height='450'><rect width='100%' height='100%' fill='#E4EDF7'/><text x='50%' y='50%' fill='#1769AA' font-family='Arial' font-size='26' font-weight='700' text-anchor='middle'>"+String(label||"TechXpress").replace(/[<>&'"]/g,"")+"</text></svg>";
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function safeImg(src,alt,label){
+  var i=document.createElement("img");i.alt=alt;i.loading="lazy";
+  i.addEventListener("error",function(){if(i.dataset.failed==="1")return;i.dataset.failed="1";i.src=fallbackSrc(label)});
+  i.src=src||fallbackSrc(label);return i
+}
+
+var toastEl=$("toast"),toast=window.bootstrap?new bootstrap.Toast(toastEl,{delay:2600}):null;
+function notify(msg,type){
+  toastEl.classList.remove("text-bg-dark","text-bg-success","text-bg-danger");
+  toastEl.classList.add(type==="error"?"text-bg-danger":type==="success"?"text-bg-success":"text-bg-dark");
+  $("toastMsg").textContent=msg;if(toast)toast.show()
+}
+
+/* Products + cart */
+var products=arr(KEYS.products).filter(function(p){return p&&p.id!==undefined&&p.id!==null&&typeof p.price==="number"});
+if(!products.length)products=SAMPLE.slice();
+function findProduct(id){return products.find(function(p){return String(p.id)===String(id)})||null}
+
+function readCart(){
+  var out=[];
+  arr(KEYS.cart).forEach(function(c){
+    if(!c||c.productId===undefined||c.productId===null)return;
+    var q=Math.floor(num(c.quantity,0));if(q<1)return;
+    var ex=out.find(function(o){return String(o.productId)===String(c.productId)});
+    if(ex){ex.quantity+=q}else out.push({productId:c.productId,quantity:q,name:c.name,brand:c.brand,price:c.price,image:c.image,stock:c.stock})
+  });
+  return out
+}
+var cart=readCart();
+
+/* Merge cart lines with latest product data */
+function lines(){
+  return cart.map(function(c){
+    var p=findProduct(c.productId);
+    var stock=p?Math.max(0,Math.floor(num(p.stock,0))):Math.max(0,Math.floor(num(c.stock,0)));
+    return {
+      productId:c.productId,quantity:c.quantity,
+      name:String((p&&p.name)||c.name||"Unknown product"),
+      brand:String((p&&p.brand)||c.brand||""),
+      price:Math.max(0,num(p?p.price:c.price,0)),
+      image:String((p&&p.image)||c.image||""),
+      stock:stock,exists:!!p||c.name!==undefined
+    }
+  })
+}
+/* Normalize quantities to stock, persist, return notes */
+function syncCart(){
+  var changed=false,notes=[];
+  var next=[];
+  cart.forEach(function(c){
+    var p=findProduct(c.productId);
+    if(p){
+      var stock=Math.max(0,Math.floor(num(p.stock,0)));
+      if(stock<=0){notes.push(String(p.name)+" is now out of stock and was removed.");changed=true;return}
+      if(c.quantity>stock){notes.push("Quantity of "+String(p.name)+" reduced to "+stock+" (available stock).");c.quantity=stock;changed=true}
+      c.name=p.name;c.brand=p.brand;c.price=p.price;c.image=p.image;c.stock=stock
+    }
+    next.push(c)
+  });
+  cart=next;
+  if(changed||JSON.stringify(arr(KEYS.cart).length)!==JSON.stringify(cart.length)||true){persistCart()}
+  return notes
+}
+function persistCart(){
+  save(KEYS.cart,cart.map(function(c){return {productId:c.productId,quantity:c.quantity,name:c.name,brand:c.brand,price:c.price,image:c.image,stock:c.stock}}))
+}
+function updateBadge(){$("cartCount").textContent=cart.reduce(function(s,i){return s+i.quantity},0)}
+
+/* Totals */
+var appliedCode=null;
+var delivery="standard";
+function totals(){
+  var ls=lines(),sub=0;
+  ls.forEach(function(l){sub+=l.price*l.quantity});sub=r2(sub);
+  var rate=appliedCode&&DISCOUNT_CODES[appliedCode]?DISCOUNT_CODES[appliedCode].rate:0;
+  var disc=r2(Math.min(sub,sub*rate));
+  var after=r2(Math.max(0,sub-disc));
+  var d=DELIVERY.find(function(x){return x.id===delivery})||DELIVERY[0];
+  var ship=0;
+  if(ls.length&&d.fee>0){ship=after>=FREE_SHIP_THRESHOLD&&d.id==="standard"?0:d.fee}
+  var total=r2(Math.max(0,after+ship));
+  return {lines:ls,subtotal:sub,discount:disc,afterDiscount:after,shipping:ship,total:total,delivery:d}
+}
+
+/* Render cart */
+function renderCart(){
+  var ls=lines(),list=$("cartList");list.replaceChildren();
+  var count=cart.reduce(function(s,i){return s+i.quantity},0);
+  $("itemsCount").textContent="("+count+" item"+(count===1?"":"s")+")";
+  ls.forEach(function(l){
+    var row=el("div","cart-item");
+    var a=el("a","thumb");a.href=detailUrl(l.productId);a.setAttribute("aria-label","View "+l.name);a.appendChild(safeImg(l.image,l.name,l.name));row.appendChild(a);
+    var info=el("div");
+    if(l.brand)info.appendChild(el("div","brand",l.brand));
+    var n=el("a","ci-name",l.name);n.href=detailUrl(l.productId);info.appendChild(n);
+    info.appendChild(el("div","unit",money(l.price)+" each"));
+    if(l.stock<=5&&l.stock>0)info.appendChild(el("div","stock-note low","Only "+l.stock+" left in stock"));
+    if(l.quantity>=l.stock&&l.stock>5)info.appendChild(el("div","stock-note low","Maximum available quantity"));
+    var rm=el("button","rm");rm.type="button";rm.appendChild(el("i","fa-regular fa-trash-can me-1"));rm.appendChild(document.createTextNode("Remove"));
+    rm.setAttribute("aria-label","Remove "+l.name+" from cart");
+    rm.addEventListener("click",function(){removeItem(l.productId,l.name)});info.appendChild(rm);
+    row.appendChild(info);
+    var lc=el("div","line-col text-end");
+    var q=el("div","qty");q.setAttribute("role","group");q.setAttribute("aria-label","Quantity for "+l.name);
+    var minus=el("button");minus.type="button";minus.setAttribute("aria-label","Decrease quantity of "+l.name);minus.appendChild(el("i","fa-solid fa-minus"));minus.disabled=l.quantity<=1;
+    var inp=document.createElement("input");inp.type="number";inp.min="1";inp.max=String(l.stock);inp.value=String(l.quantity);inp.setAttribute("aria-label","Quantity of "+l.name);inp.inputMode="numeric";
+    var plus=el("button");plus.type="button";plus.setAttribute("aria-label","Increase quantity of "+l.name);plus.appendChild(el("i","fa-solid fa-plus"));plus.disabled=l.quantity>=l.stock;
+    minus.addEventListener("click",function(){setQty(l.productId,l.quantity-1,l.name)});
+    plus.addEventListener("click",function(){setQty(l.productId,l.quantity+1,l.name)});
+    inp.addEventListener("change",function(){setQty(l.productId,parseInt(inp.value,10),l.name)});
+    q.appendChild(minus);q.appendChild(inp);q.appendChild(plus);lc.appendChild(q);
+    lc.appendChild(el("div","line mt-2",money(r2(l.price*l.quantity))));
+    row.appendChild(lc);list.appendChild(row)
+  });
+  renderSummary()
+}
+
+function renderSummary(){
+  var t=totals();
+  var mini=$("miniItems");mini.replaceChildren();
+  t.lines.forEach(function(l){
+    var r=el("div","mini-item");r.appendChild(el("span",null,l.quantity+" \u00d7 "+l.name));r.appendChild(el("span",null,money(r2(l.price*l.quantity))));mini.appendChild(r)
+  });
+  $("sSub").textContent=money(t.subtotal);
+  var tag=$("sCodeTag");tag.textContent=appliedCode?"("+appliedCode+")":"";
+  $("sDisc").textContent=t.discount>0?"-"+money(t.discount):money(0);
+  var ship=$("sShip");
+  if(t.shipping===0&&t.lines.length){ship.textContent="FREE";ship.className="free"}
+  else{ship.textContent=money(t.shipping);ship.className=""}
+  $("sTotal").textContent=money(t.total);
+  $("placeTotal").textContent="\u00b7 "+money(t.total);
+  var remaining=r2(FREE_SHIP_THRESHOLD-t.afterDiscount),pct=Math.max(0,Math.min(100,Math.round(t.afterDiscount/FREE_SHIP_THRESHOLD*100)));
+  $("shipBar").style.width=pct+"%";$("shipBarWrap").setAttribute("aria-valuenow",String(pct));
+  var sm=$("shipMsg");
+  if(delivery==="pickup")sm.textContent="Store pickup has no shipping fee.";
+  else if(delivery==="express")sm.textContent="Express delivery always carries a "+money(DELIVERY[1].fee)+" fee. Free shipping applies to Standard delivery on orders of "+money(FREE_SHIP_THRESHOLD)+" or more.";
+  else if(remaining>0)sm.textContent="Add "+money(remaining)+" more to unlock free standard shipping.";
+  else sm.textContent="You've unlocked free standard shipping!";
+  renderDelivery()
+}
+
+/* Delivery options */
+function renderDelivery(){
+  var box=$("delivOptions");
+  if(!box.children.length){
+    DELIVERY.forEach(function(d){
+      var col=el("div","col-md-4"),lab=el("label","deliv");lab.htmlFor="dm_"+d.id;
+      var r=document.createElement("input");r.type="radio";r.name="delivery";r.id="dm_"+d.id;r.value=d.id;r.className="form-check-input";
+      r.addEventListener("change",function(){delivery=d.id;renderSummary()});
+      var body=el("div");var t=el("div","fw-semibold");t.appendChild(el("i","fa-solid "+d.icon+" me-2 text-primary"));t.appendChild(document.createTextNode(d.name));
+      body.appendChild(t);body.appendChild(el("div","small text-muted",d.desc));
+      var fee=el("div","small fw-bold mt-1");fee.dataset.fee=d.id;body.appendChild(fee);
+      lab.appendChild(r);lab.appendChild(body);col.appendChild(lab);box.appendChild(col)
+    })
+  }
+  var t=totals();
+  DELIVERY.forEach(function(d){
+    var radio=$("dm_"+d.id);radio.checked=(d.id===delivery);radio.closest(".deliv").classList.toggle("sel",d.id===delivery);
+    var f=box.querySelector('[data-fee="'+d.id+'"]');
+    if(d.fee===0)f.textContent="Free";
+    else if(d.id==="standard"&&t.afterDiscount>=FREE_SHIP_THRESHOLD)f.textContent="Free (over "+money(FREE_SHIP_THRESHOLD)+")";
+    else f.textContent=money(d.fee)
+  })
+}
+
+/* Cart actions */
+function setQty(id,q,name){
+  var c=cart.find(function(x){return String(x.productId)===String(id)});if(!c)return;
+  var p=findProduct(id),stock=p?Math.max(0,Math.floor(num(p.stock,0))):Math.max(0,Math.floor(num(c.stock,0)));
+  if(isNaN(q)||q<1){q=1;notify("Quantity cannot be less than 1.","error")}
+  if(q>stock){q=stock;notify("Only "+stock+" unit"+(stock===1?"":"s")+" of "+name+" available.","error")}
+  c.quantity=q;persistCart();updateBadge();renderCart()
+}
+function removeItem(id,name){
+  cart=cart.filter(function(c){return String(c.productId)!==String(id)});
+  persistCart();updateBadge();notify(name+" removed from cart");showView()
+}
+function clearCart(){cart=[];persistCart();updateBadge();appliedCode=null;showView();notify("Cart cleared")}
+
+/* Views */
+function showView(){
+  var has=cart.length>0;
+  $("cartView").classList.toggle("d-none",!has);
+  $("emptyView").classList.toggle("d-none",has);
+  $("confirmView").classList.add("d-none");
+  $("pageTitle").classList.remove("d-none");
+  $("pageTitle").textContent="Shopping Cart";$("bcCurrent").textContent="Shopping Cart";
+  if(has)renderCart();
+  updateBadge()
+}
+
+/* Discount code */
+function applyCode(){
+  var raw=$("codeInput").value.trim().toUpperCase(),msg=$("codeMsg"),inp=$("codeInput");
+  inp.classList.remove("is-valid","is-invalid");
+  if(!raw){msg.className="small mb-3 text-danger";msg.textContent="Please enter a discount code.";inp.classList.add("is-invalid");return}
+  if(DISCOUNT_CODES[raw]){
+    appliedCode=raw;inp.classList.add("is-valid");msg.className="small mb-3 text-success";
+    msg.textContent="Code "+raw+" applied: "+DISCOUNT_CODES[raw].label+" on eligible merchandise.";
+    notify("Discount code applied","success")
+  }else{
+    appliedCode=null;inp.classList.add("is-invalid");msg.className="small mb-3 text-danger";
+    msg.textContent="Invalid code. Please check it and try again.";notify("Invalid discount code","error")
+  }
+  renderSummary()
+}
+
+/* Validation */
+var RULES={
+  fName:{test:function(v){return v.length>=2&&/[A-Za-z\u00C0-\u024F\u0600-\u06FF]/.test(v)}},
+  fEmail:{test:function(v){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)}},
+  fPhone:{test:function(v){var d=v.replace(/\D/g,"");return /^[+()\d\s\-.]+$/.test(v)&&d.length>=7&&d.length<=15}},
+  fAddress:{test:function(v){return v.length>=5}},
+  fCity:{test:function(v){return v.length>=2}},
+  fPostal:{test:function(v){return /^[A-Za-z0-9][A-Za-z0-9\s\-]{1,8}[A-Za-z0-9]$/.test(v)}}
+};
+function validateField(id){
+  var inp=$(id),ok=RULES[id].test(inp.value.trim());
+  inp.classList.toggle("is-invalid",!ok);inp.classList.toggle("is-valid",ok);
+  inp.setAttribute("aria-invalid",ok?"false":"true");return ok
+}
+function validateAck(){
+  var c=$("fAck"),ok=c.checked;c.classList.toggle("is-invalid",!ok);c.setAttribute("aria-invalid",ok?"false":"true");return ok
+}
+
+/* Order creation */
+function orderNumber(){
+  var d=new Date(),pad=function(n){return String(n).padStart(2,"0")};
+  var base="TX-"+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"-";
+  var existing=arr(KEYS.orders).map(function(o){return o&&String(o.orderNumber||o.id||"")});
+  var n,tries=0;
+  do{
+    var rnd=Math.floor(Math.random()*0xFFFFFF).toString(36).toUpperCase().padStart(5,"0").slice(0,5);
+    n=base+rnd;tries++
+  }while(existing.indexOf(n)>-1&&tries<20);
+  return n
+}
+function currentUserInfo(){
+  var cu=load(KEYS.current,null);
+  if(!cu||typeof cu!=="object")return null;
+  return {id:cu.id!==undefined?cu.id:null,email:typeof cu.email==="string"?cu.email:null,name:typeof cu.name==="string"?cu.name:(typeof cu.fullName==="string"?cu.fullName:null)}
+}
+function placeOrder(){
+  var formAlert=$("formAlert");formAlert.classList.add("d-none");
+  var ok=true,firstBad=null;
+  Object.keys(RULES).forEach(function(id){if(!validateField(id)){ok=false;if(!firstBad)firstBad=$(id)}});
+  if(!validateAck()){ok=false;if(!firstBad)firstBad=$("fAck")}
+  if(!ok){
+    formAlert.textContent="Please correct the highlighted fields before placing your order.";formAlert.classList.remove("d-none");
+    if(firstBad)firstBad.focus();notify("Please fix the highlighted fields.","error");return
+  }
+  /* Re-validate cart against latest stock */
+  products=arr(KEYS.products).filter(function(p){return p&&p.id!==undefined&&p.id!==null&&typeof p.price==="number"});
+  if(!products.length)products=SAMPLE.slice();
+  var notes=syncCart();
+  if(!cart.length){showView();notify("Your cart is empty or items are no longer available.","error");return}
+  if(notes.length){
+    renderCart();showStockNotes(notes);
+    formAlert.textContent="Your cart changed because of stock updates. Please review it and place your order again.";formAlert.classList.remove("d-none");
+    notify("Cart updated to match stock.","error");return
+  }
+  var t=totals();
+  if(!isFinite(t.total)||t.total<0||!t.lines.length){notify("Unable to calculate a valid total.","error");return}
+  var user=currentUserInfo();
+  var order={
+    id:orderNumber(),orderNumber:null,
+    date:new Date().toISOString(),status:"Pending",
+    userId:user?user.id:null,userEmail:user?user.email:null,
+    customer:{
+      name:$("fName").value.trim(),email:$("fEmail").value.trim(),phone:$("fPhone").value.trim(),
+      address:$("fAddress").value.trim(),city:$("fCity").value.trim(),postalCode:$("fPostal").value.trim()
+    },
+    delivery:{method:t.delivery.id,label:t.delivery.name,fee:t.shipping},
+    items:t.lines.map(function(l){return {productId:l.productId,name:l.name,brand:l.brand,image:l.image,quantity:l.quantity,price:l.price,lineTotal:r2(l.price*l.quantity)}}),
+    subtotal:t.subtotal,discount:t.discount,discountCode:appliedCode,shipping:t.shipping,total:t.total,
+    payment:{method:"Simulated (demo)",status:"Not charged"}
+  };
+  order.orderNumber=order.id;
+  var orders=arr(KEYS.orders);orders.push(order);
+  if(!save(KEYS.orders,orders)){
+    formAlert.textContent="Your browser could not save the demo order (storage may be full or disabled). Your cart was not cleared.";formAlert.classList.remove("d-none");
+    notify("Could not save the order.","error");return
+  }
+  /* Success: decrement demo stock, then clear cart */
+  try{
+    var all=arr(KEYS.products),changed=false;
+    order.items.forEach(function(it){
+      var p=all.find(function(x){return x&&String(x.id)===String(it.productId)});
+      if(p&&typeof p.stock==="number"){p.stock=Math.max(0,p.stock-it.quantity);changed=true}
+    });
+    if(changed)save(KEYS.products,all)
+  }catch(e){}
+  cart=[];persistCart();updateBadge();showConfirmation(order)
+}
+function showStockNotes(notes){
+  var a=$("stockAlert");a.replaceChildren();
+  notes.forEach(function(n){a.appendChild(el("div",null,n))});a.classList.remove("d-none")
+}
+
+/* Confirmation */
+function showConfirmation(o){
+  $("cartView").classList.add("d-none");$("emptyView").classList.add("d-none");$("confirmView").classList.remove("d-none");
+  $("pageTitle").classList.add("d-none");$("bcCurrent").textContent="Order Confirmation";
+  $("cfNumber").textContent=o.orderNumber;
+  var box=$("cfItems");box.replaceChildren();
+  o.items.forEach(function(it){var r=el("div","mini-item");r.appendChild(el("span",null,it.quantity+" \u00d7 "+it.name));r.appendChild(el("span",null,money(it.lineTotal)));box.appendChild(r)});
+  $("cfSub").textContent=money(o.subtotal);
+  $("cfDisc").textContent=o.discount>0?"-"+money(o.discount)+(o.discountCode?" ("+o.discountCode+")":""):money(0);
+  $("cfShip").textContent=o.shipping===0?"FREE":money(o.shipping);
+  $("cfTotal").textContent=money(o.total);
+  $("cfAddr").textContent=o.customer.name+", "+o.customer.address+", "+o.customer.city+" "+o.customer.postalCode;
+  $("cfDeliv").textContent=o.delivery.label;
+  $("cfStatus").textContent=o.status;
+  $("cfEmail").textContent=o.customer.email;
+  window.scrollTo({top:0,behavior:"smooth"});
+  $("confirmView").setAttribute("tabindex","-1");$("confirmView").focus({preventScroll:true})
+}
+
+/* Header search suggestions (same behavior as other pages) */
+var sInput=$("searchInput"),sBox=$("suggestBox");
+function matches(q){
+  q=q.trim().toLowerCase();if(!q)return[];
+  return products.filter(function(p){return (String(p.name)+" "+String(p.brand)).toLowerCase().indexOf(q)>-1})
+}
+function closeSuggest(){sBox.classList.add("d-none");sInput.setAttribute("aria-expanded","false")}
+function showSuggest(){
+  var q=sInput.value,list=matches(q).slice(0,6);sBox.replaceChildren();
+  if(!q.trim()){closeSuggest();return}
+  if(!list.length)sBox.appendChild(el("div","none","No products found for \""+q.trim().slice(0,40)+"\""));
+  list.forEach(function(p){
+    var a=el("a");a.href=detailUrl(p.id);a.setAttribute("role","option");
+    a.appendChild(safeImg(p.image,p.name,p.name));
+    var d=el("div");d.appendChild(el("div","fw-semibold",String(p.name)));d.appendChild(el("div","small text-muted",String(p.brand)+" \u00b7 "+money(p.price)));
+    a.appendChild(d);sBox.appendChild(a)
+  });
+  sBox.classList.remove("d-none");sInput.setAttribute("aria-expanded","true")
+}
+sInput.addEventListener("input",showSuggest);
+sInput.addEventListener("focus",showSuggest);
+sInput.addEventListener("keydown",function(e){
+  if(e.key==="Escape")closeSuggest();
+  if(e.key==="ArrowDown"){var f=sBox.querySelector("a");if(f){e.preventDefault();f.focus()}}
+});
+sBox.addEventListener("keydown",function(e){
+  var links=Array.prototype.slice.call(sBox.querySelectorAll("a")),i=links.indexOf(document.activeElement);
+  if(e.key==="ArrowDown"&&i<links.length-1){e.preventDefault();links[i+1].focus()}
+  else if(e.key==="ArrowUp"){e.preventDefault();if(i>0)links[i-1].focus();else sInput.focus()}
+  else if(e.key==="Escape"){closeSuggest();sInput.focus()}
+});
+document.addEventListener("click",function(e){if(!e.target.closest(".search-wrap"))closeSuggest()});
+$("searchForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  if(!sInput.value.trim()){notify("Type a product name or brand to search.","error");return}
+  var m=matches(sInput.value);
+  if(m.length)window.location.href=detailUrl(m[0].id);else notify("No products match your search.","error")
+});
+
+/* Wire events */
+var modalEl=$("confirmModal"),modal=window.bootstrap?new bootstrap.Modal(modalEl):null;
+$("clearBtn").addEventListener("click",function(){
+  if(modal)modal.show();else if(window.confirm("Clear your cart? This cannot be undone."))clearCart()
+});
+$("confirmClear").addEventListener("click",function(){if(modal)modal.hide();clearCart()});
+$("codeApply").addEventListener("click",applyCode);
+$("codeInput").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();applyCode()}});
+$("checkoutForm").addEventListener("submit",function(e){e.preventDefault();placeOrder()});
+Object.keys(RULES).forEach(function(id){
+  $(id).addEventListener("blur",function(){if($(id).value.trim()!==""||$(id).classList.contains("is-invalid"))validateField(id)});
+  $(id).addEventListener("input",function(){if($(id).classList.contains("is-invalid"))validateField(id)})
+});
+$("fAck").addEventListener("change",validateAck);
+
+/* Init */
+function init(){
+  var notes=syncCart();
+  var cu=load(KEYS.current,null);
+  $("accountLink").href=(cu&&typeof cu==="object")?"profile.html":"auth.html";
+  if(cu&&typeof cu==="object"){
+    var nm=cu.name||cu.fullName||"";if(typeof nm==="string"&&nm)$("fName").value=nm.slice(0,80);
+    if(typeof cu.email==="string")$("fEmail").value=cu.email.slice(0,120);
+    if(typeof cu.phone==="string")$("fPhone").value=cu.phone.slice(0,25)
+  }
+  showView();
+  if(notes.length&&cart.length)showStockNotes(notes);
+  else if(notes.length)notify(notes[0],"error")
+}
+init();
+window.addEventListener("storage",function(e){
+  if(e.key===KEYS.cart&&!$("confirmView").classList.contains("d-none"))return;
+  if(e.key===KEYS.cart||e.key===KEYS.products||e.key===null){
+    products=arr(KEYS.products).filter(function(p){return p&&p.id!==undefined&&p.id!==null&&typeof p.price==="number"});
+    if(!products.length)products=SAMPLE.slice();
+    cart=readCart();syncCart();
+    if($("confirmView").classList.contains("d-none"))showView()
+  }
+});
+})();
+</script>
+</body>
+</html>

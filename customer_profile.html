@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Account | TechXpress</title>
+<meta name="description" content="Manage your TechXpress demo profile, order history and wishlist.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--primary:#1769AA;--navy:#0B1220;--secondary:#2589D8;--bg:#F5F7FB;--text:#182230;--muted:#667085;--border:#E4E7EC}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+.topbar{background:var(--navy);color:#fff;font-size:.85rem;padding:.5rem 0;text-align:center}
+.topbar a{color:#9fd0f5;font-weight:600}
+header.site{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-weight:800;font-size:1.5rem;color:var(--navy)}
+.logo i{color:var(--primary)}.logo span{color:var(--primary)}
+.search-wrap{position:relative;max-width:560px;width:100%}
+.suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(16,24,40,.14);z-index:300;overflow:hidden}
+.suggest a{display:flex;align-items:center;gap:.7rem;padding:.55rem .8rem;font-size:.92rem}
+.suggest a:hover,.suggest a:focus{background:var(--bg)}
+.suggest img{width:40px;height:40px;object-fit:cover;border-radius:8px;background:#eef2f7}
+.suggest .none{padding:.8rem;color:var(--muted);font-size:.9rem}
+.form-control,.form-select{border-radius:10px;border-color:var(--border)}
+.form-control:focus,.form-select:focus{border-color:var(--secondary);box-shadow:0 0 0 .2rem rgba(37,137,216,.2)}
+.btn{border-radius:10px;transition:all .2s}
+.btn-primary{background:var(--primary);border-color:var(--primary)}
+.btn-primary:hover,.btn-primary:focus{background:var(--secondary);border-color:var(--secondary)}
+.btn-outline-primary{color:var(--primary);border-color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);border-color:var(--primary)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-navy:hover{background:#1b2a44;border-color:#1b2a44;color:#fff}
+.icon-link{position:relative;font-size:1.25rem;color:var(--navy);padding:.4rem .6rem}
+.icon-link:hover{color:var(--primary)}
+.badge-count{position:absolute;top:-4px;right:-4px;background:var(--primary);color:#fff;font-size:.68rem;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+nav.main-nav{border-top:1px solid var(--border)}
+nav.main-nav a{display:inline-block;padding:.7rem 1rem;font-weight:600;font-size:.95rem;color:var(--text);border-bottom:2px solid transparent}
+nav.main-nav a:hover,nav.main-nav a.active{color:var(--primary);border-color:var(--primary)}
+.breadcrumb{font-size:.88rem;margin-bottom:1rem}
+.breadcrumb a{color:var(--primary)}
+.breadcrumb-item.active{color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.4rem;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.section-title{font-weight:800;font-size:1.4rem}
+.page-title{font-weight:800;font-size:clamp(1.6rem,3vw,2rem)}
+.avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:2rem;margin:0 auto .8rem;flex:none}
+.side-nav button{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;border:0;background:transparent;padding:.7rem .9rem;border-radius:10px;font-weight:600;color:var(--text);transition:.2s}
+.side-nav button i{width:1.2rem;color:var(--muted);text-align:center}
+.side-nav button:hover{background:var(--bg)}
+.side-nav button.active{background:#e8f2fb;color:var(--primary)}
+.side-nav button.active i{color:var(--primary)}
+.side-nav button.danger{color:#d92d20}
+.side-nav button.danger i{color:#d92d20}
+.side-nav .count{margin-left:auto;background:var(--bg);color:var(--muted);font-size:.72rem;font-weight:700;border-radius:20px;padding:.05rem .5rem}
+.stat{background:var(--bg);border-radius:14px;padding:1rem;text-align:center;height:100%}
+.stat .n{font-weight:800;font-size:1.5rem;color:var(--primary)}
+.stat .l{font-size:.8rem;color:var(--muted);font-weight:600}
+.info-row{display:flex;justify-content:space-between;gap:1rem;padding:.7rem 0;border-top:1px solid var(--border)}
+.info-row:first-child{border-top:0}
+.info-row span:first-child{color:var(--muted);font-weight:600}
+.info-row span:last-child{text-align:right;word-break:break-word}
+.order-card{border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:1rem;transition:.2s}
+.order-card:hover{border-color:var(--secondary);box-shadow:0 6px 18px rgba(16,24,40,.08)}
+.order-no{font-weight:800;color:var(--primary)}
+.o-thumb{width:46px;height:38px;border-radius:8px;object-fit:cover;background:#eef2f7;border:1px solid var(--border)}
+.status{display:inline-flex;align-items:center;gap:.35rem;font-size:.76rem;font-weight:700;padding:.25rem .65rem;border-radius:20px;border:1px solid transparent}
+.st-pending{background:#fff4e0;color:#b54708;border-color:#f7d9a0}
+.st-processing{background:#e6f0fb;color:#1769AA;border-color:#b9d6f2}
+.st-shipped{background:#efe9fb;color:#5b3bb0;border-color:#d3c5f3}
+.st-delivered{background:#e7f6ef;color:#12805c;border-color:#b5e3cf}
+.st-cancelled{background:#fdeceb;color:#d92d20;border-color:#f6c3bf}
+.pay-ok{background:#e7f6ef;color:#12805c;border-color:#b5e3cf}
+.pay-none{background:#f2f4f7;color:#475467;border-color:#e4e7ec}
+.brand{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700}
+.card-p{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;height:100%;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(16,24,40,.06);transition:.2s}
+.card-p:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(16,24,40,.12)}
+.card-p .img{aspect-ratio:4/3;background:#eef2f7;display:block}
+.card-p .img img{width:100%;height:100%;object-fit:cover}
+.card-p .body{padding:1rem;display:flex;flex-direction:column;flex:1}
+.pname{font-weight:700;margin:.2rem 0}
+.pname:hover{color:var(--primary)}
+.price{font-weight:800;font-size:1.15rem;color:var(--primary)}
+.old{color:var(--muted);text-decoration:line-through;font-size:.88rem;margin-left:.4rem}
+.in{color:#12805c}.low{color:#b54708}.out{color:#d92d20}
+.sum-row{display:flex;justify-content:space-between;padding:.3rem 0}
+.sum-row.total{border-top:1px solid var(--border);margin-top:.4rem;padding-top:.7rem;font-weight:800;font-size:1.15rem}
+.sum-row.total span:last-child{color:var(--primary)}
+.disc{color:#12805c;font-weight:600}
+.free{color:#12805c;font-weight:700}
+.sim-tag{display:inline-block;background:var(--navy);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.05em;padding:.15rem .55rem;border-radius:20px}
+.notice{background:#fff8e6;border:1px solid #f3dca0;border-radius:12px;padding:.7rem 1rem;font-size:.82rem;color:#6b4e00}
+footer{background:var(--navy);color:#c3cbd8;margin-top:3rem}
+footer h6{color:#fff;font-weight:700}
+footer a{display:block;color:#c3cbd8;padding:.15rem 0;font-size:.92rem}
+footer a:hover{color:#fff}
+.toast-box{position:fixed;bottom:20px;right:20px;z-index:2000}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+@media(max-width:991.98px){.side-nav{display:flex;flex-wrap:wrap;gap:.3rem}.side-nav button{width:auto;flex:1 1 auto;justify-content:center}.side-nav .count{margin-left:.3rem}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="container"><i class="fa-solid fa-bolt"></i> Free shipping on orders over $99 &middot; <a href="index.html#catalog">See today's deals</a></div></div>
+
+<header class="site">
+  <div class="container py-3 d-flex align-items-center gap-3 flex-wrap">
+    <a href="index.html" class="logo"><i class="fa-solid fa-microchip"></i> Tech<span>Xpress</span></a>
+    <div class="search-wrap flex-grow-1 mx-lg-auto order-3 order-lg-2">
+      <form id="searchForm" role="search" autocomplete="off">
+        <div class="input-group">
+          <input type="search" id="searchInput" class="form-control" placeholder="Search products or brands..." aria-label="Search products" aria-controls="suggestBox" aria-expanded="false">
+          <button class="btn btn-primary" type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </form>
+      <div id="suggestBox" class="suggest d-none" role="listbox" aria-label="Search suggestions"></div>
+    </div>
+    <div class="ms-auto d-flex align-items-center order-2 order-lg-3">
+      <a href="customer_profile.html" id="accountLink" class="icon-link" aria-label="Account" aria-current="page"><i class="fa-solid fa-user"></i></a>
+      <a href="shopping.html" class="icon-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i><span class="badge-count" id="cartCount">0</span></a>
+    </div>
+  </div>
+  <nav class="main-nav" aria-label="Main navigation"><div class="container" style="overflow-x:auto;white-space:nowrap">
+    <a href="index.html">Home</a>
+    <a href="index.html">Laptops</a>
+    <a href="index.html">Smartphones</a>
+    <a href="home.html">Cameras</a>
+    <a href="index.html">Accessories</a>
+    <a href="index.html">Deals</a>
+  </div></nav>
+</header>
+
+<main class="container my-4" id="main">
+  <nav aria-label="Breadcrumb"><ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">My Account</li>
+  </ol></nav>
+
+  <!-- Signed-out prompt -->
+  <section id="signedOut" class="panel text-center py-5 d-none">
+    <i class="fa-regular fa-circle-user fa-3x text-muted mb-3"></i>
+    <h1 class="h3 fw-bold">Please sign in to view your account</h1>
+    <p class="text-muted mb-4">Sign in or create a demo account to see your profile, order history and wishlist.</p>
+    <div class="d-flex flex-wrap justify-content-center gap-2">
+      <a href="login_registration.html" class="btn btn-primary px-4"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign in / Register</a>
+      <a href="index.html" class="btn btn-outline-primary px-4">Continue Shopping</a>
+    </div>
+  </section>
+
+  <!-- Account area -->
+  <div id="account" class="d-none">
+    <div class="row g-4">
+      <div class="col-lg-3">
+        <aside class="panel text-center" aria-label="Account sidebar">
+          <div class="avatar" id="avatar" aria-hidden="true"></div>
+          <h1 class="h5 fw-bold mb-0" id="sideName"></h1>
+          <div class="small text-muted mb-1 text-break" id="sideEmail"></div>
+          <span class="badge text-bg-secondary mb-3" id="sideRole"></span>
+          <nav class="side-nav text-start" role="tablist" aria-label="Account sections" aria-orientation="vertical" id="sideNav">
+            <button type="button" role="tab" data-tab="overview" id="t_overview" aria-controls="p_overview" aria-selected="true" class="active"><i class="fa-solid fa-gauge"></i><span>Overview</span></button>
+            <button type="button" role="tab" data-tab="info" id="t_info" aria-controls="p_info" aria-selected="false" tabindex="-1"><i class="fa-regular fa-id-card"></i><span>Account info</span></button>
+            <button type="button" role="tab" data-tab="edit" id="t_edit" aria-controls="p_edit" aria-selected="false" tabindex="-1"><i class="fa-solid fa-pen-to-square"></i><span>Edit profile</span></button>
+            <button type="button" role="tab" data-tab="orders" id="t_orders" aria-controls="p_orders" aria-selected="false" tabindex="-1"><i class="fa-solid fa-box"></i><span>Orders</span><span class="count" id="cntOrders">0</span></button>
+            <button type="button" role="tab" data-tab="wishlist" id="t_wishlist" aria-controls="p_wishlist" aria-selected="false" tabindex="-1"><i class="fa-regular fa-heart"></i><span>Wishlist</span><span class="count" id="cntWish">0</span></button>
+            <button type="button" class="danger" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i><span>Log out</span></button>
+          </nav>
+        </aside>
+      </div>
+
+      <div class="col-lg-9">
+        <!-- Overview -->
+        <section class="panel" id="p_overview" role="tabpanel" aria-labelledby="t_overview">
+          <h2 class="section-title mb-1">Welcome back, <span id="ovName"></span></h2>
+          <p class="text-muted">Here is a summary of your demo account.</p>
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3"><div class="stat"><div class="n" id="stOrders">0</div><div class="l">Orders</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="n" id="stSpent">$0.00</div><div class="l">Total spent</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="n" id="stWish">0</div><div class="l">Wishlist items</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat"><div class="n" id="stCart">0</div><div class="l">Items in cart</div></div></div>
+          </div>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            <button type="button" class="btn btn-primary" data-go="orders"><i class="fa-solid fa-box me-2"></i>View orders</button>
+            <button type="button" class="btn btn-outline-primary" data-go="wishlist"><i class="fa-regular fa-heart me-2"></i>Open wishlist</button>
+            <a href="shopping.html" class="btn btn-outline-primary"><i class="fa-solid fa-cart-shopping me-2"></i>Go to cart</a>
+            <a href="admin.html" class="btn btn-navy d-none" id="adminLink"><i class="fa-solid fa-gauge-high me-2"></i>Demo Admin Dashboard</a>
+          </div>
+          <div class="notice" role="note"><i class="fa-solid fa-triangle-exclamation me-1"></i>This is a front-end demonstration. Profile data is stored in this browser's localStorage and is not secure account management.</div>
+        </section>
+
+        <!-- Info -->
+        <section class="panel d-none" id="p_info" role="tabpanel" aria-labelledby="t_info">
+          <h2 class="section-title mb-3">Account Information</h2>
+          <div id="infoRows"></div>
+        </section>
+
+        <!-- Edit -->
+        <section class="panel d-none" id="p_edit" role="tabpanel" aria-labelledby="t_edit">
+          <h2 class="section-title mb-3">Edit Profile</h2>
+          <form id="editForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="eName" class="form-label small fw-semibold">Full name <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" id="eName" class="form-control" maxlength="60" autocomplete="name" aria-describedby="eNameErr">
+                <div class="invalid-feedback" id="eNameErr">Please enter your full name (at least 2 characters).</div>
+              </div>
+              <div class="col-md-6">
+                <label for="eEmail" class="form-label small fw-semibold">Email <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="email" id="eEmail" class="form-control" maxlength="120" autocomplete="email" aria-describedby="eEmailErr">
+                <div class="invalid-feedback" id="eEmailErr">Please enter a valid email address.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="ePhone" class="form-label small fw-semibold">Phone</label>
+                <input type="tel" id="ePhone" class="form-control" maxlength="25" autocomplete="tel" aria-describedby="ePhoneErr">
+                <div class="invalid-feedback" id="ePhoneErr">Enter 7 to 15 digits, or leave blank.</div>
+              </div>
+              <div class="col-md-6">
+                <label for="eCity" class="form-label small fw-semibold">City</label>
+                <input type="text" id="eCity" class="form-control" maxlength="60" autocomplete="address-level2">
+              </div>
+              <div class="col-12">
+                <label for="eAddress" class="form-label small fw-semibold">Street address</label>
+                <input type="text" id="eAddress" class="form-control" maxlength="150" autocomplete="street-address">
+              </div>
+              <div class="col-md-6">
+                <label for="ePostal" class="form-label small fw-semibold">Postal code</label>
+                <input type="text" id="ePostal" class="form-control" maxlength="12" autocomplete="postal-code" aria-describedby="ePostalErr">
+                <div class="invalid-feedback" id="ePostalErr">Enter 3 to 10 letters or digits, or leave blank.</div>
+              </div>
+            </div>
+            <div id="eAlert" class="alert alert-danger small d-none mt-3 mb-0" role="alert"></div>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-floppy-disk me-2"></i>Save changes</button>
+              <button type="button" class="btn btn-outline-primary" id="editReset">Reset</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Orders -->
+        <section class="panel d-none" id="p_orders" role="tabpanel" aria-labelledby="t_orders">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <h2 class="section-title mb-0">Order History</h2>
+            <div class="d-flex align-items-center gap-2">
+              <label for="orderFilter" class="small fw-semibold text-muted mb-0">Status</label>
+              <select id="orderFilter" class="form-select form-select-sm" style="width:auto">
+                <option value="all">All</option><option>Pending</option><option>Processing</option><option>Shipped</option><option>Delivered</option><option>Cancelled</option>
+              </select>
+            </div>
+          </div>
+          <div id="orderList"></div>
+          <div id="ordersEmpty" class="text-center py-5 d-none">
+            <i class="fa-solid fa-box-open fa-3x text-muted mb-3"></i>
+            <h3 class="h5 fw-bold" id="ordersEmptyTitle">No orders yet</h3>
+            <p class="text-muted mb-4" id="ordersEmptyText">When you place an order it will appear here so you can track it.</p>
+            <a href="index.html" class="btn btn-primary px-4" id="shopNowBtn">Shop Now</a>
+          </div>
+        </section>
+
+        <!-- Wishlist -->
+        <section class="panel d-none" id="p_wishlist" role="tabpanel" aria-labelledby="t_wishlist">
+          <h2 class="section-title mb-3">My Wishlist</h2>
+          <div class="row g-3" id="wishGrid"></div>
+          <div id="wishEmpty" class="text-center py-5 d-none">
+            <i class="fa-regular fa-heart fa-3x text-muted mb-3"></i>
+            <h3 class="h5 fw-bold">Your wishlist is empty</h3>
+            <p class="text-muted mb-4">Tap the heart on any product to save it for later.</p>
+            <a href="index.html" class="btn btn-primary px-4">Shop Now</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4"><div class="logo text-white mb-2"><i class="fa-solid fa-microchip"></i> Tech<span style="color:#6cb6ee">Xpress</span></div>
+        <p class="small">Your destination for quality electronics. This is a front-end demo store.</p></div>
+      <div class="col-6 col-lg-2"><h6>Shop</h6><a href="index.html">Laptops</a><a href="home.html">Smartphones</a><a href="index.html#catalog">Cameras</a><a href="index.html#catalog">Accessories</a></div>
+      <div class="col-6 col-lg-2"><h6>Account</h6><a href="login_registration.html">Sign in / Register</a><a href="customer_profile.html">My Profile</a><a href="shopping.html">Cart</a></div>
+      <div class="col-lg-4"><h6>Contact</h6>
+        <div class="small"><i class="fa-solid fa-location-dot me-2"></i>123 Tech Avenue, Cairo, Egypt</div>
+        <div class="small"><i class="fa-solid fa-phone me-2"></i>+20 100 000 0000</div>
+        <div class="small"><i class="fa-solid fa-envelope me-2"></i>support@techxpress.example</div></div>
+    </div>
+    <hr class="border-secondary mt-4"><div class="small text-center">&copy; 2026 TechXpress. Demo project, no real payments or accounts.</div>
+  </div>
+</footer>
+
+<div class="toast-box"><div id="toast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true"><div class="d-flex"><div class="toast-body" id="toastMsg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div></div>
+
+<!-- Order details modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="omTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"><div class="modal-content" style="border-radius:16px">
+    <div class="modal-header"><div><h2 class="modal-title h5 fw-bold mb-1" id="omTitle">Order details</h2><div class="small text-muted" id="omDate"></div></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+    <div class="modal-body">
+      <div class="d-flex flex-wrap gap-2 mb-3" id="omBadges"></div>
+      <div class="table-responsive mb-3">
+        <table class="table align-middle mb-0">
+          <thead><tr><th scope="col">Product</th><th scope="col" class="text-center">Qty</th><th scope="col" class="text-end">Price</th><th scope="col" class="text-end">Subtotal</th></tr></thead>
+          <tbody id="omItems"></tbody>
+        </table>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6">
+          <h3 class="h6 fw-bold">Shipping information</h3>
+          <div class="small text-muted" id="omShip"></div>
+        </div>
+        <div class="col-md-6">
+          <div class="sum-row"><span class="text-muted">Subtotal</span><span id="omSub"></span></div>
+          <div class="sum-row"><span class="text-muted">Discount <span id="omCode"></span></span><span id="omDisc"></span></div>
+          <div class="sum-row"><span class="text-muted">Shipping</span><span id="omShipFee"></span></div>
+          <div class="sum-row total"><span>Final total</span><span id="omTotal"></span></div>
+        </div>
+      </div>
+      <p class="small text-muted mt-3 mb-0"><span class="sim-tag me-1">DEMO</span>Payment is simulated. No real payment was processed.</p>
+    </div>
+    <div class="modal-footer"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Close</button></div>
+  </div></div>
+</div>
+
+<!-- Logout modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="loTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content" style="border-radius:16px">
+    <div class="modal-header border-0"><h2 class="modal-title h5 fw-bold" id="loTitle">Log out?</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+    <div class="modal-body pt-0 text-muted">You will be signed out of the demo session. Your cart and order history will be kept on this device.</div>
+    <div class="modal-footer border-0"><button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Stay signed in</button><button type="button" class="btn btn-danger" id="confirmLogout">Yes, log out</button></div>
+  </div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+"use strict";
+var KEYS={products:"techxpress_products",cart:"techxpress_cart",users:"techxpress_users",current:"techxpress_current_user",orders:"techxpress_orders",categories:"techxpress_categories",wishlist:"techxpress_wishlist"};
+var U="https://images.unsplash.com/";
+var SAMPLE=[
+{id:"p1",name:"AeroBook Pro 14",brand:"Aero",category:"Laptops",price:1299,originalPrice:1499,rating:4.7,reviews:328,stock:12,image:U+"photo-1496181133206-80ce9b88a853?w=600&q=80",description:"14-inch ultraportable with 16GB RAM and 512GB SSD.",isNew:false},
+{id:"p2",name:"Vertex Gaming 15",brand:"Vertex",category:"Laptops",price:1099,originalPrice:null,rating:4.5,reviews:214,stock:4,image:U+"photo-1517336714731-489689fd1ca8?w=600&q=80",description:"15.6-inch 144Hz display, dedicated graphics, RGB keyboard.",isNew:true},
+{id:"p3",name:"Nova X12 5G",brand:"Nova",category:"Smartphones",price:799,originalPrice:899,rating:4.6,reviews:512,stock:25,image:U+"photo-1511707171634-5f897ff02aa9?w=600&q=80",description:"6.7-inch OLED, triple camera, all-day battery.",isNew:false},
+{id:"p4",name:"Pixa Lite 8",brand:"Pixa",category:"Smartphones",price:449,originalPrice:null,rating:4.2,reviews:187,stock:0,image:U+"photo-1598327105666-5b89351aff97?w=600&q=80",description:"Compact smartphone with a bright display and clean software.",isNew:true},
+{id:"p5",name:"Lumix Z50 Mirrorless",brand:"Lumix",category:"Cameras",price:899,originalPrice:999,rating:4.8,reviews:143,stock:7,image:U+"photo-1516035069371-29a1b244cc32?w=600&q=80",description:"24MP mirrorless camera with 4K video and fast autofocus.",isNew:false},
+{id:"p6",name:"Retro Snap DSLR",brand:"Canvas",category:"Cameras",price:649,originalPrice:null,rating:4.4,reviews:96,stock:9,image:U+"photo-1502920917128-1aa500764cbd?w=600&q=80",description:"Beginner-friendly DSLR with 18-55mm kit lens.",isNew:true},
+{id:"p7",name:"SoundMax ANC Headphones",brand:"SoundMax",category:"Headphones",price:249,originalPrice:329,rating:4.7,reviews:620,stock:30,image:U+"photo-1505740420928-5e560c06d30e?w=600&q=80",description:"Wireless over-ear with active noise cancelling, 40h battery.",isNew:false},
+{id:"p8",name:"BeatPods Studio",brand:"Beatz",category:"Headphones",price:179,originalPrice:null,rating:4.3,reviews:275,stock:3,image:U+"photo-1583394838336-acd977736f90?w=600&q=80",description:"Comfortable studio-tuned headphones with a detachable cable.",isNew:true},
+{id:"p9",name:"TabOne Air 11",brand:"Aero",category:"Tablets",price:599,originalPrice:649,rating:4.6,reviews:201,stock:15,image:U+"photo-1544244015-0df4b3ffc6b0?w=600&q=80",description:"11-inch tablet with stylus support and laminated display.",isNew:false},
+{id:"p10",name:"Slate Mini 8",brand:"Nova",category:"Tablets",price:329,originalPrice:null,rating:4.1,reviews:88,stock:18,image:U+"photo-1561154464-82e9adf32764?w=600&q=80",description:"Lightweight 8-inch tablet for reading and streaming.",isNew:true},
+{id:"p11",name:"MechKey TKL Keyboard",brand:"Vertex",category:"Accessories",price:89,originalPrice:119,rating:4.5,reviews:342,stock:40,image:U+"photo-1587829741301-dc798b83add3?w=600&q=80",description:"Hot-swappable mechanical keyboard with tactile switches.",isNew:false},
+{id:"p12",name:"GlideX Wireless Mouse",brand:"GlideX",category:"Accessories",price:49,originalPrice:null,rating:4.4,reviews:410,stock:60,image:U+"photo-1527864550417-7fd91fc51a46?w=600&q=80",description:"Ergonomic wireless mouse with 6 programmable buttons.",isNew:true},
+{id:"p13",name:"PulseBox Bluetooth Speaker",brand:"SoundMax",category:"Accessories",price:79,originalPrice:99,rating:4.3,reviews:156,stock:22,image:U+"photo-1608043152269-423dbba4e7e8?w=600&q=80",description:"Waterproof portable speaker with 12h playtime.",isNew:true},
+{id:"p14",name:"ChronoFit Smartwatch",brand:"Pixa",category:"Accessories",price:199,originalPrice:249,rating:4.2,reviews:233,stock:11,image:U+"photo-1523275335684-37898b6baf30?w=600&q=80",description:"Fitness tracking, GPS and a 7-day battery life.",isNew:false}
+];
+var CATS=[
+{id:"c1",name:"Laptops",icon:"fa-laptop"},{id:"c2",name:"Smartphones",icon:"fa-mobile-screen"},
+{id:"c3",name:"Cameras",icon:"fa-camera"},{id:"c4",name:"Headphones",icon:"fa-headphones"},
+{id:"c5",name:"Tablets",icon:"fa-tablet-screen-button"},{id:"c6",name:"Accessories",icon:"fa-keyboard"}];
+var STATUSES=["Pending","Processing","Shipped","Delivered","Cancelled"];
+
+/* Safe storage helpers */
+function load(key,fb){try{var r=localStorage.getItem(key);if(r===null)return fb;var v=JSON.parse(r);return v===null?fb:v}catch(e){return fb}}
+function save(key,v){try{localStorage.setItem(key,JSON.stringify(v));return true}catch(e){return false}}
+function initKey(key,val){try{if(localStorage.getItem(key)===null)localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+function arr(key){var v=load(key,[]);return Array.isArray(v)?v:[]}
+/* Initialize only missing keys; never overwrite existing orders, users or carts */
+initKey(KEYS.products,SAMPLE);initKey(KEYS.categories,CATS);
+initKey(KEYS.cart,[]);initKey(KEYS.users,[]);initKey(KEYS.orders,[]);initKey(KEYS.wishlist,[]);initKey(KEYS.current,null);
+
+var $=function(id){return document.getElementById(id)};
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined&&text!==null)e.textContent=text;return e}
+function num(v,d){var n=Number(v);return isFinite(n)?n:d}
+function r2(n){return Math.round((n+Number.EPSILON)*100)/100}
+function money(n){return "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function detailUrl(id){return "product-details.html?id="+encodeURIComponent(id)}
+function normEmail(v){return String(v||"").trim().toLowerCase()}
+var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function fmtDate(iso){try{var d=new Date(iso);if(isNaN(d.getTime()))return "Unknown date";return d.toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"})+" at "+d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit"})}catch(e){return "Unknown date"}}
+
+function fallbackSrc(label){
+  var svg="<svg xmlns='http://www.w3.org/2000/svg' width='600' height='450'><rect width='100%' height='100%' fill='#E4EDF7'/><text x='50%' y='50%' fill='#1769AA' font-family='Arial' font-size='26' font-weight='700' text-anchor='middle'>"+String(label||"TechXpress").replace(/[<>&'"]/g,"")+"</text></svg>";
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function safeImg(src,alt,label,cls){
+  var i=document.createElement("img");i.alt=alt;i.loading="lazy";if(cls)i.className=cls;
+  i.addEventListener("error",function(){if(i.dataset.failed==="1")return;i.dataset.failed="1";i.src=fallbackSrc(label)});
+  i.src=src||fallbackSrc(label);return i
+}
+
+var toastEl=$("toast"),toast=window.bootstrap?new bootstrap.Toast(toastEl,{delay:2600}):null;
+function notify(msg,type){
+  toastEl.classList.remove("text-bg-dark","text-bg-success","text-bg-danger");
+  toastEl.classList.add(type==="error"?"text-bg-danger":type==="success"?"text-bg-success":"text-bg-dark");
+  $("toastMsg").textContent=msg;if(toast)toast.show()
+}
+
+/* Data access */
+function getProducts(){
+  var p=arr(KEYS.products).filter(function(x){return x&&x.id!==undefined&&x.id!==null&&typeof x.price==="number"&&typeof x.name==="string"});
+  return p.length?p:SAMPLE.slice()
+}
+var products=getProducts();
+function findProduct(id){return products.find(function(p){return String(p.id)===String(id)})||null}
+function cartCount(){return arr(KEYS.cart).reduce(function(s,i){return s+(Math.floor(num(i&&i.quantity,0))||0)},0)}
+function updateBadge(){$("cartCount").textContent=cartCount()}
+function currentUser(){var c=load(KEYS.current,null);return(c&&typeof c==="object"&&typeof c.email==="string")?c:null}
+function allUsers(){return arr(KEYS.users).filter(function(u){return u&&typeof u==="object"&&typeof u.email==="string"})}
+function storedUserRecord(cu){
+  var list=allUsers();
+  return list.find(function(u){return cu.id!==undefined&&u.id===cu.id})||list.find(function(u){return normEmail(u.email)===normEmail(cu.email)})||null
+}
+
+/* Orders belonging to current customer */
+function myOrders(cu){
+  var email=normEmail(cu.email);
+  return arr(KEYS.orders).filter(function(o){
+    if(!o||typeof o!=="object")return false;
+    if(o.userId!==undefined&&o.userId!==null&&cu.id!==undefined&&String(o.userId)===String(cu.id))return true;
+    if(normEmail(o.userEmail)===email)return true;
+    return false
+  }).sort(function(a,b){return (new Date(b.date).getTime()||0)-(new Date(a.date).getTime()||0)})
+}
+function orderItems(o){
+  return (Array.isArray(o.items)?o.items:[]).map(function(it){
+    var q=Math.max(0,Math.floor(num(it&&it.quantity,0))),price=Math.max(0,num(it&&it.price,0));
+    return {productId:it&&it.productId,name:String((it&&it.name)||"Unknown product"),brand:String((it&&it.brand)||""),image:String((it&&it.image)||""),quantity:q,price:price,lineTotal:r2(price*q)}
+  }).filter(function(it){return it.quantity>0})
+}
+function orderMoney(o){
+  var items=orderItems(o),sub=r2(items.reduce(function(s,i){return s+i.lineTotal},0));
+  var disc=Math.min(sub,Math.max(0,num(o.discount,0))),ship=Math.max(0,num(o.shipping,0));
+  var total=isFinite(Number(o.total))&&o.total!==null&&Number(o.total)>=0?r2(Number(o.total)):r2(Math.max(0,sub-disc+ship));
+  return {items:items,subtotal:isFinite(Number(o.subtotal))&&o.subtotal!==null?r2(Number(o.subtotal)):sub,discount:r2(disc),shipping:r2(ship),total:total}
+}
+function statusOf(o){
+  var s=String(o.status||"Pending").toLowerCase();
+  var m=STATUSES.find(function(x){return x.toLowerCase()===s});return m||"Pending"
+}
+function statusBadge(s){return el("span","status st-"+s.toLowerCase(),s)}
+function payInfo(o){
+  var p=o&&o.payment&&typeof o.payment==="object"?o.payment:{};
+  var st=String(p.status||"Not charged");
+  return {label:"Payment: "+st+" (simulated)",ok:/paid|success/i.test(st)}
+}
+
+/* Tabs */
+var TABS=["overview","info","edit","orders","wishlist"];
+function showTab(name,focus){
+  if(TABS.indexOf(name)<0)name="overview";
+  TABS.forEach(function(t){
+    var on=t===name;$("p_"+t).classList.toggle("d-none",!on);
+    var b=$("t_"+t);b.classList.toggle("active",on);b.setAttribute("aria-selected",on?"true":"false");b.tabIndex=on?0:-1;
+    if(on&&focus)b.focus()
+  });
+  if(history.replaceState)history.replaceState(null,"","#"+name)
+}
+
+/* Render profile */
+var cu=null;
+function renderProfile(){
+  var rec=storedUserRecord(cu)||{};
+  var name=String(cu.name||rec.name||"Customer"),role=String(cu.role||rec.role||"Customer");
+  $("avatar").textContent=name.trim().charAt(0).toUpperCase()||"?";
+  $("sideName").textContent=name;$("sideEmail").textContent=cu.email;$("sideRole").textContent=role;
+  $("ovName").textContent=name.split(" ")[0]||name;
+  $("adminLink").classList.toggle("d-none",role.toLowerCase()!=="admin");
+  var phone=cu.phone||rec.phone||"",city=cu.city||rec.city||"",addr=cu.address||rec.address||"",postal=cu.postalCode||rec.postalCode||"";
+  var since=rec.createdAt||cu.createdAt;
+  var rows=[["Full name",name],["Email",cu.email],["Phone",phone||"Not provided"],["Street address",addr||"Not provided"],["City",city||"Not provided"],["Postal code",postal||"Not provided"],["Account role",role],["Member since",since?fmtDate(since).split(" at ")[0]:"Not available"],["User ID",String(cu.id!==undefined?cu.id:"Not available")]];
+  var box=$("infoRows");box.replaceChildren();
+  rows.forEach(function(r){var d=el("div","info-row");d.appendChild(el("span",null,r[0]));d.appendChild(el("span",null,r[1]));box.appendChild(d)});
+  $("eName").value=name;$("eEmail").value=cu.email;$("ePhone").value=phone;$("eCity").value=city;$("eAddress").value=addr;$("ePostal").value=postal;
+  ["eName","eEmail","ePhone","ePostal"].forEach(function(id){$(id).classList.remove("is-invalid","is-valid")});
+  $("eAlert").classList.add("d-none")
+}
+function renderStats(){
+  var orders=myOrders(cu),spent=0;
+  orders.forEach(function(o){if(statusOf(o)!=="Cancelled")spent+=orderMoney(o).total});
+  $("stOrders").textContent=orders.length;$("stSpent").textContent=money(r2(spent));
+  var w=wishIds().length;$("stWish").textContent=w;$("stCart").textContent=cartCount();
+  $("cntOrders").textContent=orders.length;$("cntWish").textContent=w
+}
+
+/* Edit profile */
+function mark(id,ok){var i=$(id);i.classList.toggle("is-invalid",!ok);i.classList.toggle("is-valid",ok);i.setAttribute("aria-invalid",ok?"false":"true");return ok}
+$("editForm").addEventListener("submit",function(e){
+  e.preventDefault();$("eAlert").classList.add("d-none");
+  var name=$("eName").value.trim().replace(/\s+/g," "),email=$("eEmail").value.trim(),phone=$("ePhone").value.trim(),postal=$("ePostal").value.trim();
+  var digits=phone.replace(/\D/g,"");
+  var checks=[
+    ["eName",name.length>=2&&/[A-Za-z\u00C0-\u024F\u0600-\u06FF]/.test(name)],
+    ["eEmail",EMAIL_RE.test(email)],
+    ["ePhone",phone===""||(/^[+()\d\s\-.]+$/.test(phone)&&digits.length>=7&&digits.length<=15)],
+    ["ePostal",postal===""||/^[A-Za-z0-9][A-Za-z0-9\s\-]{1,8}[A-Za-z0-9]$/.test(postal)]
+  ],ok=true,first=null;
+  checks.forEach(function(c){if(!mark(c[0],c[1])){ok=false;if(!first)first=$(c[0])}});
+  if(!ok){notify("Please fix the highlighted fields.","error");if(first)first.focus();return}
+  var list=arr(KEYS.users),oldEmail=normEmail(cu.email);
+  var idx=list.findIndex(function(u){return u&&((cu.id!==undefined&&u.id===cu.id)||normEmail(u.email)===oldEmail)});
+  /* Prevent duplicate emails belonging to other accounts */
+  var dup=list.some(function(u,i){return u&&i!==idx&&normEmail(u.email)===normEmail(email)});
+  if(dup){mark("eEmail",false);$("eEmailErr").textContent="Another account already uses this email.";showAlertE("That email is already registered to a different demo account.");$("eEmail").focus();return}
+  var base=idx>-1?list[idx]:{id:cu.id!==undefined?cu.id:"u_"+Date.now().toString(36),role:cu.role||"Customer",createdAt:new Date().toISOString()};
+  var updated=Object.assign({},base,{name:name,email:email,phone:phone,city:$("eCity").value.trim(),address:$("eAddress").value.trim(),postalCode:postal});
+  if(idx>-1)list[idx]=updated;else list.push(updated);
+  var newCurrent=Object.assign({},cu,{id:updated.id,name:updated.name,email:updated.email,role:updated.role||"Customer",phone:updated.phone,city:updated.city,address:updated.address,postalCode:updated.postalCode});
+  if(!save(KEYS.users,list)||!save(KEYS.current,newCurrent)){showAlertE("Your browser could not save the changes (storage may be disabled or full).");notify("Could not save profile","error");return}
+  /* Keep existing order ownership in sync when the email changes */
+  if(oldEmail!==normEmail(email)){
+    var orders=arr(KEYS.orders),changed=false;
+    orders.forEach(function(o){if(o&&typeof o==="object"&&normEmail(o.userEmail)===oldEmail){o.userEmail=email;changed=true}});
+    if(changed)save(KEYS.orders,orders)
+  }
+  cu=newCurrent;
+  $("eEmailErr").textContent="Please enter a valid email address.";
+  renderProfile();renderStats();renderOrders();notify("Profile updated successfully.","success");showTab("info",true)
+});
+function showAlertE(m){var a=$("eAlert");a.textContent=m;a.classList.remove("d-none")}
+$("editReset").addEventListener("click",function(){renderProfile();notify("Changes discarded.")});
+["eName","eEmail","ePhone","ePostal"].forEach(function(id){$(id).addEventListener("input",function(){if($(id).classList.contains("is-invalid")||$(id).classList.contains("is-valid")){$(id).classList.remove("is-invalid","is-valid")}})});
+
+/* Orders */
+var orderModal=window.bootstrap?new bootstrap.Modal($("orderModal")):null;
+function renderOrders(){
+  var all=myOrders(cu),filter=$("orderFilter").value;
+  var list=all.filter(function(o){return filter==="all"||statusOf(o)===filter});
+  var box=$("orderList");box.replaceChildren();
+  $("ordersEmpty").classList.toggle("d-none",list.length>0);
+  if(!list.length){
+    if(all.length){$("ordersEmptyTitle").textContent="No "+filter.toLowerCase()+" orders";$("ordersEmptyText").textContent="Try choosing a different status filter.";$("shopNowBtn").textContent="Shop Now"}
+    else{$("ordersEmptyTitle").textContent="No orders yet";$("ordersEmptyText").textContent="When you place an order it will appear here so you can track it.";$("shopNowBtn").textContent="Shop Now"}
+  }
+  list.forEach(function(o){
+    var m=orderMoney(o),card=el("article","order-card"),st=statusOf(o),pay=payInfo(o);
+    var top=el("div","d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2");
+    var left=el("div");left.appendChild(el("div","order-no",String(o.orderNumber||o.id||"Order")));left.appendChild(el("div","small text-muted",fmtDate(o.date)));
+    var badges=el("div","d-flex flex-wrap gap-2");badges.appendChild(statusBadge(st));badges.appendChild(el("span","status "+(pay.ok?"pay-ok":"pay-none"),pay.label));
+    top.appendChild(left);top.appendChild(badges);card.appendChild(top);
+    var thumbs=el("div","d-flex align-items-center gap-2 mb-2 flex-wrap");
+    m.items.slice(0,4).forEach(function(it){var p=findProduct(it.productId);thumbs.appendChild(safeImg((p&&p.image)||it.image,it.name,it.name,"o-thumb"))});
+    if(m.items.length>4)thumbs.appendChild(el("span","small text-muted","+"+(m.items.length-4)+" more"));
+    var count=m.items.reduce(function(s,i){return s+i.quantity},0);
+    thumbs.appendChild(el("span","small text-muted ms-1",count+" item"+(count===1?"":"s")));card.appendChild(thumbs);
+    var names=m.items.map(function(i){return i.quantity+" \u00d7 "+i.name}).join(", ");
+    card.appendChild(el("p","small text-muted mb-2",names.length>140?names.slice(0,137)+"...":names));
+    var foot=el("div","d-flex flex-wrap justify-content-between align-items-center gap-2");
+    var tot=el("div");tot.appendChild(el("span","small text-muted me-2","Total"));tot.appendChild(el("strong",null,money(m.total)));
+    var btn=el("button","btn btn-outline-primary btn-sm");btn.type="button";btn.appendChild(el("i","fa-regular fa-eye me-1"));btn.appendChild(document.createTextNode("View Details"));
+    btn.setAttribute("aria-label","View details for order "+String(o.orderNumber||o.id||""));
+    btn.addEventListener("click",function(){openOrder(o)});
+    foot.appendChild(tot);foot.appendChild(btn);card.appendChild(foot);box.appendChild(card)
+  })
+}
+function openOrder(o){
+  var m=orderMoney(o),st=statusOf(o),pay=payInfo(o);
+  $("omTitle").textContent="Order "+String(o.orderNumber||o.id||"");$("omDate").textContent="Placed on "+fmtDate(o.date);
+  var bd=$("omBadges");bd.replaceChildren();bd.appendChild(statusBadge(st));bd.appendChild(el("span","status "+(pay.ok?"pay-ok":"pay-none"),pay.label));
+  var body=$("omItems");body.replaceChildren();
+  m.items.forEach(function(it){
+    var tr=document.createElement("tr"),td=document.createElement("td"),wrap=el("div","d-flex align-items-center gap-2");
+    var p=findProduct(it.productId);wrap.appendChild(safeImg((p&&p.image)||it.image,it.name,it.name,"o-thumb"));
+    var info=el("div");
+    if(p){var a=el("a","fw-semibold",it.name);a.href=detailUrl(it.productId);info.appendChild(a)}else info.appendChild(el("div","fw-semibold",it.name));
+    if(it.brand)info.appendChild(el("div","small text-muted",it.brand));
+    wrap.appendChild(info);td.appendChild(wrap);tr.appendChild(td);
+    tr.appendChild(el("td","text-center",String(it.quantity)));tr.appendChild(el("td","text-end",money(it.price)));tr.appendChild(el("td","text-end fw-semibold",money(it.lineTotal)));body.appendChild(tr)
+  });
+  var c=o.customer&&typeof o.customer==="object"?o.customer:{},d=o.delivery&&typeof o.delivery==="object"?o.delivery:{};
+  var ship=$("omShip");ship.replaceChildren();
+  function line(label,val){var r=el("div","mb-1");r.appendChild(el("strong","text-body",label+": "));r.appendChild(document.createTextNode(String(val||"Not provided")));ship.appendChild(r)}
+  line("Recipient",c.name);
+  line("Address",[c.address,c.city,c.postalCode].filter(Boolean).join(", "));
+  line("Phone",c.phone);line("Email",c.email);
+  line("Delivery method",d.label||d.method);
+  $("omSub").textContent=money(m.subtotal);
+  $("omCode").textContent=o.discountCode?"("+String(o.discountCode)+")":"";
+  var dEl=$("omDisc");dEl.textContent=m.discount>0?"-"+money(m.discount):money(0);dEl.className=m.discount>0?"disc":"";
+  var sEl=$("omShipFee");if(m.shipping===0){sEl.textContent="FREE";sEl.className="free"}else{sEl.textContent=money(m.shipping);sEl.className=""}
+  $("omTotal").textContent=money(m.total);
+  if(orderModal)orderModal.show()
+}
+$("orderFilter").addEventListener("change",renderOrders);
+
+/* Wishlist */
+function wishIds(){
+  var seen={},out=[];
+  arr(KEYS.wishlist).forEach(function(w){
+    var id=(w&&typeof w==="object")?w.productId:w;if(id===undefined||id===null)return;
+    var s=String(id);if(!seen[s]&&findProduct(s)){seen[s]=1;out.push(s)}
+  });
+  return out
+}
+function addToCart(p){
+  var stock=Math.max(0,Math.floor(num(p.stock,0)));
+  if(stock<=0){notify("Sorry, this item is out of stock.","error");return}
+  var cart=arr(KEYS.cart),it=cart.find(function(c){return c&&String(c.productId)===String(p.id)});
+  if(it){
+    if((Math.floor(num(it.quantity,0)))>=stock){notify("Maximum available stock is already in your cart.","error");return}
+    it.quantity=Math.floor(num(it.quantity,0))+1;it.price=p.price;it.stock=stock
+  }else cart.push({productId:p.id,quantity:1,name:p.name,brand:p.brand,price:p.price,image:p.image,stock:stock});
+  if(save(KEYS.cart,cart)){updateBadge();renderStats();notify(p.name+" added to cart","success")}else notify("Could not update your cart.","error")
+}
+function removeWish(id){
+  var next=arr(KEYS.wishlist).filter(function(w){var x=(w&&typeof w==="object")?w.productId:w;return String(x)!==String(id)});
+  save(KEYS.wishlist,next);renderWishlist();renderStats();notify("Removed from wishlist")
+}
+function renderWishlist(){
+  var ids=wishIds(),grid=$("wishGrid");grid.replaceChildren();
+  $("wishEmpty").classList.toggle("d-none",ids.length>0);
+  ids.forEach(function(id){
+    var p=findProduct(id);if(!p)return;
+    var col=el("div","col-6 col-md-4"),c=el("article","card-p");
+    var link=el("a","img");link.href=detailUrl(p.id);link.setAttribute("aria-label","View "+p.name);link.appendChild(safeImg(p.image,p.name,p.name));c.appendChild(link);
+    var b=el("div","body");b.appendChild(el("div","brand",String(p.brand||"")));
+    var n=el("a","pname",String(p.name));n.href=detailUrl(p.id);b.appendChild(n);
+    var stock=Math.max(0,Math.floor(num(p.stock,0)));
+    var st=stock<=0?["Out of stock","out"]:stock<=5?["Only "+stock+" left","low"]:["In stock","in"];
+    b.appendChild(el("div","small fw-semibold mb-2 "+st[1],st[0]));
+    var pr=el("div","mb-3 mt-auto");pr.appendChild(el("span","price",money(p.price)));
+    if(p.originalPrice&&p.originalPrice>p.price)pr.appendChild(el("span","old",money(p.originalPrice)));b.appendChild(pr);
+    var add=el("button","btn btn-primary w-100 mb-2",stock<=0?"Out of Stock":"Add to Cart");add.type="button";add.disabled=stock<=0;
+    add.addEventListener("click",function(){addToCart(p)});b.appendChild(add);
+    var row=el("div","d-flex gap-2");
+    var view=el("a","btn btn-outline-primary btn-sm flex-fill","View Product");view.href=detailUrl(p.id);
+    var rm=el("button","btn btn-outline-danger btn-sm flex-fill");rm.type="button";rm.appendChild(el("i","fa-regular fa-trash-can me-1"));rm.appendChild(document.createTextNode("Remove"));
+    rm.setAttribute("aria-label","Remove "+p.name+" from wishlist");rm.addEventListener("click",function(){removeWish(p.id)});
+    row.appendChild(view);row.appendChild(rm);b.appendChild(row);
+    c.appendChild(b);col.appendChild(c);grid.appendChild(col)
+  })
+}
+
+/* Logout (clears only the current session) */
+var logoutModal=window.bootstrap?new bootstrap.Modal($("logoutModal")):null;
+$("logoutBtn").addEventListener("click",function(){
+  if(logoutModal)logoutModal.show();else if(window.confirm("Log out of your demo session?"))doLogout()
+});
+$("confirmLogout").addEventListener("click",doLogout);
+function doLogout(){
+  save(KEYS.current,null);
+  try{localStorage.removeItem(KEYS.current)}catch(e){}
+  if(logoutModal)logoutModal.hide();
+  notify("You have been logged out.","success");
+  setTimeout(function(){window.location.href="index.html"},700)
+}
+
+/* Header search */
+var sInput=$("searchInput"),sBox=$("suggestBox");
+function matches(q){
+  q=q.trim().toLowerCase();if(!q)return[];
+  return products.filter(function(p){return (String(p.name)+" "+String(p.brand)).toLowerCase().indexOf(q)>-1})
+}
+function closeSuggest(){sBox.classList.add("d-none");sInput.setAttribute("aria-expanded","false")}
+function showSuggest(){
+  var q=sInput.value,list=matches(q).slice(0,6);sBox.replaceChildren();
+  if(!q.trim()){closeSuggest();return}
+  if(!list.length)sBox.appendChild(el("div","none","No products found for \""+q.trim().slice(0,40)+"\""));
+  list.forEach(function(p){
+    var a=el("a");a.href=detailUrl(p.id);a.setAttribute("role","option");
+    a.appendChild(safeImg(p.image,p.name,p.name));
+    var d=el("div");d.appendChild(el("div","fw-semibold",String(p.name)));d.appendChild(el("div","small text-muted",String(p.brand)+" \u00b7 "+money(p.price)));
+    a.appendChild(d);sBox.appendChild(a)
+  });
+  sBox.classList.remove("d-none");sInput.setAttribute("aria-expanded","true")
+}
+sInput.addEventListener("input",showSuggest);
+sInput.addEventListener("focus",showSuggest);
+sInput.addEventListener("keydown",function(e){
+  if(e.key==="Escape")closeSuggest();
+  if(e.key==="ArrowDown"){var f=sBox.querySelector("a");if(f){e.preventDefault();f.focus()}}
+});
+sBox.addEventListener("keydown",function(e){
+  var links=Array.prototype.slice.call(sBox.querySelectorAll("a")),i=links.indexOf(document.activeElement);
+  if(e.key==="ArrowDown"&&i<links.length-1){e.preventDefault();links[i+1].focus()}
+  else if(e.key==="ArrowUp"){e.preventDefault();if(i>0)links[i-1].focus();else sInput.focus()}
+  else if(e.key==="Escape"){closeSuggest();sInput.focus()}
+});
+document.addEventListener("click",function(e){if(!e.target.closest(".search-wrap"))closeSuggest()});
+$("searchForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  if(!sInput.value.trim()){notify("Type a product name or brand to search.","error");return}
+  var m=matches(sInput.value);
+  if(m.length)window.location.href=detailUrl(m[0].id);else notify("No products match your search.","error")
+});
+
+/* Sidebar + shortcuts */
+$("sideNav").addEventListener("click",function(e){var b=e.target.closest("button[data-tab]");if(b)showTab(b.dataset.tab,false)});
+$("sideNav").addEventListener("keydown",function(e){
+  if(e.key!=="ArrowDown"&&e.key!=="ArrowUp")return;
+  var i=TABS.findIndex(function(t){return $("t_"+t).getAttribute("aria-selected")==="true"});
+  var n=e.key==="ArrowDown"?(i+1)%TABS.length:(i-1+TABS.length)%TABS.length;
+  e.preventDefault();showTab(TABS[n],true)
+});
+document.querySelectorAll("[data-go]").forEach(function(b){b.addEventListener("click",function(){showTab(b.dataset.go,true)})});
+
+/* Init */
+function init(){
+  updateBadge();
+  cu=currentUser();
+  $("accountLink").href=cu?"profile.html":"auth.html";
+  if(!cu){$("signedOut").classList.remove("d-none");$("account").classList.add("d-none");document.title="Sign in | TechXpress";return}
+  $("account").classList.remove("d-none");$("signedOut").classList.add("d-none");
+  renderProfile();renderOrders();renderWishlist();renderStats();
+  var h=(window.location.hash||"").replace("#","");showTab(TABS.indexOf(h)>-1?h:"overview",false)
+}
+init();
+window.addEventListener("hashchange",function(){var h=(window.location.hash||"").replace("#","");if(cu&&TABS.indexOf(h)>-1)showTab(h,false)});
+window.addEventListener("storage",function(e){
+  if(e.key===null||e.key===KEYS.current){init();return}
+  if(!cu)return;
+  if(e.key===KEYS.cart){updateBadge();renderStats()}
+  if(e.key===KEYS.wishlist||e.key===KEYS.products){products=getProducts();renderWishlist();renderStats()}
+  if(e.key===KEYS.orders){renderOrders();renderStats()}
+});
+})();
+</script>
+</body>
+</html>

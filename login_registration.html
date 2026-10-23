@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign In or Register | TechXpress</title>
+<meta name="description" content="Sign in or create a demo account at TechXpress. Front-end demonstration only.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--primary:#1769AA;--navy:#0B1220;--secondary:#2589D8;--bg:#F5F7FB;--text:#182230;--muted:#667085;--border:#E4E7EC}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1}
+a{color:inherit;text-decoration:none}
+.topbar{background:var(--navy);color:#fff;font-size:.85rem;padding:.5rem 0;text-align:center}
+.topbar a{color:#9fd0f5;font-weight:600}
+header.site{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-weight:800;font-size:1.5rem;color:var(--navy)}
+.logo i{color:var(--primary)}.logo span{color:var(--primary)}
+.hdr-link{font-weight:600;font-size:.95rem;color:var(--text);padding:.4rem .7rem;border-radius:8px}
+.hdr-link:hover{color:var(--primary);background:var(--bg)}
+.icon-link{position:relative;font-size:1.25rem;color:var(--navy);padding:.4rem .6rem}
+.icon-link:hover{color:var(--primary)}
+.badge-count{position:absolute;top:-4px;right:-4px;background:var(--primary);color:#fff;font-size:.68rem;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.form-control,.form-select{border-radius:10px;border-color:var(--border);padding:.65rem .85rem}
+.form-control:focus,.form-select:focus{border-color:var(--secondary);box-shadow:0 0 0 .2rem rgba(37,137,216,.2)}
+.btn{border-radius:10px;transition:all .2s}
+.btn-primary{background:var(--primary);border-color:var(--primary)}
+.btn-primary:hover,.btn-primary:focus{background:var(--secondary);border-color:var(--secondary)}
+.btn-outline-primary{color:var(--primary);border-color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);border-color:var(--primary)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-navy:hover{background:#1b2a44;border-color:#1b2a44;color:#fff}
+.auth-wrap{max-width:1040px}
+.side{background:linear-gradient(130deg,var(--navy),#12345a 60%,var(--primary));color:#fff;border-radius:20px;padding:2.2rem;height:100%}
+.side h1{font-weight:800;font-size:clamp(1.6rem,3vw,2.1rem)}
+.side li{margin-bottom:.8rem;display:flex;gap:.7rem;align-items:flex-start;opacity:.92}
+.side li i{margin-top:.25rem;color:#9fd0f5}
+.auth-card{background:#fff;border:1px solid var(--border);border-radius:20px;padding:1.8rem;box-shadow:0 10px 30px rgba(16,24,40,.08)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:4px;margin-bottom:1.4rem}
+.tabs button{border:0;background:transparent;padding:.65rem;border-radius:9px;font-weight:700;color:var(--muted);transition:.2s}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--primary);box-shadow:0 1px 4px rgba(16,24,40,.12)}
+.pw-wrap{position:relative}
+.pw-wrap .form-control{padding-right:3rem}
+.pw-toggle{position:absolute;top:0;right:0;height:100%;width:3rem;border:0;background:transparent;color:var(--muted);border-radius:0 10px 10px 0}
+.pw-toggle:hover{color:var(--primary)}
+.was-bad .pw-toggle{right:1.6rem}
+.strength-bar{height:6px;background:var(--border);border-radius:6px;overflow:hidden}
+.strength-bar span{display:block;height:100%;width:0;border-radius:6px;transition:width .25s,background .25s}
+.notice{background:#fff8e6;border:1px solid #f3dca0;border-radius:12px;padding:.8rem 1rem;font-size:.84rem;color:#6b4e00}
+.sim-tag{display:inline-block;background:var(--navy);color:#fff;font-size:.68rem;font-weight:700;letter-spacing:.05em;padding:.15rem .55rem;border-radius:20px}
+.admin-box{border:2px dashed var(--secondary);background:#f0f7fd;border-radius:14px;padding:1rem}
+.divider{display:flex;align-items:center;gap:.8rem;color:var(--muted);font-size:.82rem;margin:1.2rem 0}
+.divider:before,.divider:after{content:"";flex:1;height:1px;background:var(--border)}
+.link-btn{background:none;border:0;padding:0;color:var(--primary);font-weight:600}
+.link-btn:hover{text-decoration:underline}
+.avatar{width:64px;height:64px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.6rem;margin:0 auto 1rem}
+.quick a{display:flex;align-items:center;gap:.5rem;padding:.55rem .8rem;border:1px solid var(--border);border-radius:10px;font-size:.9rem;font-weight:600;background:#fff}
+.quick a:hover{border-color:var(--secondary);color:var(--primary)}
+footer{background:var(--navy);color:#c3cbd8;margin-top:3rem}
+footer h6{color:#fff;font-weight:700}
+footer a{display:block;color:#c3cbd8;padding:.15rem 0;font-size:.92rem}
+footer a:hover{color:#fff}
+.toast-box{position:fixed;bottom:20px;right:20px;z-index:2000}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="container"><i class="fa-solid fa-bolt"></i> Free shipping on orders over $99 &middot; <a href="index.html#catalog">See today's deals</a></div></div>
+
+<header class="site">
+  <div class="container py-3 d-flex align-items-center gap-2 gap-md-3 flex-wrap">
+    <a href="index.html" class="logo"><i class="fa-solid fa-microchip"></i> Tech<span>Xpress</span></a>
+    <nav class="ms-lg-4 d-none d-md-flex gap-1" aria-label="Main navigation">
+      <a href="index.html" class="hdr-link">Home</a>
+      <a href="index.html#catalog" class="hdr-link">Shop</a>
+      <a href="profile.html" class="hdr-link">My Profile</a>
+    </nav>
+    <div class="ms-auto d-flex align-items-center">
+      <a href="auth.html" class="icon-link" aria-label="Account" aria-current="page"><i class="fa-solid fa-user"></i></a>
+      <a href="cart.html" class="icon-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i><span class="badge-count" id="cartCount">0</span></a>
+    </div>
+  </div>
+</header>
+
+<main class="container auth-wrap my-4 my-lg-5" id="main">
+  <div class="row g-4 align-items-stretch">
+    <div class="col-lg-5 d-none d-lg-block">
+      <div class="side">
+        <div class="logo text-white mb-4"><i class="fa-solid fa-microchip" style="color:#9fd0f5"></i> Tech<span style="color:#9fd0f5">Xpress</span></div>
+        <h1>Welcome to your TechXpress account</h1>
+        <p class="opacity-75 mb-4">Sign in to track demo orders, manage your wishlist and check out faster.</p>
+        <ul class="list-unstyled mb-0">
+          <li><i class="fa-solid fa-clock-rotate-left"></i><span>View your order history on your profile page</span></li>
+          <li><i class="fa-solid fa-heart"></i><span>Keep a wishlist of products you love</span></li>
+          <li><i class="fa-solid fa-truck-fast"></i><span>Fast, simulated checkout experience</span></li>
+          <li><i class="fa-solid fa-shield-halved"></i><span>Front-end demo: no real accounts or payments</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-7">
+      <div class="auth-card">
+        <div class="notice mb-3" role="note"><i class="fa-solid fa-triangle-exclamation me-1"></i><strong>Security notice:</strong> This is a front-end demonstration. Production authentication and role authorization must be implemented securely with ASP.NET Identity on the server.</div>
+
+        <!-- Signed-in panel -->
+        <section id="viewSigned" class="d-none text-center" aria-labelledby="signedH">
+          <div class="avatar" id="sAvatar" aria-hidden="true"></div>
+          <h2 class="h4 fw-bold" id="signedH">You are signed in</h2>
+          <p class="text-muted mb-1"><strong id="sName"></strong></p>
+          <p class="text-muted small mb-3"><span id="sEmail"></span> &middot; <span class="badge text-bg-secondary" id="sRole"></span></p>
+          <div class="row g-2 quick text-start mb-3">
+            <div class="col-sm-6"><a href="profile.html"><i class="fa-solid fa-user text-primary"></i> Go to my profile</a></div>
+            <div class="col-sm-6"><a href="cart.html"><i class="fa-solid fa-cart-shopping text-primary"></i> View cart</a></div>
+            <div class="col-sm-6"><a href="index.html"><i class="fa-solid fa-house text-primary"></i> Continue shopping</a></div>
+            <div class="col-sm-6 d-none" id="sAdminLinkWrap"><a href="admin.html"><i class="fa-solid fa-gauge-high text-primary"></i> Demo Admin Dashboard</a></div>
+          </div>
+          <button type="button" class="btn btn-outline-primary px-4" id="logoutBtn"><i class="fa-solid fa-right-from-bracket me-2"></i>Sign out</button>
+        </section>
+
+        <!-- Auth views -->
+        <div id="authViews">
+          <div class="tabs" role="tablist" aria-label="Authentication mode" id="tabs">
+            <button type="button" role="tab" id="tabLogin" aria-controls="viewLogin" aria-selected="true">Sign In</button>
+            <button type="button" role="tab" id="tabRegister" aria-controls="viewRegister" aria-selected="false" tabindex="-1">Create Account</button>
+          </div>
+
+          <!-- Login -->
+          <section id="viewLogin" role="tabpanel" aria-labelledby="tabLogin">
+            <h2 class="h4 fw-bold mb-1">Sign in</h2>
+            <p class="text-muted small mb-3">Use the email you registered with on this device.</p>
+            <form id="loginForm" novalidate>
+              <div class="mb-3">
+                <label for="lEmail" class="form-label small fw-semibold">Email</label>
+                <input type="email" id="lEmail" class="form-control" autocomplete="email" maxlength="120" aria-describedby="lEmailErr">
+                <div class="invalid-feedback" id="lEmailErr">Please enter a valid email address.</div>
+              </div>
+              <div class="mb-3">
+                <label for="lPass" class="form-label small fw-semibold">Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="lPass" class="form-control" autocomplete="current-password" maxlength="64" aria-describedby="lPassErr">
+                  <button type="button" class="pw-toggle" data-target="lPass" aria-label="Show password" aria-pressed="false"><i class="fa-regular fa-eye"></i></button>
+                </div>
+                <div class="invalid-feedback d-block-if" id="lPassErr">Please enter your password.</div>
+              </div>
+              <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                <div class="form-check"><input class="form-check-input" type="checkbox" id="lRemember"><label class="form-check-label small" for="lRemember">Remember me</label></div>
+                <button type="button" class="link-btn small" id="toForgot">Forgot password?</button>
+              </div>
+              <div id="lAlert" class="alert alert-danger small d-none" role="alert"></div>
+              <button type="submit" class="btn btn-primary btn-lg w-100">Sign In</button>
+              <p class="small text-muted text-center mt-3 mb-0">New here? <button type="button" class="link-btn" id="toRegister">Create an account</button></p>
+            </form>
+          </section>
+
+          <!-- Register -->
+          <section id="viewRegister" role="tabpanel" aria-labelledby="tabRegister" class="d-none">
+            <h2 class="h4 fw-bold mb-1">Create your account</h2>
+            <p class="text-muted small mb-3">Demo registration. New accounts are created with the Customer role.</p>
+            <form id="regForm" novalidate>
+              <div class="mb-3">
+                <label for="rName" class="form-label small fw-semibold">Full name</label>
+                <input type="text" id="rName" class="form-control" autocomplete="name" maxlength="60" aria-describedby="rNameErr">
+                <div class="invalid-feedback" id="rNameErr">Please enter your full name (at least 2 characters).</div>
+              </div>
+              <div class="mb-3">
+                <label for="rEmail" class="form-label small fw-semibold">Email</label>
+                <input type="email" id="rEmail" class="form-control" autocomplete="email" maxlength="120" aria-describedby="rEmailErr">
+                <div class="invalid-feedback" id="rEmailErr">Please enter a valid email address.</div>
+              </div>
+              <div class="mb-3">
+                <label for="rPass" class="form-label small fw-semibold">Password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="rPass" class="form-control" autocomplete="new-password" maxlength="64" aria-describedby="rPassErr strengthText">
+                  <button type="button" class="pw-toggle" data-target="rPass" aria-label="Show password" aria-pressed="false"><i class="fa-regular fa-eye"></i></button>
+                </div>
+                <div class="invalid-feedback" id="rPassErr">Use at least 8 characters including a letter and a number.</div>
+                <div class="strength-bar mt-2" role="progressbar" aria-label="Password strength" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0" id="strengthWrap"><span id="strengthBar"></span></div>
+                <div class="small mt-1 text-muted" id="strengthText" aria-live="polite">Password strength: enter a password</div>
+              </div>
+              <div class="mb-3">
+                <label for="rConfirm" class="form-label small fw-semibold">Confirm password</label>
+                <div class="pw-wrap">
+                  <input type="password" id="rConfirm" class="form-control" autocomplete="new-password" maxlength="64" aria-describedby="rConfirmErr">
+                  <button type="button" class="pw-toggle" data-target="rConfirm" aria-label="Show confirm password" aria-pressed="false"><i class="fa-regular fa-eye"></i></button>
+                </div>
+                <div class="invalid-feedback" id="rConfirmErr">Passwords do not match.</div>
+              </div>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="rTerms" aria-describedby="rTermsErr">
+                <label class="form-check-label small" for="rTerms">I accept the <button type="button" class="link-btn" id="openTerms">demo terms and privacy notice</button>.</label>
+                <div class="invalid-feedback" id="rTermsErr">You must accept the terms to create an account.</div>
+              </div>
+              <div id="rAlert" class="alert alert-danger small d-none" role="alert"></div>
+              <button type="submit" class="btn btn-primary btn-lg w-100">Create Account</button>
+              <p class="small text-muted text-center mt-3 mb-0">Already registered? <button type="button" class="link-btn" id="toLogin">Sign in</button></p>
+            </form>
+          </section>
+
+          <!-- Forgot -->
+          <section id="viewForgot" class="d-none" aria-labelledby="forgotH">
+            <h2 class="h4 fw-bold mb-1" id="forgotH">Reset your password</h2>
+            <p class="text-muted small mb-3">Demo interface only. No email is sent and no password is changed.</p>
+            <form id="forgotForm" novalidate>
+              <div class="mb-3">
+                <label for="fEmail" class="form-label small fw-semibold">Account email</label>
+                <input type="email" id="fEmail" class="form-control" autocomplete="email" maxlength="120" aria-describedby="fEmailErr">
+                <div class="invalid-feedback" id="fEmailErr">Please enter a valid email address.</div>
+              </div>
+              <div id="fMsg" class="alert alert-success small d-none" role="status"></div>
+              <button type="submit" class="btn btn-primary w-100 mb-2">Send Reset Link (demo)</button>
+              <button type="button" class="btn btn-outline-primary w-100" id="forgotBack"><i class="fa-solid fa-arrow-left me-2"></i>Back to sign in</button>
+            </form>
+          </section>
+
+          <div class="divider"><span>or review the admin area</span></div>
+          <div class="admin-box">
+            <div class="d-flex flex-wrap align-items-center gap-2 mb-1"><span class="sim-tag">DEMO ONLY</span><strong>Demo Admin access</strong></div>
+            <p class="small text-muted mb-2">Creates a simulated Admin session so you can review the dashboard. It uses no password and provides no real security.</p>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="button" class="btn btn-navy btn-sm" id="adminBtn"><i class="fa-solid fa-user-shield me-1"></i>Sign in as Demo Admin</button>
+              <a href="admin.html" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-gauge-high me-1"></i>Open Demo Admin Dashboard</a>
+            </div>
+          </div>
+        </div>
+
+        <hr class="my-4">
+        <div class="d-flex flex-wrap gap-3 small justify-content-center">
+          <a href="index.html" class="text-primary fw-semibold"><i class="fa-solid fa-house me-1"></i>Back to store</a>
+          <a href="cart.html" class="text-primary fw-semibold"><i class="fa-solid fa-cart-shopping me-1"></i>View cart</a>
+          <a href="profile.html" class="text-primary fw-semibold"><i class="fa-solid fa-user me-1"></i>My profile</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4"><div class="logo text-white mb-2"><i class="fa-solid fa-microchip"></i> Tech<span style="color:#6cb6ee">Xpress</span></div>
+        <p class="small">Your destination for quality electronics. This is a front-end demo store.</p></div>
+      <div class="col-6 col-lg-2"><h6>Shop</h6><a href="index.html">Laptops</a><a href="index.html">Smartphones</a><a href="index.html">Cameras</a><a href="index.html">Accessories</a></div>
+      <div class="col-6 col-lg-2"><h6>Account</h6><a href="login_registration.html">Sign in / Register</a><a href="customer_profile.html">My Profile</a><a href="shopping.html">Cart</a></div>
+      <div class="col-lg-4"><h6>Contact</h6>
+        <div class="small"><i class="fa-solid fa-location-dot me-2"></i>123 Tech Avenue, Cairo, Egypt</div>
+        <div class="small"><i class="fa-solid fa-phone me-2"></i>+20 100 000 0000</div>
+        <div class="small"><i class="fa-solid fa-envelope me-2"></i>support@techxpress.example</div></div>
+    </div>
+    <hr class="border-secondary mt-4"><div class="small text-center">&copy; 2026 TechXpress. Demo project, no real payments or accounts.</div>
+  </div>
+</footer>
+
+<div class="toast-box"><div id="toast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true"><div class="d-flex"><div class="toast-body" id="toastMsg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div></div>
+
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered"><div class="modal-content" style="border-radius:16px">
+    <div class="modal-header border-0"><h2 class="modal-title h5 fw-bold" id="termsTitle">Demo terms and privacy notice</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+    <div class="modal-body pt-0 small text-muted">
+      <p>TechXpress is a front-end demonstration project. No real accounts, payments or orders exist.</p>
+      <p>Your name and email are saved only in this browser's localStorage so the demo can work across pages. Passwords are never saved: they are used only for on-page validation and discarded.</p>
+      <p class="mb-0">localStorage is not a secure authentication system. A production version must use server-side authentication and authorization (ASP.NET Identity).</p>
+    </div>
+    <div class="modal-footer border-0"><button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button></div>
+  </div></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+"use strict";
+var KEYS={products:"techxpress_products",cart:"techxpress_cart",users:"techxpress_users",current:"techxpress_current_user",orders:"techxpress_orders",categories:"techxpress_categories",wishlist:"techxpress_wishlist"};
+var REMEMBER_KEY="techxpress_remembered_email"; /* convenience only: stores an email address, never a password */
+var ADMIN_EMAIL="admin@techxpress.demo";
+
+function load(key,fb){try{var r=localStorage.getItem(key);if(r===null)return fb;var v=JSON.parse(r);return v===null?fb:v}catch(e){return fb}}
+function save(key,v){try{localStorage.setItem(key,JSON.stringify(v));return true}catch(e){return false}}
+function initKey(key,val){try{if(localStorage.getItem(key)===null)localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+function arr(key){var v=load(key,[]);return Array.isArray(v)?v:[]}
+/* Products and categories are seeded by the catalog pages; they are intentionally not touched here. */
+initKey(KEYS.users,[]);initKey(KEYS.cart,[]);initKey(KEYS.orders,[]);initKey(KEYS.wishlist,[]);initKey(KEYS.current,null);
+
+var $=function(id){return document.getElementById(id)};
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined&&text!==null)e.textContent=text;return e}
+var EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function normEmail(v){return String(v||"").trim().toLowerCase()}
+
+var toastEl=$("toast"),toast=window.bootstrap?new bootstrap.Toast(toastEl,{delay:2800}):null;
+function notify(msg,type){
+  toastEl.classList.remove("text-bg-dark","text-bg-success","text-bg-danger");
+  toastEl.classList.add(type==="error"?"text-bg-danger":type==="success"?"text-bg-success":"text-bg-dark");
+  $("toastMsg").textContent=msg;if(toast)toast.show()
+}
+
+function updateBadge(){
+  var n=arr(KEYS.cart).reduce(function(s,i){return s+(Number(i&&i.quantity)||0)},0);
+  $("cartCount").textContent=n
+}
+
+/* Users */
+function users(){return arr(KEYS.users).filter(function(u){return u&&typeof u==="object"&&typeof u.email==="string"})}
+function findUser(email){var e=normEmail(email);return users().find(function(u){return normEmail(u.email)===e})||null}
+function newId(){return "u_"+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function publicUser(u){return {id:u.id,name:u.name,email:u.email,role:u.role||"Customer"}}
+function setCurrent(u){return save(KEYS.current,publicUser(u))}
+function currentUser(){var c=load(KEYS.current,null);return(c&&typeof c==="object"&&typeof c.email==="string")?c:null}
+
+/* View handling */
+var views=["viewLogin","viewRegister","viewForgot"];
+function showView(name){
+  views.forEach(function(v){$(v).classList.toggle("d-none",v!==name)});
+  var isLogin=name==="viewLogin",isReg=name==="viewRegister";
+  $("tabs").classList.toggle("d-none",name==="viewForgot");
+  $("tabLogin").setAttribute("aria-selected",isLogin?"true":"false");$("tabLogin").tabIndex=isLogin?0:-1;
+  $("tabRegister").setAttribute("aria-selected",isReg?"true":"false");$("tabRegister").tabIndex=isReg?0:-1;
+  if(history.replaceState){history.replaceState(null,"",isReg?"#register":"#login")}
+}
+function showSigned(){
+  var u=currentUser();
+  if(!u){$("viewSigned").classList.add("d-none");$("authViews").classList.remove("d-none");return}
+  $("authViews").classList.add("d-none");$("viewSigned").classList.remove("d-none");
+  $("sName").textContent=u.name||"Customer";$("sEmail").textContent=u.email;$("sRole").textContent=u.role||"Customer";
+  $("sAvatar").textContent=String(u.name||u.email).trim().charAt(0).toUpperCase()||"?";
+  $("sAdminLinkWrap").classList.toggle("d-none",String(u.role).toLowerCase()!=="admin");
+  $("accountLabelFix")
+}
+/* helper stub removed at runtime if missing */
+$.accountLabelFix=null;
+
+/* Field validation helpers */
+function mark(id,ok){var i=$(id);i.classList.toggle("is-invalid",!ok);i.classList.toggle("is-valid",ok);i.setAttribute("aria-invalid",ok?"false":"true");return ok}
+function clearMarks(form){form.querySelectorAll(".is-invalid,.is-valid").forEach(function(i){i.classList.remove("is-invalid","is-valid");i.removeAttribute("aria-invalid")})}
+function showAlert(id,msg){var a=$(id);a.textContent=msg;a.classList.remove("d-none")}
+function hideAlert(id){$(id).classList.add("d-none")}
+
+/* Password toggles */
+document.querySelectorAll(".pw-toggle").forEach(function(btn){
+  btn.addEventListener("click",function(){
+    var inp=$(btn.dataset.target),show=inp.type==="password";
+    inp.type=show?"text":"password";
+    btn.setAttribute("aria-pressed",show?"true":"false");
+    btn.setAttribute("aria-label",(show?"Hide ":"Show ")+(btn.dataset.target==="rConfirm"?"confirm password":"password"));
+    btn.firstChild.className=show?"fa-regular fa-eye-slash":"fa-regular fa-eye"
+  })
+});
+
+/* Password strength */
+function strength(p){
+  if(!p)return 0;
+  var s=0;
+  if(p.length>=8)s++;
+  if(/[a-z]/.test(p)&&/[A-Z]/.test(p))s++;
+  if(/\d/.test(p))s++;
+  if(/[^A-Za-z0-9]/.test(p))s++;
+  if(p.length>=12&&s>=3)s=4;
+  if(p.length<8)s=Math.min(s,1);
+  return Math.min(4,s)
+}
+var SLABEL=["Enter a password","Weak","Fair","Good","Strong"],SCOLOR=["#E4E7EC","#d92d20","#f79009","#2589D8","#12805c"];
+function renderStrength(){
+  var p=$("rPass").value,s=strength(p);
+  $("strengthBar").style.width=(p?Math.max(12,s*25):0)+"%";
+  $("strengthBar").style.background=SCOLOR[s];
+  $("strengthWrap").setAttribute("aria-valuenow",String(s));
+  $("strengthText").textContent="Password strength: "+(p?SLABEL[s]:"enter a password")
+}
+function passOk(p){return p.length>=8&&/[A-Za-z]/.test(p)&&/\d/.test(p)}
+
+/* Login */
+function afterLogin(u){
+  setCurrent(u);
+  var admin=String(u.role).toLowerCase()==="admin";
+  notify("Welcome back, "+(u.name||"friend")+"! Redirecting...","success");
+  setTimeout(function(){window.location.href=admin?"admin.html":"profile.html"},900)
+}
+$("loginForm").addEventListener("submit",function(e){
+  e.preventDefault();hideAlert("lAlert");
+  var email=$("lEmail").value.trim(),pass=$("lPass").value;
+  var okE=mark("lEmail",EMAIL_RE.test(email));
+  var okP=mark("lPass",pass.length>0);
+  $("lPassErr").classList.toggle("d-block",!okP);
+  if(!okE||!okP){notify("Please fix the highlighted fields.","error");(okE?$("lPass"):$("lEmail")).focus();return}
+  var u=findUser(email);
+  if(!u){
+    showAlert("lAlert","We couldn't find a demo account for that email on this device. Please create an account first.");
+    notify("Account not found","error");return
+  }
+  /* Demo only: the password is not stored or verified; production must verify it on the server. */
+  try{if($("lRemember").checked)localStorage.setItem(REMEMBER_KEY,normEmail(email));else localStorage.removeItem(REMEMBER_KEY)}catch(err){}
+  $("lPass").value="";
+  afterLogin(u)
+});
+$("lPass").addEventListener("input",function(){if($("lPass").classList.contains("is-invalid")){mark("lPass",$("lPass").value.length>0);$("lPassErr").classList.toggle("d-block",$("lPass").value.length===0)}});
+$("lEmail").addEventListener("blur",function(){if($("lEmail").value.trim())mark("lEmail",EMAIL_RE.test($("lEmail").value.trim()))});
+
+/* Registration */
+$("rPass").addEventListener("input",function(){
+  renderStrength();
+  if($("rPass").classList.contains("is-invalid"))mark("rPass",passOk($("rPass").value));
+  if($("rConfirm").value)mark("rConfirm",$("rConfirm").value===$("rPass").value)
+});
+$("rConfirm").addEventListener("input",function(){mark("rConfirm",$("rConfirm").value===$("rPass").value&&$("rConfirm").value.length>0)});
+$("rEmail").addEventListener("blur",function(){if($("rEmail").value.trim())mark("rEmail",EMAIL_RE.test($("rEmail").value.trim()))});
+$("regForm").addEventListener("submit",function(e){
+  e.preventDefault();hideAlert("rAlert");
+  var name=$("rName").value.trim().replace(/\s+/g," "),email=$("rEmail").value.trim(),pass=$("rPass").value,conf=$("rConfirm").value;
+  var checks=[
+    ["rName",name.length>=2&&/[A-Za-z\u00C0-\u024F\u0600-\u06FF]/.test(name)],
+    ["rEmail",EMAIL_RE.test(email)],
+    ["rPass",passOk(pass)],
+    ["rConfirm",conf.length>0&&conf===pass]
+  ],first=null,ok=true;
+  checks.forEach(function(c){if(!mark(c[0],c[1])){ok=false;if(!first)first=$(c[0])}});
+  var t=$("rTerms");t.classList.toggle("is-invalid",!t.checked);t.setAttribute("aria-invalid",t.checked?"false":"true");
+  if(!t.checked){ok=false;if(!first)first=t}
+  if(!ok){notify("Please fix the highlighted fields.","error");if(first)first.focus();return}
+  if(findUser(email)){
+    mark("rEmail",false);$("rEmailErr").textContent="An account with this email already exists. Try signing in.";
+    showAlert("rAlert","This email is already registered in the demo.");notify("Email already registered","error");$("rEmail").focus();return
+  }
+  var user={id:newId(),name:name,email:email,role:"Customer",createdAt:new Date().toISOString()}; /* no password is persisted */
+  var list=arr(KEYS.users);list.push(user);
+  if(!save(KEYS.users,list)){showAlert("rAlert","Your browser could not save the demo account (storage may be disabled or full).");notify("Could not save account","error");return}
+  $("rPass").value="";$("rConfirm").value="";renderStrength();
+  notify("Account created! Signing you in...","success");
+  setCurrent(user);
+  setTimeout(function(){window.location.href="profile.html"},900)
+});
+$("rEmail").addEventListener("input",function(){$("rEmailErr").textContent="Please enter a valid email address."});
+
+/* Forgot password (demo) */
+$("forgotForm").addEventListener("submit",function(e){
+  e.preventDefault();var v=$("fEmail").value.trim(),m=$("fMsg");m.classList.add("d-none");
+  if(!mark("fEmail",EMAIL_RE.test(v))){notify("Please enter a valid email.","error");$("fEmail").focus();return}
+  m.textContent="Demo only: if an account existed for "+v+", a reset link would be sent. No email was sent and nothing was changed.";
+  m.classList.remove("d-none");notify("Demo reset requested","success")
+});
+
+/* Demo admin */
+$("adminBtn").addEventListener("click",function(){
+  var list=arr(KEYS.users),u=list.find(function(x){return x&&normEmail(x.email)===ADMIN_EMAIL});
+  if(!u){
+    u={id:"u_demo_admin",name:"Demo Admin",email:ADMIN_EMAIL,role:"Admin",createdAt:new Date().toISOString()};
+    list.push(u);save(KEYS.users,list)
+  }
+  setCurrent(u);
+  notify("Signed in as Demo Admin (simulation only). Redirecting...","success");
+  setTimeout(function(){window.location.href="admin.html"},900)
+});
+
+/* Logout */
+$("logoutBtn").addEventListener("click",function(){
+  save(KEYS.current,null);notify("You have been signed out.");
+  showSigned();showView("viewLogin")
+});
+
+/* Navigation between views */
+$("tabLogin").addEventListener("click",function(){showView("viewLogin")});
+$("tabRegister").addEventListener("click",function(){showView("viewRegister")});
+$("toRegister").addEventListener("click",function(){showView("viewRegister");$("rName").focus()});
+$("toLogin").addEventListener("click",function(){showView("viewLogin");$("lEmail").focus()});
+$("toForgot").addEventListener("click",function(){showView("viewForgot");$("fEmail").value=$("lEmail").value;$("fEmail").focus()});
+$("forgotBack").addEventListener("click",function(){showView("viewLogin");$("lEmail").focus()});
+$("tabs").addEventListener("keydown",function(e){
+  if(e.key==="ArrowRight"||e.key==="ArrowLeft"){
+    e.preventDefault();var toReg=$("tabLogin").getAttribute("aria-selected")==="true";
+    showView(toReg?"viewRegister":"viewLogin");(toReg?$("tabRegister"):$("tabLogin")).focus()
+  }
+});
+var termsModal=window.bootstrap?new bootstrap.Modal($("termsModal")):null;
+$("openTerms").addEventListener("click",function(){if(termsModal)termsModal.show()});
+
+/* Init */
+function init(){
+  updateBadge();
+  try{var re=localStorage.getItem(REMEMBER_KEY);if(re&&EMAIL_RE.test(re)){$("lEmail").value=re;$("lRemember").checked=true}}catch(e){}
+  showSigned();
+  showView(window.location.hash==="#register"?"viewRegister":"viewLogin")
+}
+/* Safe shim so showSigned never fails */
+document.addEventListener("DOMContentLoaded",function(){});
+init();
+window.addEventListener("storage",function(e){if(e.key===KEYS.cart||e.key===null)updateBadge();if(e.key===KEYS.current||e.key===null)showSigned()});
+})();
+</script>
+</body>
+</html>

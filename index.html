@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TechXpress | Electronics Store</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--primary:#1769AA;--navy:#0B1220;--secondary:#2589D8;--bg:#F5F7FB;--text:#182230;--muted:#667085;--border:#E4E7EC}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+.topbar{background:var(--navy);color:#fff;font-size:.85rem;padding:.5rem 0;text-align:center}
+.topbar a{color:#9fd0f5;font-weight:600}
+header.site{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-weight:800;font-size:1.5rem;color:var(--navy)}
+.logo i{color:var(--primary)}.logo span{color:var(--primary)}
+.search-box{max-width:560px;width:100%}
+.form-control,.form-select{border-radius:10px;border-color:var(--border)}
+.form-control:focus,.form-select:focus{border-color:var(--secondary);box-shadow:0 0 0 .2rem rgba(37,137,216,.2)}
+.btn{border-radius:10px;transition:all .2s}
+.btn-primary{background:var(--primary);border-color:var(--primary)}
+.btn-primary:hover{background:var(--secondary);border-color:var(--secondary)}
+.btn-outline-primary{color:var(--primary);border-color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);border-color:var(--primary)}
+.icon-link{position:relative;font-size:1.25rem;color:var(--navy);padding:.4rem .6rem}
+.icon-link:hover{color:var(--primary)}
+.badge-count{position:absolute;top:-4px;right:-4px;background:var(--primary);color:#fff;font-size:.68rem;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+nav.main-nav{border-top:1px solid var(--border)}
+nav.main-nav a{display:inline-block;padding:.7rem 1rem;font-weight:600;font-size:.95rem;color:var(--text);border-bottom:2px solid transparent}
+nav.main-nav a:hover,nav.main-nav a.active{color:var(--primary);border-color:var(--primary)}
+.hero{background:linear-gradient(120deg,var(--navy),#12345a 60%,var(--primary));color:#fff;border-radius:20px;overflow:hidden}
+.hero h1{font-weight:800;font-size:clamp(2rem,4.5vw,3.2rem)}
+.hero img{width:100%;height:100%;max-height:380px;object-fit:cover;border-radius:16px}
+.tag{display:inline-block;background:rgba(255,255,255,.15);padding:.3rem .8rem;border-radius:20px;font-size:.8rem}
+.section-title{font-weight:800;font-size:1.6rem}
+.cat-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.2rem .5rem;text-align:center;transition:.2s;display:block;width:100%;cursor:pointer}
+.cat-card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(16,24,40,.1);border-color:var(--secondary)}
+.cat-card i{font-size:1.8rem;color:var(--primary);margin-bottom:.5rem}
+.cat-card div{font-weight:600}
+.card-p{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;height:100%;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(16,24,40,.06);transition:.2s;position:relative}
+.card-p:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(16,24,40,.12)}
+.card-p .img{aspect-ratio:4/3;background:#eef2f7;display:block}
+.card-p img{width:100%;height:100%;object-fit:cover}
+.card-p .body{padding:1rem;display:flex;flex-direction:column;flex:1}
+.brand{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.pname{font-weight:700;font-size:1rem;margin:.2rem 0}
+.price{font-weight:800;font-size:1.2rem;color:var(--primary)}
+.old{color:var(--muted);text-decoration:line-through;font-size:.9rem;margin-left:.4rem}
+.stars{color:#f5a623;font-size:.85rem}
+.wish{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);color:var(--muted)}
+.wish.active{color:#e5484d}
+.sale{position:absolute;top:10px;left:10px;background:#e5484d;color:#fff;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:8px}
+.stock{font-size:.8rem;font-weight:600}
+.in{color:#12805c}.low{color:#b54708}.out{color:#d92d20}
+.filters{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1rem}
+.promo{background:linear-gradient(100deg,var(--primary),var(--secondary));color:#fff;border-radius:20px;padding:2.5rem}
+.benefit{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.4rem;height:100%}
+.benefit i{font-size:1.6rem;color:var(--primary);margin-bottom:.6rem}
+.newsletter{background:var(--navy);color:#fff;border-radius:20px;padding:2.5rem}
+footer{background:var(--navy);color:#c3cbd8;margin-top:3rem}
+footer h6{color:#fff;font-weight:700}
+footer a{display:block;color:#c3cbd8;padding:.15rem 0;font-size:.92rem}
+footer a:hover{color:#fff}
+.toast-box{position:fixed;bottom:20px;right:20px;z-index:2000}
+a:focus-visible,button:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+</style>
+</head>
+<body id="top">
+<div class="topbar"><div class="container"><i class="fa-solid fa-bolt"></i> Free shipping on orders over $99 &middot; <a href="#catalog" data-deals="1">See today's deals</a></div></div>
+
+<header class="site">
+  <div class="container py-3 d-flex align-items-center gap-3 flex-wrap">
+    <a href="index.html" class="logo"><i class="fa-solid fa-microchip"></i> Tech<span>Xpress</span></a>
+    <form class="search-box flex-grow-1 mx-lg-auto order-3 order-lg-2" id="searchForm" role="search">
+      <div class="input-group">
+        <input type="search" id="searchInput" class="form-control" placeholder="Search products or brands..." aria-label="Search products">
+        <button class="btn btn-primary" type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+    </form>
+    <div class="ms-auto d-flex align-items-center order-2 order-lg-3">
+      <a href="login_registration.html" id="accountLink" class="icon-link" aria-label="Account"><i class="fa-regular fa-user"></i></a>
+      <a href="shopping.html" class="icon-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i><span class="badge-count" id="cartCount">0</span></a>
+    </div>
+  </div>
+  <nav class="main-nav"><div class="container" style="overflow-x:auto;white-space:nowrap">
+    <a href="#top" class="active">Home</a>
+    <a href="#catalog" data-cat="Laptops">Laptops</a>
+    <a href="#catalog" data-cat="Smartphones">Smartphones</a>
+    <a href="#catalog" data-cat="Cameras">Cameras</a>
+    <a href="#catalog" data-cat="Accessories">Accessories</a>
+    <a href="#catalog" data-deals="1">Deals</a>
+  </div></nav>
+</header>
+
+<main class="container my-4">
+  <section class="hero p-4 p-md-5 mb-5">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <span class="tag mb-3"><i class="fa-solid fa-fire"></i> New season sale</span>
+        <h1 class="mt-3">Next-level tech, delivered fast.</h1>
+        <p class="lead opacity-75">Discover laptops, smartphones, cameras and accessories from the world's best brands at prices you'll love.</p>
+        <a href="#catalog" class="btn btn-light btn-lg fw-bold px-4" id="shopNow">Shop Now <i class="fa-solid fa-arrow-right ms-1"></i></a>
+      </div>
+      <div class="col-lg-6"><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=900&q=80" alt="Laptop on a desk" data-fb="TechXpress"></div>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-labelledby="catH">
+    <h2 class="section-title mb-3" id="catH">Shop by Category</h2>
+    <div class="row g-3" id="categoryGrid"></div>
+  </section>
+
+  <section class="mb-5" id="catalog" aria-labelledby="featH">
+    <h2 class="section-title mb-3" id="featH">Featured Products</h2>
+    <div class="filters mb-4">
+      <div class="row g-2 align-items-end">
+        <div class="col-6 col-md-3"><label class="form-label small fw-semibold" for="fCat">Category</label>
+          <select id="fCat" class="form-select"></select></div>
+        <div class="col-3 col-md-2"><label class="form-label small fw-semibold" for="fMin">Min $</label>
+          <input id="fMin" type="number" min="0" class="form-control" placeholder="0"></div>
+        <div class="col-3 col-md-2"><label class="form-label small fw-semibold" for="fMax">Max $</label>
+          <input id="fMax" type="number" min="0" class="form-control" placeholder="Any"></div>
+        <div class="col-6 col-md-3"><label class="form-label small fw-semibold" for="fSort">Sort by</label>
+          <select id="fSort" class="form-select">
+            <option value="default">Featured</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="popular">Popularity</option>
+            <option value="rating">Rating</option>
+          </select></div>
+        <div class="col-6 col-md-2 d-grid"><button id="fReset" class="btn btn-outline-primary" type="button">Reset</button></div>
+      </div>
+      <div class="form-check mt-2"><input class="form-check-input" type="checkbox" id="fDeals"><label class="form-check-label small" for="fDeals">Deals only</label></div>
+    </div>
+    <div class="small text-muted mb-2" id="resultCount" aria-live="polite"></div>
+    <div class="row g-3" id="productGrid"></div>
+    <div id="emptyState" class="text-center py-5 d-none">
+      <i class="fa-regular fa-face-frown fa-3x text-muted mb-3"></i>
+      <h3 class="h5">No products match your search</h3>
+      <p class="text-muted">Try different keywords or adjust your filters.</p>
+      <button class="btn btn-primary" id="emptyReset" type="button">Clear filters</button>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-labelledby="newH">
+    <h2 class="section-title mb-3" id="newH">New Arrivals</h2>
+    <div class="row g-3" id="newGrid"></div>
+  </section>
+
+  <section class="promo mb-5">
+    <div class="row align-items-center g-3">
+      <div class="col-md-8"><h2 class="fw-bold">Up to 30% off audio &amp; accessories</h2>
+        <p class="mb-0 opacity-75">Limited-time offers on headphones, keyboards, mice and more.</p></div>
+      <div class="col-md-4 text-md-end"><a href="#catalog" class="btn btn-light fw-bold px-4" data-deals="1">View Deals</a></div>
+    </div>
+  </section>
+
+  <section class="mb-5" aria-label="Benefits">
+    <div class="row g-3">
+      <div class="col-6 col-lg-3"><div class="benefit"><i class="fa-solid fa-lock"></i><h3 class="h6 fw-bold">Secure Checkout</h3><p class="small text-muted mb-0">Demo checkout flow with protected-style form handling.</p></div></div>
+      <div class="col-6 col-lg-3"><div class="benefit"><i class="fa-solid fa-truck-fast"></i><h3 class="h6 fw-bold">Fast Delivery</h3><p class="small text-muted mb-0">Express shipping options on most items.</p></div></div>
+      <div class="col-6 col-lg-3"><div class="benefit"><i class="fa-solid fa-shield-halved"></i><h3 class="h6 fw-bold">Warranty</h3><p class="small text-muted mb-0">Manufacturer warranty on every product.</p></div></div>
+      <div class="col-6 col-lg-3"><div class="benefit"><i class="fa-solid fa-headset"></i><h3 class="h6 fw-bold">24/7 Support</h3><p class="small text-muted mb-0">Friendly help whenever you need it.</p></div></div>
+    </div>
+  </section>
+
+  <section class="newsletter">
+    <div class="row align-items-center g-3">
+      <div class="col-lg-6"><h2 class="fw-bold h3">Join the TechXpress newsletter</h2><p class="mb-0 opacity-75">Get deals and new arrivals in your inbox. (Demo only, nothing is sent.)</p></div>
+      <div class="col-lg-6">
+        <form id="newsForm" novalidate>
+          <div class="input-group">
+            <input type="email" id="newsEmail" class="form-control" placeholder="you@example.com" aria-label="Email address" aria-describedby="newsMsg">
+            <button class="btn btn-primary" type="submit">Subscribe</button>
+          </div>
+          <div id="newsMsg" class="small mt-2" role="status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4"><div class="logo text-white mb-2"><i class="fa-solid fa-microchip"></i> Tech<span style="color:#6cb6ee">Xpress</span></div>
+        <p class="small">Your destination for quality electronics. This is a front-end demo store.</p></div>
+      <div class="col-6 col-lg-2"><h6>Shop</h6><a href="#catalog" data-cat="Laptops">Laptops</a><a href="#catalog" data-cat="Smartphones">Smartphones</a><a href="#catalog" data-cat="Cameras">Cameras</a><a href="#catalog" data-cat="Accessories">Accessories</a></div>
+      <div class="col-6 col-lg-2"><h6>Account</h6><a href="login_registration.html">Sign in / Register</a><a href="customer_profile.html">My Profile</a><a href="shopping.html">Cart</a></div>
+      <div class="col-lg-4"><h6>Contact</h6>
+        <div class="small"><i class="fa-solid fa-location-dot me-2"></i>123 Tech Avenue, Cairo, Egypt</div>
+        <div class="small"><i class="fa-solid fa-phone me-2"></i>+20 100 000 0000</div>
+        <div class="small"><i class="fa-solid fa-envelope me-2"></i>support@techxpress.example</div></div>
+    </div>
+    <hr class="border-secondary mt-4"><div class="small text-center">&copy; 2026 TechXpress. Demo project, no real payments or accounts.</div>
+  </div>
+</footer>
+
+<div class="toast-box"><div id="toast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite"><div class="d-flex"><div class="toast-body" id="toastMsg"></div></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+"use strict";
+var KEYS={products:"techxpress_products",cart:"techxpress_cart",users:"techxpress_users",current:"techxpress_current_user",orders:"techxpress_orders",categories:"techxpress_categories",wishlist:"techxpress_wishlist"};
+var U="https://images.unsplash.com/";
+var SAMPLE=[
+{id:"p1",name:"AeroBook Pro 14",brand:"Aero",category:"Laptops",price:1299,originalPrice:1499,rating:4.7,reviews:328,stock:12,image:U+"photo-1496181133206-80ce9b88a853?w=600&q=80",description:"14-inch ultraportable with 16GB RAM and 512GB SSD.",isNew:false},
+{id:"p2",name:"Vertex Gaming 15",brand:"Vertex",category:"Laptops",price:1099,originalPrice:null,rating:4.5,reviews:214,stock:4,image:U+"photo-1517336714731-489689fd1ca8?w=600&q=80",description:"15.6-inch 144Hz display, dedicated graphics, RGB keyboard.",isNew:true},
+{id:"p3",name:"Nova X12 5G",brand:"Nova",category:"Smartphones",price:799,originalPrice:899,rating:4.6,reviews:512,stock:25,image:U+"photo-1511707171634-5f897ff02aa9?w=600&q=80",description:"6.7-inch OLED, triple camera, all-day battery.",isNew:false},
+{id:"p4",name:"Pixa Lite 8",brand:"Pixa",category:"Smartphones",price:449,originalPrice:null,rating:4.2,reviews:187,stock:0,image:U+"photo-1598327105666-5b89351aff97?w=600&q=80",description:"Compact smartphone with a bright display and clean software.",isNew:true},
+{id:"p5",name:"Lumix Z50 Mirrorless",brand:"Lumix",category:"Cameras",price:899,originalPrice:999,rating:4.8,reviews:143,stock:7,image:U+"photo-1516035069371-29a1b244cc32?w=600&q=80",description:"24MP mirrorless camera with 4K video and fast autofocus.",isNew:false},
+{id:"p6",name:"Retro Snap DSLR",brand:"Canvas",category:"Cameras",price:649,originalPrice:null,rating:4.4,reviews:96,stock:9,image:U+"photo-1502920917128-1aa500764cbd?w=600&q=80",description:"Beginner-friendly DSLR with 18-55mm kit lens.",isNew:true},
+{id:"p7",name:"SoundMax ANC Headphones",brand:"SoundMax",category:"Headphones",price:249,originalPrice:329,rating:4.7,reviews:620,stock:30,image:U+"photo-1505740420928-5e560c06d30e?w=600&q=80",description:"Wireless over-ear with active noise cancelling, 40h battery.",isNew:false},
+{id:"p8",name:"BeatPods Studio",brand:"Beatz",category:"Headphones",price:179,originalPrice:null,rating:4.3,reviews:275,stock:3,image:U+"photo-1583394838336-acd977736f90?w=600&q=80",description:"Comfortable studio-tuned headphones with a detachable cable.",isNew:true},
+{id:"p9",name:"TabOne Air 11",brand:"Aero",category:"Tablets",price:599,originalPrice:649,rating:4.6,reviews:201,stock:15,image:U+"photo-1544244015-0df4b3ffc6b0?w=600&q=80",description:"11-inch tablet with stylus support and laminated display.",isNew:false},
+{id:"p10",name:"Slate Mini 8",brand:"Nova",category:"Tablets",price:329,originalPrice:null,rating:4.1,reviews:88,stock:18,image:U+"photo-1561154464-82e9adf32764?w=600&q=80",description:"Lightweight 8-inch tablet for reading and streaming.",isNew:true},
+{id:"p11",name:"MechKey TKL Keyboard",brand:"Vertex",category:"Accessories",price:89,originalPrice:119,rating:4.5,reviews:342,stock:40,image:U+"photo-1587829741301-dc798b83add3?w=600&q=80",description:"Hot-swappable mechanical keyboard with tactile switches.",isNew:false},
+{id:"p12",name:"GlideX Wireless Mouse",brand:"GlideX",category:"Accessories",price:49,originalPrice:null,rating:4.4,reviews:410,stock:60,image:U+"photo-1527864550417-7fd91fc51a46?w=600&q=80",description:"Ergonomic wireless mouse with 6 programmable buttons.",isNew:true},
+{id:"p13",name:"PulseBox Bluetooth Speaker",brand:"SoundMax",category:"Accessories",price:79,originalPrice:99,rating:4.3,reviews:156,stock:22,image:U+"photo-1608043152269-423dbba4e7e8?w=600&q=80",description:"Waterproof portable speaker with 12h playtime.",isNew:true},
+{id:"p14",name:"ChronoFit Smartwatch",brand:"Pixa",category:"Accessories",price:199,originalPrice:249,rating:4.2,reviews:233,stock:11,image:U+"photo-1523275335684-37898b6baf30?w=600&q=80",description:"Fitness tracking, GPS and a 7-day battery life.",isNew:false}
+];
+var CATS=[
+{id:"c1",name:"Laptops",icon:"fa-laptop"},{id:"c2",name:"Smartphones",icon:"fa-mobile-screen"},
+{id:"c3",name:"Cameras",icon:"fa-camera"},{id:"c4",name:"Headphones",icon:"fa-headphones"},
+{id:"c5",name:"Tablets",icon:"fa-tablet-screen-button"},{id:"c6",name:"Accessories",icon:"fa-keyboard"}];
+
+function load(key,fb){try{var r=localStorage.getItem(key);if(r===null)return fb;var v=JSON.parse(r);return v===null?fb:v}catch(e){return fb}}
+function save(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch(e){}}
+function initKey(key,val){try{if(localStorage.getItem(key)===null)localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+function arr(key){var v=load(key,[]);return Array.isArray(v)?v:[]}
+
+initKey(KEYS.products,SAMPLE);initKey(KEYS.categories,CATS);
+initKey(KEYS.cart,[]);initKey(KEYS.users,[]);initKey(KEYS.orders,[]);initKey(KEYS.wishlist,[]);
+initKey(KEYS.current,null);
+
+var products=arr(KEYS.products).filter(function(p){return p&&p.id&&typeof p.price==="number"});
+if(!products.length)products=SAMPLE;
+var categories=arr(KEYS.categories);if(!categories.length)categories=CATS;
+
+var $=function(id){return document.getElementById(id)};
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+function money(n){return "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:2})}
+function fallback(img,label){
+  var svg="<svg xmlns='http://www.w3.org/2000/svg' width='600' height='450'><rect width='100%' height='100%' fill='#E4EDF7'/><text x='50%' y='50%' fill='#1769AA' font-family='Arial' font-size='26' font-weight='700' text-anchor='middle'>"+String(label||"TechXpress").replace(/[<>&'"]/g,"")+"</text></svg>";
+  img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function safeImg(src,alt,label){var i=document.createElement("img");i.alt=alt;i.loading="lazy";i.addEventListener("error",function h(){i.removeEventListener("error",h);fallback(i,label)});i.src=src;return i}
+document.querySelectorAll("img[data-fb]").forEach(function(i){i.addEventListener("error",function(){fallback(i,i.dataset.fb)},{once:true})});
+
+var toastEl=$("toast"),toast=window.bootstrap?new bootstrap.Toast(toastEl,{delay:2200}):null;
+function notify(m){$("toastMsg").textContent=m;if(toast)toast.show()}
+
+/* Cart */
+function cartCount(){return arr(KEYS.cart).reduce(function(s,i){return s+(Number(i.quantity)||0)},0)}
+function updateBadge(){$("cartCount").textContent=cartCount()}
+function addToCart(id){
+  var p=products.find(function(x){return x.id===id});if(!p)return;
+  if(p.stock<=0){notify("Sorry, this item is out of stock.");return}
+  var cart=arr(KEYS.cart),it=cart.find(function(c){return c.productId===id});
+  if(it){if(it.quantity>=p.stock){notify("Maximum available stock reached.");return}it.quantity+=1;it.price=p.price}
+  else cart.push({productId:p.id,quantity:1,name:p.name,brand:p.brand,price:p.price,image:p.image,stock:p.stock});
+  save(KEYS.cart,cart);updateBadge();notify(p.name+" added to cart")
+}
+
+/* Wishlist */
+function wishlist(){return arr(KEYS.wishlist)}
+function toggleWish(id,btn){
+  var w=wishlist(),i=w.indexOf(id);
+  if(i>-1){w.splice(i,1);notify("Removed from wishlist")}else{w.push(id);notify("Added to wishlist")}
+  save(KEYS.wishlist,w);
+  document.querySelectorAll('.wish[data-id="'+id+'"]').forEach(function(b){setWish(b,w.indexOf(id)>-1)})
+}
+function setWish(b,on){b.classList.toggle("active",on);b.setAttribute("aria-pressed",on);b.firstChild.className=on?"fa-solid fa-heart":"fa-regular fa-heart"}
+
+/* Product card */
+function stars(r){var s=el("span","stars"),f=Math.round(r);for(var i=1;i<=5;i++){var x=el("i",i<=f?"fa-solid fa-star":"fa-regular fa-star");s.appendChild(x)}return s}
+function card(p){
+  var col=el("div","col-6 col-md-4 col-lg-3"),c=el("article","card-p");
+  var link=el("a","img");link.href="product-details.html?id="+encodeURIComponent(p.id);link.setAttribute("aria-label","View "+p.name);
+  link.appendChild(safeImg(p.image,p.name,p.name));c.appendChild(link);
+  if(p.originalPrice&&p.originalPrice>p.price)c.appendChild(el("span","sale","-"+Math.round((1-p.price/p.originalPrice)*100)+"%"));
+  var w=el("button","wish");w.type="button";w.dataset.id=p.id;w.setAttribute("aria-label","Toggle wishlist for "+p.name);w.appendChild(el("i","fa-regular fa-heart"));
+  setWish(w,wishlist().indexOf(p.id)>-1);w.addEventListener("click",function(){toggleWish(p.id,w)});c.appendChild(w);
+  var b=el("div","body");b.appendChild(el("div","brand",p.brand));
+  var n=el("a","pname",p.name);n.href=link.href;b.appendChild(n);
+  var r=el("div","small mb-1");r.appendChild(stars(p.rating));r.appendChild(el("span","text-muted ms-1",p.rating+" ("+p.reviews+")"));b.appendChild(r);
+  b.appendChild(el("p","small text-muted mb-2",p.description));
+  var st=p.stock<=0?["Out of stock","stock out"]:p.stock<=5?["Only "+p.stock+" left","stock low"]:["In stock","stock in"];
+  b.appendChild(el("div",st[1]+" mb-2",st[0]));
+  var pr=el("div","mt-auto mb-2");pr.appendChild(el("span","price",money(p.price)));
+  if(p.originalPrice&&p.originalPrice>p.price)pr.appendChild(el("span","old",money(p.originalPrice)));b.appendChild(pr);
+  var btn=el("button","btn btn-primary w-100",p.stock<=0?"Out of Stock":"Add to Cart");btn.type="button";btn.disabled=p.stock<=0;
+  btn.addEventListener("click",function(){addToCart(p.id)});b.appendChild(btn);
+  c.appendChild(b);col.appendChild(c);return col
+}
+
+/* Catalog */
+var state={q:"",cat:"all",min:"",max:"",sort:"default",deals:false};
+function render(){
+  var q=state.q.trim().toLowerCase(),min=parseFloat(state.min),max=parseFloat(state.max);
+  var list=products.filter(function(p){
+    if(q&&(p.name+" "+p.brand).toLowerCase().indexOf(q)<0)return false;
+    if(state.cat!=="all"&&p.category!==state.cat)return false;
+    if(!isNaN(min)&&p.price<min)return false;
+    if(!isNaN(max)&&p.price>max)return false;
+    if(state.deals&&!(p.originalPrice&&p.originalPrice>p.price))return false;
+    return true});
+  var s=state.sort;
+  if(s==="priceAsc")list.sort(function(a,b){return a.price-b.price});
+  else if(s==="priceDesc")list.sort(function(a,b){return b.price-a.price});
+  else if(s==="popular")list.sort(function(a,b){return b.reviews-a.reviews});
+  else if(s==="rating")list.sort(function(a,b){return b.rating-a.rating||b.reviews-a.reviews});
+  var g=$("productGrid");g.replaceChildren();
+  list.forEach(function(p){g.appendChild(card(p))});
+  $("emptyState").classList.toggle("d-none",list.length>0);
+  $("resultCount").textContent=list.length+" product"+(list.length===1?"":"s")+" found"
+}
+function syncControls(){
+  $("searchInput").value=state.q;$("fCat").value=state.cat;$("fMin").value=state.min;
+  $("fMax").value=state.max;$("fSort").value=state.sort;$("fDeals").checked=state.deals
+}
+function resetFilters(){state={q:"",cat:"all",min:"",max:"",sort:"default",deals:false};syncControls();render()}
+function goCatalog(opts){
+  state=Object.assign({q:"",cat:"all",min:"",max:"",sort:"default",deals:false},opts||{});
+  syncControls();render();
+  $("catalog").scrollIntoView({behavior:"smooth"})
+}
+
+/* Categories */
+var fCat=$("fCat");
+var all=el("option",null,"All categories");all.value="all";fCat.appendChild(all);
+categories.forEach(function(c){var o=el("option",null,c.name);o.value=c.name;fCat.appendChild(o)});
+var catGrid=$("categoryGrid");
+categories.forEach(function(c){
+  var col=el("div","col-6 col-md-4 col-lg-2"),b=el("button","cat-card");b.type="button";
+  b.appendChild(el("i","fa-solid "+(c.icon||"fa-box")));b.appendChild(el("div",null,c.name));
+  b.addEventListener("click",function(){goCatalog({cat:c.name})});col.appendChild(b);catGrid.appendChild(col)
+});
+
+/* New arrivals */
+var ng=$("newGrid");
+products.filter(function(p){return p.isNew}).slice(0,4).forEach(function(p){ng.appendChild(card(p))});
+
+/* Events */
+$("searchForm").addEventListener("submit",function(e){e.preventDefault();goCatalog({q:$("searchInput").value})});
+$("searchInput").addEventListener("input",function(e){state.q=e.target.value;render()});
+fCat.addEventListener("change",function(e){state.cat=e.target.value;render()});
+$("fMin").addEventListener("input",function(e){state.min=e.target.value;render()});
+$("fMax").addEventListener("input",function(e){state.max=e.target.value;render()});
+$("fSort").addEventListener("change",function(e){state.sort=e.target.value;render()});
+$("fDeals").addEventListener("change",function(e){state.deals=e.target.checked;render()});
+$("fReset").addEventListener("click",resetFilters);
+$("emptyReset").addEventListener("click",resetFilters);
+document.querySelectorAll("[data-cat]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();goCatalog({cat:a.dataset.cat})})});
+document.querySelectorAll("[data-deals]").forEach(function(a){a.addEventListener("click",function(e){e.preventDefault();goCatalog({deals:true})})});
+$("shopNow").addEventListener("click",function(e){e.preventDefault();goCatalog()});
+
+/* Newsletter */
+$("newsForm").addEventListener("submit",function(e){
+  e.preventDefault();
+  var inp=$("newsEmail"),msg=$("newsMsg"),v=inp.value.trim();
+  var ok=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+  inp.classList.toggle("is-invalid",!ok);inp.classList.toggle("is-valid",ok);
+  msg.className="small mt-2 "+(ok?"text-success":"text-warning");
+  msg.textContent=ok?"Thanks! (Demo only, your email was not stored or sent.)":"Please enter a valid email address.";
+  if(ok)inp.value=""
+});
+
+/* Account link */
+var cu=load(KEYS.current,null);
+$("accountLink").href=(cu&&typeof cu==="object")?"profile.html":"auth.html";
+
+updateBadge();render();
+window.addEventListener("storage",updateBadge);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Details | TechXpress</title>
+<meta name="description" content="View product details, specifications, reviews and related products at TechXpress.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+:root{--primary:#1769AA;--navy:#0B1220;--secondary:#2589D8;--bg:#F5F7FB;--text:#182230;--muted:#667085;--border:#E4E7EC}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+.topbar{background:var(--navy);color:#fff;font-size:.85rem;padding:.5rem 0;text-align:center}
+.topbar a{color:#9fd0f5;font-weight:600}
+header.site{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{font-weight:800;font-size:1.5rem;color:var(--navy)}
+.logo i{color:var(--primary)}.logo span{color:var(--primary)}
+.search-wrap{position:relative;max-width:560px;width:100%}
+.suggest{position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:12px;box-shadow:0 12px 28px rgba(16,24,40,.14);z-index:300;overflow:hidden}
+.suggest a{display:flex;align-items:center;gap:.7rem;padding:.55rem .8rem;font-size:.92rem}
+.suggest a:hover,.suggest a:focus{background:var(--bg)}
+.suggest img{width:40px;height:40px;object-fit:cover;border-radius:8px;background:#eef2f7}
+.suggest .none{padding:.8rem;color:var(--muted);font-size:.9rem}
+.form-control,.form-select{border-radius:10px;border-color:var(--border)}
+.form-control:focus,.form-select:focus{border-color:var(--secondary);box-shadow:0 0 0 .2rem rgba(37,137,216,.2)}
+.btn{border-radius:10px;transition:all .2s}
+.btn-primary{background:var(--primary);border-color:var(--primary)}
+.btn-primary:hover,.btn-primary:focus{background:var(--secondary);border-color:var(--secondary)}
+.btn-outline-primary{color:var(--primary);border-color:var(--primary)}
+.btn-outline-primary:hover{background:var(--primary);border-color:var(--primary)}
+.btn-navy{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-navy:hover{background:#1b2a44;border-color:#1b2a44;color:#fff}
+.icon-link{position:relative;font-size:1.25rem;color:var(--navy);padding:.4rem .6rem}
+.icon-link:hover{color:var(--primary)}
+.badge-count{position:absolute;top:-4px;right:-4px;background:var(--primary);color:#fff;font-size:.68rem;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+nav.main-nav{border-top:1px solid var(--border)}
+nav.main-nav a{display:inline-block;padding:.7rem 1rem;font-weight:600;font-size:.95rem;color:var(--text);border-bottom:2px solid transparent}
+nav.main-nav a:hover,nav.main-nav a.active{color:var(--primary);border-color:var(--primary)}
+.breadcrumb{font-size:.88rem;margin-bottom:1rem}
+.breadcrumb a{color:var(--primary)}
+.breadcrumb-item.active{color:var(--muted)}
+.panel{background:#fff;border:1px solid var(--border);border-radius:16px;padding:1.4rem;box-shadow:0 1px 3px rgba(16,24,40,.06)}
+.section-title{font-weight:800;font-size:1.4rem}
+.gallery-main{position:relative;aspect-ratio:4/3;background:#eef2f7;border-radius:14px;overflow:hidden}
+.gallery-main img{width:100%;height:100%;object-fit:cover}
+.thumbs{display:flex;gap:.6rem;margin-top:.8rem;flex-wrap:wrap}
+.thumb{width:78px;height:62px;padding:0;border:2px solid var(--border);border-radius:10px;overflow:hidden;background:#eef2f7;transition:.2s;cursor:pointer}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb:hover{border-color:var(--secondary)}
+.thumb.active{border-color:var(--primary);box-shadow:0 0 0 3px rgba(23,105,170,.18)}
+.sale{position:absolute;top:12px;left:12px;background:#e5484d;color:#fff;font-size:.8rem;font-weight:700;padding:.25rem .65rem;border-radius:8px;z-index:2}
+.brand{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.pname-h{font-weight:800;font-size:clamp(1.5rem,3vw,2rem);margin:.2rem 0 .6rem}
+.stars{color:#f5a623}
+.meta{font-size:.88rem;color:var(--muted)}
+.price-now{font-weight:800;font-size:2rem;color:var(--primary)}
+.price-old{color:var(--muted);text-decoration:line-through;font-size:1.1rem;margin-left:.5rem}
+.save{color:#12805c;font-weight:700;font-size:.9rem}
+.stock{font-weight:700;font-size:.92rem}
+.in{color:#12805c}.low{color:#b54708}.out{color:#d92d20}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden}
+.qty button{width:42px;height:44px;border:0;background:#fff;color:var(--navy);font-size:1rem}
+.qty button:hover:not(:disabled){background:var(--bg)}
+.qty input{width:60px;height:44px;border:0;text-align:center;font-weight:700;-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.qty input:focus{outline:none;background:#f0f7fd}
+.wish-btn.active{color:#e5484d;border-color:#e5484d}
+.perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin-top:1.2rem}
+.perk{background:var(--bg);border-radius:12px;padding:.7rem .8rem;font-size:.84rem;display:flex;gap:.55rem;align-items:center}
+.perk i{color:var(--primary)}
+.spec-table th{width:34%;background:var(--bg);font-weight:600;color:var(--text)}
+.spec-table td,.spec-table th{padding:.7rem 1rem;border-color:var(--border)}
+.info-card{background:var(--bg);border-radius:14px;padding:1.1rem;height:100%}
+.info-card i{font-size:1.4rem;color:var(--primary);margin-bottom:.5rem}
+.bar{height:8px;background:var(--border);border-radius:6px;overflow:hidden}
+.bar span{display:block;height:100%;background:#f5a623;border-radius:6px}
+.review{border-top:1px solid var(--border);padding:1rem 0}
+.review:first-child{border-top:0}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.star-input{display:inline-flex;flex-direction:row-reverse;gap:.15rem}
+.star-input input{position:absolute;opacity:0;width:1px;height:1px}
+.star-input label{font-size:1.5rem;color:#cbd2dc;cursor:pointer;transition:color .15s}
+.star-input input:checked~label,.star-input label:hover,.star-input label:hover~label{color:#f5a623}
+.star-input input:focus-visible+label{outline:3px solid var(--secondary);outline-offset:2px;border-radius:6px}
+.card-p{background:#fff;border:1px solid var(--border);border-radius:16px;overflow:hidden;height:100%;display:flex;flex-direction:column;box-shadow:0 1px 3px rgba(16,24,40,.06);transition:.2s;position:relative}
+.card-p:hover{transform:translateY(-4px);box-shadow:0 12px 28px rgba(16,24,40,.12)}
+.card-p .img{aspect-ratio:4/3;background:#eef2f7;display:block}
+.card-p .img img{width:100%;height:100%;object-fit:cover}
+.card-p .body{padding:1rem;display:flex;flex-direction:column;flex:1}
+.pname{font-weight:700;font-size:1rem;margin:.2rem 0}
+.price{font-weight:800;font-size:1.2rem;color:var(--primary)}
+.old{color:var(--muted);text-decoration:line-through;font-size:.9rem;margin-left:.4rem}
+.wish{position:absolute;top:10px;right:10px;width:36px;height:36px;border-radius:50%;border:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.15);color:var(--muted);z-index:2}
+.wish.active{color:#e5484d}
+.card-p .sale{font-size:.72rem}
+footer{background:var(--navy);color:#c3cbd8;margin-top:3rem}
+footer h6{color:#fff;font-weight:700}
+footer a{display:block;color:#c3cbd8;padding:.15rem 0;font-size:.92rem}
+footer a:hover{color:#fff}
+.toast-box{position:fixed;bottom:20px;right:20px;z-index:2000}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="container"><i class="fa-solid fa-bolt"></i> Free shipping on orders over $99 &middot; <a href="index.html#catalog">See today's deals</a></div></div>
+
+<header class="site">
+  <div class="container py-3 d-flex align-items-center gap-3 flex-wrap">
+    <a href="index.html" class="logo"><i class="fa-solid fa-microchip"></i> Tech<span>Xpress</span></a>
+    <div class="search-wrap flex-grow-1 mx-lg-auto order-3 order-lg-2">
+      <form id="searchForm" role="search" autocomplete="off">
+        <div class="input-group">
+          <input type="search" id="searchInput" class="form-control" placeholder="Search products or brands..." aria-label="Search products" aria-controls="suggestBox" aria-expanded="false">
+          <button class="btn btn-primary" type="submit" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+      </form>
+      <div id="suggestBox" class="suggest d-none" role="listbox" aria-label="Search suggestions"></div>
+    </div>
+    <div class="ms-auto d-flex align-items-center order-2 order-lg-3">
+      <a href="login_registration.html" id="accountLink" class="icon-link" aria-label="Account"><i class="fa-regular fa-user"></i></a>
+      <a href="shopping.html" class="icon-link" aria-label="Shopping cart"><i class="fa-solid fa-cart-shopping"></i><span class="badge-count" id="cartCount">0</span></a>
+    </div>
+  </div>
+  <nav class="main-nav" aria-label="Main navigation"><div class="container" style="overflow-x:auto;white-space:nowrap">
+    <a href="index.html">Home</a>
+    <a href="index.html" data-nav="Laptops">Laptops</a>
+    <a href="index.html" data-nav="Smartphones">Smartphones</a>
+    <a href="index.html" data-nav="Cameras">Cameras</a>
+    <a href="index.html" data-nav="Accessories">Accessories</a>
+    <a href="index.html">Deals</a>
+  </div></nav>
+</header>
+
+<main class="container my-4" id="main">
+  <nav aria-label="Breadcrumb"><ol class="breadcrumb" id="breadcrumb">
+    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+  </ol></nav>
+
+  <!-- Not found -->
+  <section id="notFound" class="panel text-center py-5 d-none">
+    <i class="fa-regular fa-circle-question fa-3x text-muted mb-3"></i>
+    <h1 class="h3 fw-bold">Product not found</h1>
+    <p class="text-muted mb-4">Sorry, we couldn't find the product you were looking for. It may have been removed or the link may be incorrect.</p>
+    <a href="index.html" class="btn btn-primary px-4"><i class="fa-solid fa-arrow-left me-2"></i>Back to TechXpress</a>
+  </section>
+
+  <!-- Product view -->
+  <div id="productView" class="d-none">
+    <section class="row g-4 mb-4" aria-label="Product overview">
+      <div class="col-lg-6">
+        <div class="panel">
+          <div class="gallery-main">
+            <span class="sale d-none" id="discBadge"></span>
+            <img id="mainImg" alt="">
+          </div>
+          <div class="thumbs" id="thumbs" role="group" aria-label="Product image thumbnails"></div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="panel h-100">
+          <div class="brand" id="pBrand"></div>
+          <h1 class="pname-h" id="pName"></h1>
+          <div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+            <span><span class="stars" id="pStars" aria-hidden="true"></span> <strong id="pRating"></strong></span>
+            <a href="#reviews" class="meta" id="pReviews"></a>
+            <span class="meta">SKU: <strong id="pSku"></strong></span>
+          </div>
+          <div class="mb-1">
+            <span class="price-now" id="pPrice"></span><span class="price-old d-none" id="pOld"></span>
+          </div>
+          <div class="save mb-3 d-none" id="pSave"></div>
+          <p class="text-muted" id="pShort"></p>
+          <div class="stock mb-3" id="pStock" aria-live="polite"></div>
+
+          <div class="mb-3">
+            <label for="qtyInput" class="form-label small fw-semibold d-block">Quantity</label>
+            <div class="qty">
+              <button type="button" id="qtyMinus" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+              <input type="number" id="qtyInput" min="1" value="1" inputmode="numeric" aria-label="Quantity">
+              <button type="button" id="qtyPlus" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-primary btn-lg flex-grow-1" id="addBtn"><i class="fa-solid fa-cart-plus me-2"></i>Add to Cart</button>
+            <button type="button" class="btn btn-navy btn-lg flex-grow-1" id="buyBtn"><i class="fa-solid fa-bolt me-2"></i>Buy Now</button>
+            <button type="button" class="btn btn-outline-primary btn-lg wish-btn" id="wishBtn" aria-pressed="false"><i class="fa-regular fa-heart me-2"></i><span>Wishlist</span></button>
+          </div>
+
+          <div class="perks">
+            <div class="perk"><i class="fa-solid fa-truck-fast"></i> Fast delivery</div>
+            <div class="perk"><i class="fa-solid fa-shield-halved"></i> <span id="perkWarranty">Warranty included</span></div>
+            <div class="perk"><i class="fa-solid fa-rotate-left"></i> 30-day returns</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel mb-4" aria-labelledby="descH">
+      <h2 class="section-title mb-3" id="descH">Product Description</h2>
+      <p id="pDesc" class="mb-2"></p>
+      <p class="text-muted mb-0" id="pDesc2"></p>
+    </section>
+
+    <section class="panel mb-4" aria-labelledby="specH">
+      <h2 class="section-title mb-3" id="specH">Specifications</h2>
+      <div class="table-responsive">
+        <table class="table spec-table mb-0"><tbody id="specBody"></tbody></table>
+      </div>
+    </section>
+
+    <section class="panel mb-4" aria-labelledby="shipH">
+      <h2 class="section-title mb-3" id="shipH">Shipping &amp; Warranty</h2>
+      <div class="row g-3">
+        <div class="col-md-6 col-lg-3"><div class="info-card"><i class="fa-solid fa-truck-fast"></i><h3 class="h6 fw-bold">Standard Delivery</h3><p class="small text-muted mb-0">3 to 5 business days. Free on orders over $99.</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="info-card"><i class="fa-solid fa-bolt"></i><h3 class="h6 fw-bold">Express Delivery</h3><p class="small text-muted mb-0">1 to 2 business days for a small additional fee.</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="info-card"><i class="fa-solid fa-rotate-left"></i><h3 class="h6 fw-bold">Easy Returns</h3><p class="small text-muted mb-0">Return unused items in original packaging within 30 days.</p></div></div>
+        <div class="col-md-6 col-lg-3"><div class="info-card"><i class="fa-solid fa-shield-halved"></i><h3 class="h6 fw-bold">Warranty</h3><p class="small text-muted mb-0" id="warrantyText"></p></div></div>
+      </div>
+      <p class="small text-muted mt-3 mb-0">This is a front-end demo store. No real orders are shipped and no payments are processed.</p>
+    </section>
+
+    <section class="panel mb-4" id="reviews" aria-labelledby="revH">
+      <h2 class="section-title mb-3" id="revH">Customer Reviews</h2>
+      <div class="row g-4">
+        <div class="col-lg-4">
+          <div class="d-flex align-items-end gap-2 mb-1"><span class="display-5 fw-bold" id="rvAvg"></span><span class="text-muted mb-2">/ 5</span></div>
+          <div class="stars mb-1" id="rvStars" aria-hidden="true"></div>
+          <div class="text-muted small mb-3" id="rvTotal"></div>
+          <div id="rvBars"></div>
+        </div>
+        <div class="col-lg-8">
+          <h3 class="h6 fw-bold">Write a review</h3>
+          <form id="reviewForm" novalidate>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold" for="rvName">Your name</label>
+                <input type="text" id="rvNameInput" class="form-control" maxlength="40" autocomplete="name" aria-describedby="rvNameErr">
+                <div class="invalid-feedback" id="rvNameErr">Please enter your name (at least 2 characters).</div>
+              </div>
+              <div class="col-md-6">
+                <span class="form-label small fw-semibold d-block" id="rvRatingLbl">Your rating</span>
+                <fieldset class="m-0 p-0 border-0">
+                  <legend class="visually-hidden">Choose a star rating</legend>
+                  <div class="star-input" id="starInput"></div>
+                </fieldset>
+                <div class="small text-danger d-none" id="rvRatingErr" role="alert">Please choose a star rating.</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold" for="rvTitleInput">Review title</label>
+                <input type="text" id="rvTitleInput" class="form-control" maxlength="80">
+                <div class="invalid-feedback">Please add a short title (at least 3 characters).</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-semibold" for="rvTextInput">Your review</label>
+                <textarea id="rvTextInput" class="form-control" rows="4" maxlength="800"></textarea>
+                <div class="invalid-feedback">Please write at least 10 characters.</div>
+              </div>
+              <div class="col-12 d-flex flex-wrap align-items-center gap-3">
+                <button type="submit" class="btn btn-primary px-4">Submit Review</button>
+                <span class="small text-muted">Demo only: reviews are shown on this page and are not saved.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <hr class="my-4">
+      <div id="reviewList" aria-live="polite"></div>
+    </section>
+
+    <section class="mb-4" aria-labelledby="relH">
+      <h2 class="section-title mb-3" id="relH">Related Products</h2>
+      <div class="row g-3" id="relatedGrid"></div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4"><div class="logo text-white mb-2"><i class="fa-solid fa-microchip"></i> Tech<span style="color:#6cb6ee">Xpress</span></div>
+        <p class="small">Your destination for quality electronics. This is a front-end demo store.</p></div>
+      <div class="col-6 col-lg-2"><h6>Shop</h6><a href="index.html">Laptops</a><a href="index.html">Smartphones</a><a href="index.html">Cameras</a><a href="index.html">Accessories</a></div>
+      <div class="col-6 col-lg-2"><h6>Account</h6><a href="login_registration.html">Sign in / Register</a><a href="customer_profile.html">My Profile</a><a href="shopping.html">Cart</a></div>
+      <div class="col-lg-4"><h6>Contact</h6>
+        <div class="small"><i class="fa-solid fa-location-dot me-2"></i>123 Tech Avenue, Cairo, Egypt</div>
+        <div class="small"><i class="fa-solid fa-phone me-2"></i>+20 100 000 0000</div>
+        <div class="small"><i class="fa-solid fa-envelope me-2"></i>support@techxpress.example</div></div>
+    </div>
+    <hr class="border-secondary mt-4"><div class="small text-center">&copy; 2026 TechXpress. Demo project, no real payments or accounts.</div>
+  </div>
+</footer>
+
+<div class="toast-box"><div id="toast" class="toast align-items-center text-bg-dark border-0" role="status" aria-live="polite" aria-atomic="true"><div class="d-flex"><div class="toast-body" id="toastMsg"></div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+"use strict";
+var KEYS={products:"techxpress_products",cart:"techxpress_cart",users:"techxpress_users",current:"techxpress_current_user",orders:"techxpress_orders",categories:"techxpress_categories",wishlist:"techxpress_wishlist"};
+var U="https://images.unsplash.com/";
+var SAMPLE=[
+{id:"p1",name:"AeroBook Pro 14",brand:"Aero",category:"Laptops",price:1299,originalPrice:1499,rating:4.7,reviews:328,stock:12,image:U+"photo-1496181133206-80ce9b88a853?w=600&q=80",description:"14-inch ultraportable with 16GB RAM and 512GB SSD.",isNew:false},
+{id:"p2",name:"Vertex Gaming 15",brand:"Vertex",category:"Laptops",price:1099,originalPrice:null,rating:4.5,reviews:214,stock:4,image:U+"photo-1517336714731-489689fd1ca8?w=600&q=80",description:"15.6-inch 144Hz display, dedicated graphics, RGB keyboard.",isNew:true},
+{id:"p3",name:"Nova X12 5G",brand:"Nova",category:"Smartphones",price:799,originalPrice:899,rating:4.6,reviews:512,stock:25,image:U+"photo-1511707171634-5f897ff02aa9?w=600&q=80",description:"6.7-inch OLED, triple camera, all-day battery.",isNew:false},
+{id:"p4",name:"Pixa Lite 8",brand:"Pixa",category:"Smartphones",price:449,originalPrice:null,rating:4.2,reviews:187,stock:0,image:U+"photo-1598327105666-5b89351aff97?w=600&q=80",description:"Compact smartphone with a bright display and clean software.",isNew:true},
+{id:"p5",name:"Lumix Z50 Mirrorless",brand:"Lumix",category:"Cameras",price:899,originalPrice:999,rating:4.8,reviews:143,stock:7,image:U+"photo-1516035069371-29a1b244cc32?w=600&q=80",description:"24MP mirrorless camera with 4K video and fast autofocus.",isNew:false},
+{id:"p6",name:"Retro Snap DSLR",brand:"Canvas",category:"Cameras",price:649,originalPrice:null,rating:4.4,reviews:96,stock:9,image:U+"photo-1502920917128-1aa500764cbd?w=600&q=80",description:"Beginner-friendly DSLR with 18-55mm kit lens.",isNew:true},
+{id:"p7",name:"SoundMax ANC Headphones",brand:"SoundMax",category:"Headphones",price:249,originalPrice:329,rating:4.7,reviews:620,stock:30,image:U+"photo-1505740420928-5e560c06d30e?w=600&q=80",description:"Wireless over-ear with active noise cancelling, 40h battery.",isNew:false},
+{id:"p8",name:"BeatPods Studio",brand:"Beatz",category:"Headphones",price:179,originalPrice:null,rating:4.3,reviews:275,stock:3,image:U+"photo-1583394838336-acd977736f90?w=600&q=80",description:"Comfortable studio-tuned headphones with a detachable cable.",isNew:true},
+{id:"p9",name:"TabOne Air 11",brand:"Aero",category:"Tablets",price:599,originalPrice:649,rating:4.6,reviews:201,stock:15,image:U+"photo-1544244015-0df4b3ffc6b0?w=600&q=80",description:"11-inch tablet with stylus support and laminated display.",isNew:false},
+{id:"p10",name:"Slate Mini 8",brand:"Nova",category:"Tablets",price:329,originalPrice:null,rating:4.1,reviews:88,stock:18,image:U+"photo-1561154464-82e9adf32764?w=600&q=80",description:"Lightweight 8-inch tablet for reading and streaming.",isNew:true},
+{id:"p11",name:"MechKey TKL Keyboard",brand:"Vertex",category:"Accessories",price:89,originalPrice:119,rating:4.5,reviews:342,stock:40,image:U+"photo-1587829741301-dc798b83add3?w=600&q=80",description:"Hot-swappable mechanical keyboard with tactile switches.",isNew:false},
+{id:"p12",name:"GlideX Wireless Mouse",brand:"GlideX",category:"Accessories",price:49,originalPrice:null,rating:4.4,reviews:410,stock:60,image:U+"photo-1527864550417-7fd91fc51a46?w=600&q=80",description:"Ergonomic wireless mouse with 6 programmable buttons.",isNew:true},
+{id:"p13",name:"PulseBox Bluetooth Speaker",brand:"SoundMax",category:"Accessories",price:79,originalPrice:99,rating:4.3,reviews:156,stock:22,image:U+"photo-1608043152269-423dbba4e7e8?w=600&q=80",description:"Waterproof portable speaker with 12h playtime.",isNew:true},
+{id:"p14",name:"ChronoFit Smartwatch",brand:"Pixa",category:"Accessories",price:199,originalPrice:249,rating:4.2,reviews:233,stock:11,image:U+"photo-1523275335684-37898b6baf30?w=600&q=80",description:"Fitness tracking, GPS and a 7-day battery life.",isNew:false}
+];
+var CATS=[
+{id:"c1",name:"Laptops",icon:"fa-laptop"},{id:"c2",name:"Smartphones",icon:"fa-mobile-screen"},
+{id:"c3",name:"Cameras",icon:"fa-camera"},{id:"c4",name:"Headphones",icon:"fa-headphones"},
+{id:"c5",name:"Tablets",icon:"fa-tablet-screen-button"},{id:"c6",name:"Accessories",icon:"fa-keyboard"}];
+
+/* Extra gallery images by category (used when a product has no "images" array) */
+var GALLERY={
+Laptops:["photo-1541807084-5c52b6b3adef","photo-1525547719571-a2d4ac8945e2","photo-1496181133206-80ce9b88a853","photo-1517336714731-489689fd1ca8"],
+Smartphones:["photo-1592899677977-9c10ca588bbd","photo-1510557880182-3d4d3cba35a5","photo-1511707171634-5f897ff02aa9","photo-1598327105666-5b89351aff97"],
+Cameras:["photo-1495707902641-75cac588d2e9","photo-1526170375885-4d8ecf77b99f","photo-1516035069371-29a1b244cc32","photo-1502920917128-1aa500764cbd"],
+Headphones:["photo-1484704849700-f032a568e944","photo-1546435770-a3e426bf472b","photo-1505740420928-5e560c06d30e","photo-1583394838336-acd977736f90"],
+Tablets:["photo-1585790050230-5dd28404ccb9","photo-1544244015-0df4b3ffc6b0","photo-1561154464-82e9adf32764","photo-1542751371-adc38448a05e"],
+Accessories:["photo-1587829741301-dc798b83add3","photo-1527864550417-7fd91fc51a46","photo-1608043152269-423dbba4e7e8","photo-1523275335684-37898b6baf30"]
+};
+
+/* Detailed specifications for the sample catalog */
+var SPECS={
+p1:[["Display","14.2-inch 2.8K IPS, 120Hz"],["Processor","8-core, up to 4.6GHz"],["Memory","16GB LPDDR5"],["Storage","512GB NVMe SSD"],["Graphics","Integrated GPU"],["Battery","Up to 14 hours"],["Weight","1.38 kg"],["Operating System","Windows 11 Home"],["Ports","2x USB-C (Thunderbolt), USB-A, HDMI, 3.5mm audio"],["Connectivity","Wi-Fi 6E, Bluetooth 5.3"]],
+p2:[["Display","15.6-inch Full HD IPS, 144Hz"],["Processor","8-core, up to 4.8GHz"],["Memory","16GB DDR5"],["Storage","1TB NVMe SSD"],["Graphics","Dedicated 6GB GDDR6"],["Battery","Up to 6 hours"],["Weight","2.2 kg"],["Operating System","Windows 11 Home"],["Keyboard","Per-key RGB backlit"],["Connectivity","Wi-Fi 6, Bluetooth 5.2"]],
+p3:[["Display","6.7-inch OLED, 120Hz"],["Processor","Octa-core 5G chipset"],["Memory","8GB RAM"],["Storage","256GB"],["Rear Camera","50MP + 12MP ultrawide + 10MP telephoto"],["Front Camera","32MP"],["Battery","5000mAh, 65W fast charging"],["Network","5G, Dual SIM"],["Weight","195 g"]],
+p4:[["Display","6.1-inch AMOLED, 90Hz"],["Processor","Octa-core 4G chipset"],["Memory","6GB RAM"],["Storage","128GB"],["Rear Camera","48MP + 8MP ultrawide"],["Front Camera","16MP"],["Battery","4300mAh, 33W charging"],["Network","4G LTE, Dual SIM"],["Weight","168 g"]],
+p5:[["Sensor","24.2MP APS-C CMOS"],["Video","4K UHD at 30fps, Full HD at 120fps"],["Autofocus","Hybrid, 209-point with eye tracking"],["ISO Range","100 to 51200"],["Screen","3.0-inch tilting touchscreen"],["Viewfinder","2.36M-dot electronic"],["Battery Life","Approx. 350 shots"],["Connectivity","Wi-Fi, Bluetooth, USB-C"],["Weight","450 g (body only)"]],
+p6:[["Sensor","24MP APS-C CMOS"],["Video","Full HD at 60fps"],["Autofocus","45-point phase detection"],["ISO Range","100 to 25600"],["Screen","3.0-inch fixed LCD"],["Included Lens","18-55mm f/3.5-5.6"],["Battery Life","Approx. 600 shots"],["Connectivity","Wi-Fi, USB 2.0"],["Weight","540 g (with lens)"]],
+p7:[["Type","Over-ear, wireless"],["Noise Cancelling","Active (ANC) with transparency mode"],["Battery Life","Up to 40 hours"],["Charging","USB-C, 10 min = 5 hours"],["Drivers","40mm dynamic"],["Bluetooth","5.3 with multipoint"],["Microphones","6 beamforming mics"],["Weight","254 g"]],
+p8:[["Type","Over-ear, wired / wireless"],["Noise Cancelling","Passive isolation"],["Battery Life","Up to 30 hours"],["Charging","USB-C"],["Drivers","45mm studio-tuned"],["Bluetooth","5.1"],["Cable","Detachable 3.5mm, 1.5 m"],["Weight","280 g"]],
+p9:[["Display","11-inch Liquid Retina-style LCD, 120Hz"],["Processor","8-core tablet chipset"],["Memory","8GB RAM"],["Storage","256GB"],["Cameras","12MP rear, 12MP front"],["Battery","Up to 10 hours"],["Stylus","Supported (sold separately)"],["Connectivity","Wi-Fi 6, Bluetooth 5.3"],["Weight","466 g"]],
+p10:[["Display","8-inch IPS, 60Hz"],["Processor","Quad-core chipset"],["Memory","4GB RAM"],["Storage","64GB (microSD supported)"],["Cameras","8MP rear, 5MP front"],["Battery","Up to 12 hours"],["Connectivity","Wi-Fi 5, Bluetooth 5.0"],["Weight","310 g"]],
+p11:[["Layout","Tenkeyless (87 keys), ANSI"],["Switches","Hot-swappable tactile"],["Keycaps","Double-shot PBT"],["Connectivity","USB-C wired"],["Backlight","White LED, 5 levels"],["Cable","Braided, 1.8 m"],["Compatibility","Windows, macOS, Linux"]],
+p12:[["Sensor","Optical, up to 8000 DPI"],["Buttons","6 programmable"],["Connectivity","2.4GHz receiver + Bluetooth"],["Battery","Up to 70 hours (1 AA)"],["Grip","Right-handed ergonomic"],["Weight","86 g"],["Compatibility","Windows, macOS, Linux"]],
+p13:[["Output","20W stereo"],["Battery Life","Up to 12 hours"],["Water Resistance","IPX7"],["Bluetooth","5.3"],["Charging","USB-C"],["Features","Built-in mic, stereo pairing"],["Weight","540 g"]],
+p14:[["Display","1.4-inch AMOLED"],["Battery Life","Up to 7 days"],["Water Resistance","5 ATM"],["Sensors","Heart rate, SpO2, GPS, accelerometer"],["Connectivity","Bluetooth 5.2"],["Compatibility","Android and iOS"],["Strap","Silicone, 20mm"],["Weight","38 g"]]
+};
+var GENERIC_SPECS={Laptops:[["Display","See product description"],["Memory","See product description"],["Storage","See product description"]]};
+
+function load(key,fb){try{var r=localStorage.getItem(key);if(r===null)return fb;var v=JSON.parse(r);return v===null?fb:v}catch(e){return fb}}
+function save(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch(e){}}
+function initKey(key,val){try{if(localStorage.getItem(key)===null)localStorage.setItem(key,JSON.stringify(val))}catch(e){}}
+function arr(key){var v=load(key,[]);return Array.isArray(v)?v:[]}
+
+/* Initialize only when missing (never overwrite existing data) */
+initKey(KEYS.products,SAMPLE);initKey(KEYS.categories,CATS);
+initKey(KEYS.cart,[]);initKey(KEYS.users,[]);initKey(KEYS.orders,[]);initKey(KEYS.wishlist,[]);initKey(KEYS.current,null);
+
+var products=arr(KEYS.products).filter(function(p){return p&&p.id!==undefined&&p.id!==null&&typeof p.price==="number"&&typeof p.name==="string"});
+if(!products.length)products=SAMPLE.slice();
+
+var $=function(id){return document.getElementById(id)};
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined&&text!==null)e.textContent=text;return e}
+function money(n){return "$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:2})}
+function num(v,d){var n=Number(v);return isFinite(n)?n:d}
+
+/* Images with fallback */
+function fallbackSrc(label){
+  var svg="<svg xmlns='http://www.w3.org/2000/svg' width='600' height='450'><rect width='100%' height='100%' fill='#E4EDF7'/><text x='50%' y='50%' fill='#1769AA' font-family='Arial' font-size='26' font-weight='700' text-anchor='middle'>"+String(label||"TechXpress").replace(/[<>&'"]/g,"")+"</text></svg>";
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+function bindFallback(img,label){
+  img.addEventListener("error",function(){
+    if(img.dataset.failed==="1")return;
+    img.dataset.failed="1";img.src=fallbackSrc(label)
+  });
+}
+function setSrc(img,src){delete img.dataset.failed;img.src=src}
+function safeImg(src,alt,label){var i=document.createElement("img");i.alt=alt;i.loading="lazy";bindFallback(i,label);i.src=src;return i}
+
+/* Toast */
+var toastEl=$("toast"),toast=window.bootstrap?new bootstrap.Toast(toastEl,{delay:2600}):null;
+function notify(msg,type){
+  toastEl.classList.remove("text-bg-dark","text-bg-success","text-bg-danger");
+  toastEl.classList.add(type==="error"?"text-bg-danger":type==="success"?"text-bg-success":"text-bg-dark");
+  $("toastMsg").textContent=msg;if(toast)toast.show()
+}
+
+/* Cart */
+function cartCount(){return arr(KEYS.cart).reduce(function(s,i){return s+(Number(i&&i.quantity)||0)},0)}
+function updateBadge(){$("cartCount").textContent=cartCount()}
+/* Returns "added", "maxed" or "toomany" */
+function addToCart(p,qty){
+  var cart=arr(KEYS.cart),it=cart.find(function(c){return c&&String(c.productId)===String(p.id)});
+  var existing=it?(Number(it.quantity)||0):0,allowed=p.stock-existing;
+  if(allowed<=0)return "maxed";
+  if(qty>allowed)return "toomany:"+allowed;
+  if(it){it.quantity=existing+qty;it.price=p.price;it.stock=p.stock}
+  else cart.push({productId:p.id,quantity:qty,name:p.name,brand:p.brand,price:p.price,image:p.image,stock:p.stock});
+  save(KEYS.cart,cart);updateBadge();return "added"
+}
+
+/* Wishlist */
+function wishlist(){return arr(KEYS.wishlist).map(String)}
+function isWished(id){return wishlist().indexOf(String(id))>-1}
+function setCardWish(b,on){b.classList.toggle("active",on);b.setAttribute("aria-pressed",on?"true":"false");b.firstChild.className=on?"fa-solid fa-heart":"fa-regular fa-heart"}
+function setMainWish(on){
+  var b=$("wishBtn");b.classList.toggle("active",on);b.setAttribute("aria-pressed",on?"true":"false");
+  b.querySelector("i").className=(on?"fa-solid":"fa-regular")+" fa-heart me-2";
+  b.querySelector("span").textContent=on?"In Wishlist":"Wishlist"
+}
+function toggleWish(id){
+  var w=arr(KEYS.wishlist),sid=String(id),idx=w.map(String).indexOf(sid);
+  if(idx>-1){w.splice(idx,1);notify("Removed from wishlist")}else{w.push(id);notify("Added to wishlist","success")}
+  save(KEYS.wishlist,w);var on=idx<0;
+  document.querySelectorAll('.wish[data-id="'+sid.replace(/"/g,"")+'"]').forEach(function(b){setCardWish(b,on)});
+  if(current&&String(current.id)===sid)setMainWish(on)
+}
+
+/* Helpers */
+function stars(r){var s=el("span","stars"),f=Math.round(r);for(var i=1;i<=5;i++)s.appendChild(el("i",i<=f?"fa-solid fa-star":"fa-regular fa-star"));return s}
+function detailUrl(id){return "product-details.html?id="+encodeURIComponent(id)}
+function skuOf(p){
+  if(p.sku)return String(p.sku);
+  var d=String(p.id).replace(/\D/g,"");if(!d)d=String(p.id).toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+  return "TX-"+String(p.category||"GEN").slice(0,3).toUpperCase()+"-"+(/^\d+$/.test(d)?d.padStart(4,"0"):d)
+}
+function normalize(p){
+  return {id:p.id,name:String(p.name),brand:String(p.brand||"TechXpress"),category:String(p.category||"Accessories"),
+    price:num(p.price,0),originalPrice:p.originalPrice?num(p.originalPrice,null):null,rating:Math.min(5,Math.max(0,num(p.rating,4))),
+    reviews:Math.max(0,Math.floor(num(p.reviews,0))),stock:Math.max(0,Math.floor(num(p.stock,0))),image:String(p.image||""),
+    description:String(p.description||""),sku:p.sku,images:p.images,specs:p.specs}
+}
+
+/* Related product card */
+function card(p){
+  var col=el("div","col-6 col-md-4 col-lg-3"),c=el("article","card-p");
+  var link=el("a","img");link.href=detailUrl(p.id);link.setAttribute("aria-label","View "+p.name);
+  link.appendChild(safeImg(p.image,p.name,p.name));c.appendChild(link);
+  if(p.originalPrice&&p.originalPrice>p.price)c.appendChild(el("span","sale","-"+Math.round((1-p.price/p.originalPrice)*100)+"%"));
+  var w=el("button","wish");w.type="button";w.dataset.id=String(p.id);w.setAttribute("aria-label","Toggle wishlist for "+p.name);w.appendChild(el("i","fa-regular fa-heart"));
+  setCardWish(w,isWished(p.id));w.addEventListener("click",function(){toggleWish(p.id)});c.appendChild(w);
+  var b=el("div","body");b.appendChild(el("div","brand",p.brand));
+  var n=el("a","pname",p.name);n.href=detailUrl(p.id);b.appendChild(n);
+  var r=el("div","small mb-1");r.appendChild(stars(p.rating));r.appendChild(el("span","text-muted ms-1",p.rating+" ("+p.reviews+")"));b.appendChild(r);
+  var st=p.stock<=0?["Out of stock","stock out"]:p.stock<=5?["Only "+p.stock+" left","stock low"]:["In stock","stock in"];
+  b.appendChild(el("div",st[1]+" small mb-2",st[0]));
+  var pr=el("div","mt-auto mb-2");pr.appendChild(el("span","price",money(p.price)));
+  if(p.originalPrice&&p.originalPrice>p.price)pr.appendChild(el("span","old",money(p.originalPrice)));b.appendChild(pr);
+  var btn=el("button","btn btn-primary w-100",p.stock<=0?"Out of Stock":"Add to Cart");btn.type="button";btn.disabled=p.stock<=0;
+  btn.addEventListener("click",function(){
+    var res=addToCart(p,1);
+    if(res==="added")notify(p.name+" added to cart","success");
+    else notify("Maximum available stock is already in your cart.","error")
+  });
+  b.appendChild(btn);c.appendChild(b);col.appendChild(c);return col
+}
+
+/* Header search suggestions */
+var sInput=$("searchInput"),sBox=$("suggestBox");
+function matches(q){
+  q=q.trim().toLowerCase();if(!q)return[];
+  return products.filter(function(p){return (String(p.name)+" "+String(p.brand)).toLowerCase().indexOf(q)>-1})
+}
+function closeSuggest(){sBox.classList.add("d-none");sInput.setAttribute("aria-expanded","false")}
+function showSuggest(){
+  var q=sInput.value,list=matches(q).slice(0,6);sBox.replaceChildren();
+  if(!q.trim()){closeSuggest();return}
+  if(!list.length){sBox.appendChild(el("div","none","No products found for \""+q.trim().slice(0,40)+"\""))}
+  list.forEach(function(p){
+    var a=el("a");a.href=detailUrl(p.id);a.setAttribute("role","option");
+    a.appendChild(safeImg(p.image,p.name,p.name));
+    var d=el("div");d.appendChild(el("div","fw-semibold",p.name));d.appendChild(el("div","small text-muted",p.brand+" \u00b7 "+money(p.price)));
+    a.appendChild(d);sBox.appendChild(a)
+  });
+  sBox.classList.remove("d-none");sInput.setAttribute("aria-expanded","true")
+}
+sInput.addEventListener("input",showSuggest);
+sInput.addEventListener("focus",showSuggest);
+sInput.addEventListener("keydown",function(e){
+  if(e.key==="Escape")closeSuggest();
+  if(e.key==="ArrowDown"){var f=sBox.querySelector("a");if(f){e.preventDefault();f.focus()}}
+});
+sBox.addEventListener("keydown",function(e){
+  var links=Array.prototype.slice.call(sBox.querySelectorAll("a")),i=links.indexOf(document.activeElement);
+  if(e.key==="ArrowDown"&&i<links.length-1){e.preventDefault();links[i+1].focus()}
+  else if(e.key==="ArrowUp"){e.preventDefault();if(i>0)links[i-1].focus();else sInput.focus()}
+  else if(e.key==="Escape"){closeSuggest();sInput.focus()}
+});
+document.addEventListener("click",function(e){if(!e.target.closest(".search-wrap"))closeSuggest()});
+$("searchForm").addEventListener("submit",function(e){
+  e.preventDefault();var m=matches(sInput.value);
+  if(!sInput.value.trim()){notify("Type a product name or brand to search.","error");return}
+  if(m.length)window.location.href=detailUrl(m[0].id);
+  else notify("No products match your search.","error")
+});
+
+/* Resolve current product */
+var params=new URLSearchParams(window.location.search),reqId=params.get("id"),current=null;
+(function(){
+  var raw=null;
+  if(reqId!==null&&reqId!==""){raw=products.find(function(p){return String(p.id)===reqId})||null}
+  else{raw=products.find(function(p){return String(p.id)==="p1"})||products.find(function(p){return p.category==="Laptops"})||products[0]||null}
+  current=raw?normalize(raw):null
+})();
+
+/* Breadcrumb */
+function buildBreadcrumb(){
+  var bc=$("breadcrumb");
+  if(!current){var li=el("li","breadcrumb-item active","Product not found");li.setAttribute("aria-current","page");bc.appendChild(li);return}
+  var l2=el("li","breadcrumb-item"),a=el("a",null,current.category);a.href="index.html#catalog";l2.appendChild(a);bc.appendChild(l2);
+  var l3=el("li","breadcrumb-item active",current.name);l3.setAttribute("aria-current","page");bc.appendChild(l3)
+}
+
+/* Gallery */
+function buildGallery(p){
+  var imgs=[];
+  if(Array.isArray(p.images)&&p.images.length){imgs=p.images.filter(function(s){return typeof s==="string"&&s})}
+  if(p.image&&imgs.indexOf(p.image)<0)imgs.unshift(p.image);
+  if(imgs.length<4){
+    (GALLERY[p.category]||[]).forEach(function(k){
+      var url=U+k+"?w=600&q=80";
+      if(imgs.length<4&&imgs.indexOf(url)<0&&imgs.every(function(s){return s.indexOf(k)<0}))imgs.push(url)
+    })
+  }
+  var main=$("mainImg");bindFallback(main,p.name);
+  var thumbs=$("thumbs");thumbs.replaceChildren();
+  function select(i){
+    setSrc(main,imgs[i]);main.alt=p.name+" - view "+(i+1);
+    Array.prototype.forEach.call(thumbs.children,function(b,j){
+      b.classList.toggle("active",j===i);if(j===i)b.setAttribute("aria-current","true");else b.removeAttribute("aria-current")
+    })
+  }
+  imgs.forEach(function(src,i){
+    var b=el("button","thumb");b.type="button";b.setAttribute("aria-label","Show image "+(i+1)+" of "+imgs.length);
+    var t=document.createElement("img");t.alt="";bindFallback(t,p.name+" "+(i+1));t.src=src;b.appendChild(t);
+    b.addEventListener("click",function(){select(i)});thumbs.appendChild(b)
+  });
+  select(0)
+}
+
+/* Specifications */
+function buildSpecs(p){
+  var body=$("specBody");body.replaceChildren();
+  var warranty=warrantyMonths(p);
+  var rows=[["Brand",p.brand],["Model",p.name],["Category",p.category],["SKU",skuOf(p)],["Condition","New"]];
+  var extra=[];
+  if(p.specs&&typeof p.specs==="object"){
+    extra=Array.isArray(p.specs)?p.specs.filter(function(r){return Array.isArray(r)&&r.length>=2}):Object.keys(p.specs).map(function(k){return [k,p.specs[k]]})
+  }else if(SPECS[String(p.id)]){extra=SPECS[String(p.id)]}
+  rows=rows.concat(extra);rows.push(["Warranty",warranty+" months manufacturer warranty"]);
+  rows.forEach(function(r){
+    var tr=document.createElement("tr"),th=el("th",null,String(r[0]));th.scope="row";
+    tr.appendChild(th);tr.appendChild(el("td",null,String(r[1])));body.appendChild(tr)
+  })
+}
+function warrantyMonths(p){return (p.category==="Laptops"||p.category==="Tablets"||p.category==="Smartphones")?24:12}
+
+/* Quantity + actions */
+function maxQty(){return Math.max(1,current.stock)}
+function clampQty(notifyOver){
+  var inp=$("qtyInput"),q=parseInt(inp.value,10);
+  if(isNaN(q)||q<1)q=1;
+  if(current.stock>0&&q>current.stock){q=current.stock;if(notifyOver)notify("Only "+current.stock+" unit"+(current.stock===1?"":"s")+" available.","error")}
+  inp.value=q;return q
+}
+function setupActions(p){
+  var qi=$("qtyInput");qi.max=String(maxQty());
+  var out=p.stock<=0;
+  if(out){qi.value=0;qi.min="0";["qtyInput","qtyMinus","qtyPlus","addBtn","buyBtn"].forEach(function(id){$(id).disabled=true});$("addBtn").innerHTML="";$("addBtn").appendChild(el("span",null,"Out of Stock"));$("buyBtn").disabled=true}
+  $("qtyMinus").addEventListener("click",function(){var q=clampQty(false);if(q>1)qi.value=q-1;else notify("Quantity cannot be less than 1.","error")});
+  $("qtyPlus").addEventListener("click",function(){var q=clampQty(false);if(q<p.stock)qi.value=q+1;else notify("Only "+p.stock+" unit"+(p.stock===1?"":"s")+" available.","error")});
+  qi.addEventListener("change",function(){clampQty(true)});
+  qi.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();clampQty(true)}});
+
+  function handle(res,qty,buyNow){
+    if(res==="added"){
+      if(buyNow){window.location.href="cart.html";return}
+      notify(qty+" \u00d7 "+p.name+" added to cart","success")
+    }else if(res==="maxed"){
+      if(buyNow){window.location.href="cart.html";return}
+      notify("You already have the maximum available stock in your cart.","error")
+    }else{
+      notify("Only "+res.split(":")[1]+" more unit(s) can be added (stock limit).","error")
+    }
+  }
+  $("addBtn").addEventListener("click",function(){if(p.stock<=0)return;var q=clampQty(true);handle(addToCart(p,q),q,false)});
+  $("buyBtn").addEventListener("click",function(){if(p.stock<=0)return;var q=clampQty(true);handle(addToCart(p,q),q,true)});
+  $("wishBtn").addEventListener("click",function(){toggleWish(p.id)});
+  setMainWish(isWished(p.id))
+}
+
+/* Reviews */
+var SAMPLE_REVIEWS=[
+{n:"Omar K.",r:5,t:"Exactly what I needed",c:"Arrived quickly and works great. The build quality feels premium for the price and setup was effortless.",d:"2026-08-14"},
+{n:"Sara M.",r:4,t:"Very good value",c:"Performs well in daily use. Packaging was neat and delivery was faster than expected. Minor wish: a few more accessories in the box.",d:"2026-07-29"},
+{n:"Daniel R.",r:5,t:"Highly recommended",c:"Impressed with the quality. Compared several options before choosing this one and I'm glad I did.",d:"2026-07-05"},
+{n:"Layla A.",r:4,t:"Solid purchase",c:"Great overall experience. Customer support answered my questions the same day.",d:"2026-06-18"}
+];
+var reviewCount=0;
+function dateText(iso){try{return new Date(iso).toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"})}catch(e){return iso}}
+function reviewItem(rv,mine){
+  var row=el("div","review d-flex gap-3"),av=el("div","avatar",rv.n.trim().charAt(0).toUpperCase()||"?");av.setAttribute("aria-hidden","true");
+  var b=el("div","flex-grow-1"),top=el("div","d-flex flex-wrap align-items-center gap-2");
+  top.appendChild(el("strong",null,rv.n));top.appendChild(stars(rv.r));
+  if(mine)top.appendChild(el("span","badge text-bg-primary","Your review (demo)"));
+  top.appendChild(el("span","small text-muted ms-auto",dateText(rv.d)));
+  b.appendChild(top);b.appendChild(el("div","fw-semibold mt-1",rv.t));b.appendChild(el("p","mb-0 text-muted",rv.c));
+  row.appendChild(av);row.appendChild(b);return row
+}
+function buildReviews(p){
+  $("rvAvg").textContent=p.rating.toFixed(1);
+  var rs=$("rvStars");rs.replaceChildren();rs.appendChild(stars(p.rating));
+  $("rvTotal").textContent="Based on "+p.reviews.toLocaleString("en-US")+" review"+(p.reviews===1?"":"s");
+  var w=[0,0,0,0,0,0],sum=0,k;
+  for(k=1;k<=5;k++){w[k]=Math.exp(-Math.pow(k-(p.rating+0.4),2)/1.2);sum+=w[k]}
+  var bars=$("rvBars");bars.replaceChildren();
+  for(k=5;k>=1;k--){
+    var pct=Math.round(w[k]/sum*100),row=el("div","d-flex align-items-center gap-2 mb-1 small");
+    row.appendChild(el("span",null,k+" \u2605"));
+    var bar=el("div","bar flex-grow-1");bar.setAttribute("role","img");bar.setAttribute("aria-label",pct+" percent of reviews are "+k+" stars");
+    var fill=document.createElement("span");fill.style.width=pct+"%";bar.appendChild(fill);row.appendChild(bar);
+    row.appendChild(el("span","text-muted text-end",pct+"%"));row.lastChild.style.width="38px";bars.appendChild(row)
+  }
+  var list=$("reviewList");list.replaceChildren();
+  SAMPLE_REVIEWS.forEach(function(rv){list.appendChild(reviewItem({n:rv.n,r:rv.r,t:rv.t,c:rv.c,d:rv.d},false))});
+  reviewCount=SAMPLE_REVIEWS.length;
+
+  /* Star radio input (DOM order 5..1 with row-reverse) */
+  var si=$("starInput");si.replaceChildren();
+  for(k=5;k>=1;k--){
+    var inp=document.createElement("input");inp.type="radio";inp.name="rvRating";inp.id="star"+k;inp.value=String(k);
+    var lab=el("label",null,"\u2605");lab.htmlFor="star"+k;lab.title=k+" star"+(k===1?"":"s");lab.setAttribute("aria-label",k+" star"+(k===1?"":"s"));
+    si.appendChild(inp);si.appendChild(lab)
+  }
+  var cu=load(KEYS.current,null);
+  if(cu&&typeof cu==="object"){var nm=cu.name||cu.fullName||cu.firstName||"";if(typeof nm==="string")$("rvNameInput").value=nm.slice(0,40)}
+
+  $("reviewForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    var name=$("rvNameInput").value.trim(),title=$("rvTitleInput").value.trim(),text=$("rvTextInput").value.trim();
+    var checked=document.querySelector('input[name="rvRating"]:checked'),ok=true;
+    function flag(id,bad){$(id).classList.toggle("is-invalid",bad);$(id).classList.toggle("is-valid",!bad);if(bad)ok=false}
+    flag("rvNameInput",name.length<2);flag("rvTitleInput",title.length<3);flag("rvTextInput",text.length<10);
+    $("rvRatingErr").classList.toggle("d-none",!!checked);if(!checked)ok=false;
+    if(!ok){notify("Please fix the highlighted fields.","error");return}
+    var rv={n:name,r:parseInt(checked.value,10),t:title,c:text,d:new Date().toISOString()};
+    list.insertBefore(reviewItem(rv,true),list.firstChild);reviewCount++;
+    $("reviewForm").reset();
+    ["rvNameInput","rvTitleInput","rvTextInput"].forEach(function(id){$(id).classList.remove("is-valid","is-invalid")});
+    if(cu&&typeof cu==="object"){var nm2=cu.name||cu.fullName||cu.firstName||"";if(typeof nm2==="string")$("rvNameInput").value=nm2.slice(0,40)}
+    notify("Thank you! Your review was added (demo only, not saved).","success")
+  })
+}
+
+/* Related */
+function buildRelated(p){
+  var all=products.map(normalize).filter(function(x){return String(x.id)!==String(p.id)});
+  var same=all.filter(function(x){return x.category===p.category}),others=all.filter(function(x){return x.category!==p.category});
+  var list=same.concat(others).slice(0,4),grid=$("relatedGrid");grid.replaceChildren();
+  list.forEach(function(x){grid.appendChild(card(x))});
+  if(!list.length)$("relH").parentNode.classList.add("d-none")
+}
+
+/* Render product */
+function renderProduct(p){
+  document.title=p.name+" | TechXpress";
+  var md=document.querySelector('meta[name="description"]');if(md)md.setAttribute("content",p.name+" by "+p.brand+" - "+p.description);
+  $("pBrand").textContent=p.brand;$("pName").textContent=p.name;
+  var ps=$("pStars");ps.replaceChildren();ps.appendChild(stars(p.rating));
+  $("pRating").textContent=p.rating.toFixed(1);
+  $("pReviews").textContent=p.reviews.toLocaleString("en-US")+" reviews";
+  $("pSku").textContent=skuOf(p);
+  $("pPrice").textContent=money(p.price);
+  var hasDisc=p.originalPrice&&p.originalPrice>p.price;
+  if(hasDisc){
+    var pct=Math.round((1-p.price/p.originalPrice)*100);
+    $("pOld").textContent=money(p.originalPrice);$("pOld").classList.remove("d-none");
+    $("discBadge").textContent="-"+pct+"% OFF";$("discBadge").classList.remove("d-none");
+    $("pSave").textContent="You save "+money(p.originalPrice-p.price)+" ("+pct+"%)";$("pSave").classList.remove("d-none")
+  }
+  $("pShort").textContent=p.description;
+  var st=$("pStock");
+  if(p.stock<=0){st.className="stock out";st.textContent="Out of stock - currently unavailable"}
+  else if(p.stock<=5){st.className="stock low";st.textContent="Low stock - only "+p.stock+" unit"+(p.stock===1?"":"s")+" left"}
+  else{st.className="stock in";st.textContent="In stock - "+p.stock+" units available"}
+  var stIcon=el("i","fa-solid "+(p.stock<=0?"fa-circle-xmark":p.stock<=5?"fa-triangle-exclamation":"fa-circle-check")+" me-1");st.insertBefore(stIcon,st.firstChild);
+  $("pDesc").textContent=p.description;
+  $("pDesc2").textContent="The "+p.name+" from "+p.brand+" is part of our "+p.category.toLowerCase()+" collection. Every unit is brand new, inspected before dispatch and backed by the manufacturer warranty, so you can buy with confidence.";
+  var wm=warrantyMonths(p);
+  $("perkWarranty").textContent=wm+"-month warranty";
+  $("warrantyText").textContent=wm+"-month manufacturer warranty covering defects in materials and workmanship.";
+  buildGallery(p);buildSpecs(p);setupActions(p);buildReviews(p);buildRelated(p)
+}
+
+/* Nav highlight, account link, init */
+function init(){
+  buildBreadcrumb();
+  if(current){
+    $("productView").classList.remove("d-none");renderProduct(current);
+    document.querySelectorAll("[data-nav]").forEach(function(a){if(a.dataset.nav===current.category)a.classList.add("active")})
+  }else{
+    document.title="Product not found | TechXpress";$("notFound").classList.remove("d-none")
+  }
+  var cu=load(KEYS.current,null);
+  $("accountLink").href=(cu&&typeof cu==="object")?"profile.html":"auth.html";
+  updateBadge()
+}
+init();
+window.addEventListener("storage",function(){updateBadge();if(current)setMainWish(isWished(current.id))});
+})();
+</script>
+</body>
+</html>
